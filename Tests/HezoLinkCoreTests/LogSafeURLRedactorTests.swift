@@ -34,11 +34,12 @@ struct LogSafeURLRedactorTests {
     let submitted = try SubmittedURL(
       rawValue: "https://example.com/path?token=\(canary)#private"
     )
+    let host = try #require(ValidatedURLHost(domainNameASCIIValue: "example.com"))
     let validated = ValidatedManualURL(
       syntaxProfileVersion: 1,
       submittedURL: submitted,
       scheme: .https,
-      asciiHost: "example.com",
+      host: host,
       explicitPort: nil,
       effectivePort: 443,
       portDisposition: .supported,
