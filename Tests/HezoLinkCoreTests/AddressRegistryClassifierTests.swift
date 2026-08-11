@@ -354,6 +354,92 @@ struct AddressRegistryClassifierTests {
     )
   }
 
+  @Test(
+    "Environment-controlled deterministic address-classifier campaign",
+    .timeLimit(.minutes(11))
+  )
+  func environmentControlledCampaign() throws {
+    let duration = try #require(addressRegistryCampaignDuration())
+    let oracle = try AddressRegistryCampaignOracle(data: addressRegistryProjectionData())
+    let classifier = try AddressRegistryClassifier()
+    let repeatClassifier = try AddressRegistryClassifier()
+    let clock = ContinuousClock()
+    let deadline = clock.now.advanced(by: duration)
+    var generator = AddressRegistryCampaignGenerator(seed: addressRegistryCampaignPublicSeed)
+    var repeatGenerator = AddressRegistryCampaignGenerator(
+      seed: addressRegistryCampaignPublicSeed
+    )
+    var iteration = 0
+
+    repeat {
+      let family: AddressRegistryIPFamily = iteration.isMultiple(of: 2) ? .ipv4 : .ipv6
+      let bytes = addressRegistryCampaignBytes(family: family, using: &generator)
+      let repeatedBytes = addressRegistryCampaignBytes(
+        family: family,
+        using: &repeatGenerator
+      )
+      guard bytes == repeatedBytes else {
+        Issue.record("The public campaign seed must produce repeatable bytes.")
+        return
+      }
+
+      let testHost: AddressRegistryTestHost =
+        family == .ipv4 ? .ipv4(bytes) : .ipv6(bytes)
+      let host = try #require(testHost.makeValidatedHost())
+      let classification = classifier.classify(host)
+      let repeatedClassification = repeatClassifier.classify(host)
+      guard case .ip(let result) = classification else {
+        Issue.record("A generated IP fixture must produce an IP classification.")
+        return
+      }
+      let expected = oracle.expectedMatch(for: bytes, family: family)
+      let invariantsHold =
+        classification == repeatedClassification
+        && result.family == family
+        && result.category == (expected?.category ?? .unallocated)
+        && result.sourceRevision == AddressRegistryClassifier.profileRevision
+        && (result.match == nil) == (result.category == .unallocated)
+        && addressRegistryCampaignMatch(result.match, equals: expected)
+        && addressRegistryCampaignDiagnosticsAreContentFree(
+          classifier: classifier,
+          host: host,
+          classification: classification,
+          result: result
+        )
+      guard invariantsHold else {
+        let familyLabel = family == .ipv4 ? "IPv4" : "IPv6"
+        Issue.record(
+          "Address-classifier campaign invariants failed for \(familyLabel) iteration \(iteration)."
+        )
+        return
+      }
+
+      iteration += 1
+    } while iteration < 128 || clock.now < deadline
+
+    #expect(iteration >= 128)
+  }
+
+  @Test(
+    "Address-classifier campaign rejects invalid duration values",
+    arguments: ["", " ", "invalid", "nan", "inf", "-1", "0", "0.009", "600.001"]
+  )
+  func campaignDurationRejectsInvalidValues(rawSeconds: String) {
+    #expect(addressRegistryCampaignDuration(rawSeconds: rawSeconds) == nil)
+  }
+
+  @Test func campaignOraclePreservesIPv4MappedIPv6PrefixFamily() throws {
+    let oracle = try AddressRegistryCampaignOracle(data: addressRegistryProjectionData())
+    let mappedRecord = try #require(
+      oracle.records.first {
+        $0.family == .ipv6 && $0.name == "IPv4-mapped Address"
+      }
+    )
+
+    #expect(mappedRecord.prefix == "::ffff:0:0/96")
+    #expect(mappedRecord.category == .specialPurpose)
+  }
+
   @Test func concurrentConstructionAndClassificationMatchSerialResults() async throws {
     let hosts = try addressRegistryConcurrentHosts.map { testHost in
       try #require(testHost.makeValidatedHost())
@@ -440,6 +526,145 @@ private struct AddressRegistryIndexedClassification: Sendable {
   let iteration: Int
   let hostIndex: Int
   let classification: AddressRegistryClassification
+}
+
+private struct AddressRegistryCampaignProjection: Decodable {
+  let sourceRegistries: [Source]
+  let policyOverlays: [Overlay]
+  let records: [Record]
+
+  struct Source: Decodable {
+    let id: String
+    let kind: String
+    let revision: String
+    let sourceURL: String
+  }
+
+  struct Overlay: Decodable {
+    let id: String
+    let revision: String
+    let sourceURL: String
+  }
+
+  struct Record: Decodable {
+    let registryID: String
+    let family: String
+    let prefixLength: Int
+    let networkBytesHex: String
+    let name: String
+    let status: String?
+
+    private enum CodingKeys: String, CodingKey {
+      case registryID = "registryId"
+      case family
+      case prefixLength
+      case networkBytesHex
+      case name
+      case status
+    }
+  }
+}
+
+private struct AddressRegistryCampaignOracle {
+  struct Record {
+    let family: AddressRegistryIPFamily
+    let layer: Int
+    let prefixLength: Int
+    let networkBytes: [UInt8]
+    let category: AddressRegistryCategory
+    let prefix: String
+    let name: String
+    let source: AddressRegistrySourceExpectation
+  }
+
+  let records: [Record]
+
+  init(data: Data) throws {
+    let projection = try JSONDecoder().decode(AddressRegistryCampaignProjection.self, from: data)
+    records = try projection.records.map { projectedRecord in
+      let source = projection.sourceRegistries.first { $0.id == projectedRecord.registryID }
+      let overlay = projection.policyOverlays.first { $0.id == projectedRecord.registryID }
+      guard (source == nil) != (overlay == nil),
+        let family = addressRegistryCampaignFamily(projectedRecord.family),
+        let networkBytes = addressRegistryCampaignHexBytes(projectedRecord.networkBytesHex),
+        let prefix = addressRegistryCampaignRenderPrefix(
+          family: family,
+          networkBytes: networkBytes,
+          prefixLength: projectedRecord.prefixLength
+        )
+      else {
+        throw AddressRegistryClassifierTestError.invalidProjection
+      }
+
+      let layer: Int
+      let category: AddressRegistryCategory
+      if source?.kind == "special-purpose" {
+        layer = 0
+        category = .specialPurpose
+      } else if overlay != nil {
+        layer = 1
+        category = .multicast
+      } else if source?.kind == "address-space" {
+        layer = 2
+        category = try addressRegistryCampaignAddressSpaceCategory(projectedRecord)
+      } else {
+        throw AddressRegistryClassifierTestError.invalidProjection
+      }
+
+      return Record(
+        family: family,
+        layer: layer,
+        prefixLength: projectedRecord.prefixLength,
+        networkBytes: networkBytes,
+        category: category,
+        prefix: prefix,
+        name: projectedRecord.name,
+        source: AddressRegistrySourceExpectation(
+          identifier: source?.id ?? overlay?.id ?? "",
+          updated: source?.revision ?? overlay?.revision ?? "",
+          publicURL: source?.sourceURL ?? overlay?.sourceURL ?? ""
+        )
+      )
+    }
+  }
+
+  func expectedMatch(
+    for bytes: [UInt8],
+    family: AddressRegistryIPFamily
+  ) -> Record? {
+    let matching = records.filter {
+      $0.family == family
+        && addressRegistryCampaignPrefixContains(
+          address: bytes,
+          network: $0.networkBytes,
+          prefixLength: $0.prefixLength
+        )
+    }
+    for layer in 0...2 {
+      if let selected = matching.filter({ $0.layer == layer }).max(by: {
+        $0.prefixLength < $1.prefixLength
+      }) {
+        return selected
+      }
+    }
+    return nil
+  }
+}
+
+private struct AddressRegistryCampaignGenerator {
+  private var state: UInt64
+
+  init(seed: UInt64) {
+    state = seed
+  }
+
+  mutating func next() -> UInt64 {
+    state &+= 0x9E37_79B9_7F4A_7C15
+    var value = state
+    value = (value ^ (value >> 30)) &* 0xBF58_476D_1CE4_E5B9
+    value = (value ^ (value >> 27)) &* 0x94D0_49BB_1331_11EB
+    return value ^ (value >> 31)
+  }
 }
 
 private enum AddressRegistryClassifierTestError: Error {
@@ -742,6 +967,8 @@ private let addressRegistryBundledExpectation = AddressRegistryProjectionExpecta
   sha256: AddressRegistryClassifier.projectionSHA256
 )
 
+private let addressRegistryCampaignPublicSeed: UInt64 = 0x4144_4452_5F46_555A
+
 private let addressRegistryRepositoryRoot = URL(fileURLWithPath: #filePath)
   .deletingLastPathComponent()
   .deletingLastPathComponent()
@@ -785,6 +1012,255 @@ private func addressRegistryProjectionData() throws -> Data {
       "Sources/HezoLinkCore/Resources/AddressRegistry/iana-address-profile-v1.json"
     )
   )
+}
+
+private func addressRegistryCampaignDuration() -> Duration? {
+  let rawSeconds =
+    ProcessInfo.processInfo.environment["HEZOLINK_ADDRESS_FUZZ_SECONDS"] ?? "0.2"
+  return addressRegistryCampaignDuration(rawSeconds: rawSeconds)
+}
+
+private func addressRegistryCampaignDuration(rawSeconds: String) -> Duration? {
+  guard let seconds = Double(rawSeconds), seconds.isFinite, (0.01...600).contains(seconds)
+  else {
+    return nil
+  }
+  return .milliseconds(Int64((seconds * 1_000).rounded(.up)))
+}
+
+private func addressRegistryCampaignBytes(
+  family: AddressRegistryIPFamily,
+  using generator: inout AddressRegistryCampaignGenerator
+) -> [UInt8] {
+  let byteCount = family == .ipv4 ? 4 : 16
+  var result: [UInt8] = []
+  result.reserveCapacity(byteCount)
+  while result.count < byteCount {
+    var value = generator.next()
+    for _ in 0..<8 where result.count < byteCount {
+      result.append(UInt8(truncatingIfNeeded: value))
+      value >>= 8
+    }
+  }
+
+  if family == .ipv6,
+    result[0..<10].allSatisfy({ $0 == 0 }),
+    result[10] == 0xFF,
+    result[11] == 0xFF
+  {
+    result[0] = 1
+  }
+  return result
+}
+
+private func addressRegistryCampaignFamily(_ value: String) -> AddressRegistryIPFamily? {
+  switch value {
+  case "ipv4":
+    .ipv4
+  case "ipv6":
+    .ipv6
+  default:
+    nil
+  }
+}
+
+private func addressRegistryCampaignAddressSpaceCategory(
+  _ record: AddressRegistryCampaignProjection.Record
+) throws -> AddressRegistryCategory {
+  switch record.family {
+  case "ipv4":
+    switch record.status {
+    case "ALLOCATED", "LEGACY":
+      return .allocatedOrLegacyIPv4
+    case "RESERVED":
+      return .reserved
+    default:
+      throw AddressRegistryClassifierTestError.invalidProjection
+    }
+  case "ipv6":
+    switch record.name {
+    case "Global Unicast":
+      return .globalUnicastIPv6
+    case "Multicast":
+      return .multicast
+    case "Reserved by IETF", "Unique Local Unicast", "Link-Scoped Unicast":
+      return .reserved
+    default:
+      throw AddressRegistryClassifierTestError.invalidProjection
+    }
+  default:
+    throw AddressRegistryClassifierTestError.invalidProjection
+  }
+}
+
+private func addressRegistryCampaignHexBytes(_ value: String) -> [UInt8]? {
+  let encoded = Array(value.utf8)
+  guard encoded.isEmpty == false, encoded.count.isMultiple(of: 2) else { return nil }
+  var result: [UInt8] = []
+  result.reserveCapacity(encoded.count / 2)
+  for index in stride(from: 0, to: encoded.count, by: 2) {
+    guard let high = addressRegistryCampaignHexNibble(encoded[index]),
+      let low = addressRegistryCampaignHexNibble(encoded[index + 1])
+    else {
+      return nil
+    }
+    result.append((high << 4) | low)
+  }
+  return result
+}
+
+private func addressRegistryCampaignHexNibble(_ value: UInt8) -> UInt8? {
+  switch value {
+  case 0x30...0x39:
+    value - 0x30
+  case 0x61...0x66:
+    value - 0x61 + 10
+  default:
+    nil
+  }
+}
+
+private func addressRegistryCampaignRenderPrefix(
+  family: AddressRegistryIPFamily,
+  networkBytes: [UInt8],
+  prefixLength: Int
+) -> String? {
+  let address: String
+  switch family {
+  case .ipv4:
+    guard networkBytes.count == 4, (0...32).contains(prefixLength) else { return nil }
+    address = networkBytes.map(String.init).joined(separator: ".")
+  case .ipv6:
+    guard networkBytes.count == 16, (0...128).contains(prefixLength) else { return nil }
+    address = addressRegistryCampaignRenderIPv6(networkBytes)
+  }
+  return "\(address)/\(prefixLength)"
+}
+
+private func addressRegistryCampaignRenderIPv6(_ bytes: [UInt8]) -> String {
+  let words = stride(from: 0, to: bytes.count, by: 2).map { index in
+    (UInt16(bytes[index]) << 8) | UInt16(bytes[index + 1])
+  }
+  var longestZeroRunStart: Int?
+  var longestZeroRunLength = 0
+  var index = 0
+  while index < words.count {
+    guard words[index] == 0 else {
+      index += 1
+      continue
+    }
+    let runStart = index
+    while index < words.count, words[index] == 0 {
+      index += 1
+    }
+    let runLength = index - runStart
+    if runLength >= 2, runLength > longestZeroRunLength {
+      longestZeroRunStart = runStart
+      longestZeroRunLength = runLength
+    }
+  }
+
+  guard let longestZeroRunStart else {
+    return words.map { String($0, radix: 16) }.joined(separator: ":")
+  }
+  let prefix = words[..<longestZeroRunStart]
+    .map { String($0, radix: 16) }
+    .joined(separator: ":")
+  let suffixStart = longestZeroRunStart + longestZeroRunLength
+  let suffix = words[suffixStart...]
+    .map { String($0, radix: 16) }
+    .joined(separator: ":")
+  if prefix.isEmpty, suffix.isEmpty { return "::" }
+  if prefix.isEmpty { return "::\(suffix)" }
+  if suffix.isEmpty { return "\(prefix)::" }
+  return "\(prefix)::\(suffix)"
+}
+
+private func addressRegistryCampaignPrefixContains(
+  address: [UInt8],
+  network: [UInt8],
+  prefixLength: Int
+) -> Bool {
+  guard address.count == network.count, (0...(network.count * 8)).contains(prefixLength) else {
+    return false
+  }
+  let wholeBytes = prefixLength / 8
+  if wholeBytes > 0, address[..<wholeBytes] != network[..<wholeBytes] { return false }
+  let remainingBits = prefixLength % 8
+  guard remainingBits > 0 else { return true }
+  let mask = UInt8.max << UInt8(8 - remainingBits)
+  return address[wholeBytes] & mask == network[wholeBytes] & mask
+}
+
+private func addressRegistryCampaignMatch(
+  _ actual: AddressRegistryMatch?,
+  equals expected: AddressRegistryCampaignOracle.Record?
+) -> Bool {
+  switch (actual, expected) {
+  case (nil, nil):
+    return true
+  case (.some(let actual), .some(let expected)):
+    return actual.prefix == expected.prefix
+      && actual.name == expected.name
+      && actual.source.identifier == expected.source.identifier
+      && actual.source.updated == expected.source.updated
+      && actual.source.publicURL == expected.source.publicURL
+  default:
+    return false
+  }
+}
+
+private func addressRegistryCampaignDiagnosticsAreContentFree(
+  classifier: AddressRegistryClassifier,
+  host: ValidatedURLHost,
+  classification: AddressRegistryClassification,
+  result: AddressRegistryIPClassification
+) -> Bool {
+  guard
+    addressRegistryCampaignHasExactRendering(
+      classifier,
+      expected: "Pinned offline address-registry classifier."
+    ),
+    addressRegistryCampaignHasExactRendering(
+      host,
+      expected: LogSafeURLRedactor.replacement
+    ),
+    addressRegistryCampaignHasExactRendering(
+      classification,
+      expected: "An IP literal has a pinned address classification."
+    ),
+    addressRegistryCampaignHasExactRendering(
+      result,
+      expected: "Pinned IP address classification."
+    ),
+    addressRegistryCampaignHasExactRendering(
+      result.family,
+      expected: result.family.description
+    ),
+    addressRegistryCampaignHasExactRendering(
+      result.category,
+      expected: result.category.description
+    )
+  else {
+    return false
+  }
+
+  guard let match = result.match else { return true }
+  return addressRegistryCampaignHasExactRendering(
+    match,
+    expected: "Pinned address-registry match."
+  )
+    && addressRegistryCampaignHasExactRendering(
+      match.source,
+      expected: "Pinned address-registry source."
+    )
+}
+
+private func addressRegistryCampaignHasExactRendering<T>(
+  _ value: T,
+  expected: String
+) -> Bool {
+  addressRegistryRenderings(value) == Array(repeating: expected, count: 3)
 }
 
 private func mutatedAddressRegistryProjection(
