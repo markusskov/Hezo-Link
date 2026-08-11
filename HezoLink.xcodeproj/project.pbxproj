@@ -20,6 +20,8 @@
 		20000000000000000000000C /* URLPolicyOracleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000D /* URLPolicyOracleTests.swift */; };
 		20000000000000000000000D /* URLPolicyPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000E /* URLPolicyPropertyTests.swift */; };
 		20000000000000000000000E /* CheckRequestV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000F /* CheckRequestV1Tests.swift */; };
+		20000000000000000000000F /* RegistrableDomainClassifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000010 /* RegistrableDomainClassifierTests.swift */; };
+		200000000000000000000010 /* PublicSuffixListAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000011 /* PublicSuffixListAssetTests.swift */; };
 		200000000000000000000008 /* URLPolicyTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000009 /* URLPolicyTestSupport.swift */; };
 		417DC138A5E9FC9F40F7F17B /* HezoLinkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B389ED6C05395E0C9A16C35 /* HezoLinkApp.swift */; };
 		F9294C4A276C665F6741DAC5 /* AppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5943CF0C9718C73A59EA62C0 /* AppShellView.swift */; };
@@ -35,6 +37,11 @@
 		81000000000000000000000A /* SubmittedURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80000000000000000000000A /* SubmittedURL.swift */; };
 		81000000000000000000000B /* ValidatedManualURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80000000000000000000000B /* ValidatedManualURL.swift */; };
 		81000000000000000000000C /* CheckRequestV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80000000000000000000000C /* CheckRequestV1.swift */; };
+		81000000000000000000000D /* RegistrableDomainClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80000000000000000000000D /* RegistrableDomainClassifier.swift */; };
+		8A0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat in Resources */ = {isa = PBXBuildFile; fileRef = 8B0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat */; };
+		8A0000000000000000000002 /* LICENSE-MPL-2.0.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8B0000000000000000000002 /* LICENSE-MPL-2.0.txt */; };
+		8A0000000000000000000003 /* hezolink-public-suffix-list-e1b8015c.dat in Resources */ = {isa = PBXBuildFile; fileRef = 8B0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat */; };
+		8A0000000000000000000004 /* LICENSE-MPL-2.0.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8B0000000000000000000002 /* LICENSE-MPL-2.0.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +59,8 @@
 		10000000000000000000000D /* URLPolicyOracleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyOracleTests.swift; sourceTree = "<group>"; };
 		10000000000000000000000E /* URLPolicyPropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyPropertyTests.swift; sourceTree = "<group>"; };
 		10000000000000000000000F /* CheckRequestV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRequestV1Tests.swift; sourceTree = "<group>"; };
+		100000000000000000000010 /* RegistrableDomainClassifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrableDomainClassifierTests.swift; sourceTree = "<group>"; };
+		100000000000000000000011 /* PublicSuffixListAssetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicSuffixListAssetTests.swift; sourceTree = "<group>"; };
 		100000000000000000000009 /* URLPolicyTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyTestSupport.swift; sourceTree = "<group>"; };
 		1A0D1E94FB5AE0F2DD5359B0 /* HezoLink.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = HezoLink.xcconfig; sourceTree = "<group>"; };
 		1A0D1E94FB5AE0F2DD5359B1 /* Signing.local.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.example.xcconfig; sourceTree = "<group>"; };
@@ -70,6 +79,9 @@
 		80000000000000000000000A /* SubmittedURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmittedURL.swift; sourceTree = "<group>"; };
 		80000000000000000000000B /* ValidatedManualURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidatedManualURL.swift; sourceTree = "<group>"; };
 		80000000000000000000000C /* CheckRequestV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRequestV1.swift; sourceTree = "<group>"; };
+		80000000000000000000000D /* RegistrableDomainClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrableDomainClassifier.swift; sourceTree = "<group>"; };
+		8B0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat */ = {isa = PBXFileReference; lastKnownFileType = text; path = "hezolink-public-suffix-list-e1b8015c.dat"; sourceTree = "<group>"; };
+		8B0000000000000000000002 /* LICENSE-MPL-2.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "LICENSE-MPL-2.0.txt"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,6 +146,8 @@
 				100000000000000000000006 /* ManualURLInputProblemTests.swift */,
 				100000000000000000000007 /* ManualURLInputValidatorTests.swift */,
 				100000000000000000000002 /* ProblemTests.swift */,
+				100000000000000000000011 /* PublicSuffixListAssetTests.swift */,
+				100000000000000000000010 /* RegistrableDomainClassifierTests.swift */,
 				100000000000000000000008 /* SubmittedURLTests.swift */,
 				10000000000000000000000B /* URLPolicyOracleManifestTests.swift */,
 				10000000000000000000000C /* URLPolicyOracleTestSupport.swift */,
@@ -171,11 +185,30 @@
 				800000000000000000000008 /* ManualURLInputProblem.swift */,
 				800000000000000000000009 /* ManualURLInputValidator.swift */,
 				800000000000000000000003 /* Problem.swift */,
+				80000000000000000000000D /* RegistrableDomainClassifier.swift */,
+				830000000000000000000003 /* Resources */,
 				80000000000000000000000A /* SubmittedURL.swift */,
 				80000000000000000000000B /* ValidatedManualURL.swift */,
 				800000000000000000000004 /* Verdict.swift */,
 			);
 			path = HezoLinkCore;
+			sourceTree = "<group>";
+		};
+		830000000000000000000003 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				830000000000000000000004 /* PublicSuffix */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		830000000000000000000004 /* PublicSuffix */ = {
+			isa = PBXGroup;
+			children = (
+				8B0000000000000000000002 /* LICENSE-MPL-2.0.txt */,
+				8B0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat */,
+			);
+			path = PublicSuffix;
 			sourceTree = "<group>";
 		};
 		7BF7FB280EC2F6D2BF67A176 /* HezoLink */ = {
@@ -227,6 +260,7 @@
 			buildPhases = (
 				300000000000000000000002 /* Sources */,
 				300000000000000000000001 /* Frameworks */,
+				8C0000000000000000000002 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -244,6 +278,7 @@
 			buildPhases = (
 				BF359010B0B659D775D2813A /* Sources */,
 				E80DED6F4E23CE6AABF206C6 /* Frameworks */,
+				8C0000000000000000000001 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -311,6 +346,27 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		8C0000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A0000000000000000000002 /* LICENSE-MPL-2.0.txt in Resources */,
+				8A0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8C0000000000000000000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A0000000000000000000004 /* LICENSE-MPL-2.0.txt in Resources */,
+				8A0000000000000000000003 /* hezolink-public-suffix-list-e1b8015c.dat in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		300000000000000000000002 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -323,6 +379,8 @@
 				200000000000000000000005 /* ManualURLInputProblemTests.swift in Sources */,
 				200000000000000000000006 /* ManualURLInputValidatorTests.swift in Sources */,
 				200000000000000000000002 /* ProblemTests.swift in Sources */,
+				200000000000000000000010 /* PublicSuffixListAssetTests.swift in Sources */,
+				20000000000000000000000F /* RegistrableDomainClassifierTests.swift in Sources */,
 				200000000000000000000007 /* SubmittedURLTests.swift in Sources */,
 				20000000000000000000000A /* URLPolicyOracleManifestTests.swift in Sources */,
 				20000000000000000000000B /* URLPolicyOracleTestSupport.swift in Sources */,
@@ -344,6 +402,7 @@
 				810000000000000000000008 /* ManualURLInputProblem.swift in Sources */,
 				810000000000000000000009 /* ManualURLInputValidator.swift in Sources */,
 				810000000000000000000003 /* Problem.swift in Sources */,
+				81000000000000000000000D /* RegistrableDomainClassifier.swift in Sources */,
 				81000000000000000000000A /* SubmittedURL.swift in Sources */,
 				81000000000000000000000B /* ValidatedManualURL.swift in Sources */,
 				810000000000000000000004 /* Verdict.swift in Sources */,

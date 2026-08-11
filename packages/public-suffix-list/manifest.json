@@ -1,0 +1,327 @@
+{
+  "$schema": "./manifest.schema.json",
+  "schemaVersion": 1,
+  "manifestId": "hezo-public-suffix-list-e1b8015c-v1",
+  "purpose": "offline-public-suffix-and-registrable-domain-boundary-classification-only",
+  "dependencyReview": {
+    "dependencyKind": "vendored-public-data",
+    "runtimeCodeDependencyAdded": false,
+    "runtimeResourceAccess": "read-only-bundled-snapshot",
+    "networkAccessPermitted": false,
+    "dnsAccessPermitted": false,
+    "externalDataAccessPermitted": false,
+    "persistentDataAccessPermitted": false,
+    "providerAccessPermitted": false,
+    "telemetryAccessPermitted": false,
+    "capturedOrUserDataAccessPermitted": false,
+    "runtimeLicenseSpdx": "MPL-2.0",
+    "updatePolicy": "reviewed-manual-only",
+    "failureBehavior": "fail-closed-classifier-unavailable",
+    "removalPolicy": "reviewed-manual-coordinated-removal-only"
+  },
+  "sourceSnapshot": {
+    "publisher": "Public Suffix List project",
+    "projectURL": "https://publicsuffix.org/",
+    "officialDistributionURL": "https://publicsuffix.org/list/public_suffix_list.dat",
+    "repositoryURL": "https://github.com/publicsuffix/list",
+    "revisionType": "git-commit",
+    "revision": "e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20",
+    "shortRevision": "e1b8015c",
+    "version": "2026-07-25_14-20-03_UTC",
+    "versionMarker": "// VERSION: 2026-07-25_14-20-03_UTC",
+    "commitMarker": "// COMMIT: e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20",
+    "provenanceBasis": "official-publicsuffix-org-distribution-response-with-embedded-version-and-commit"
+  },
+  "validationRequirements": {
+    "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+    "strictSchemaModeRequired": true,
+    "digestVerificationRequired": true,
+    "byteCountVerificationRequired": true,
+    "countVerificationRequired": true,
+    "utf8Required": true,
+    "lfLineEndingsRequired": true,
+    "finalNewlineRequired": true,
+    "repositoryRelativePathVerificationRequired": true,
+    "wrapperMarkerVerificationRequired": true,
+    "sectionBoundaryVerificationRequired": true,
+    "unmanifestedArtifactUsePermitted": false,
+    "companionSemanticValidationRequired": true,
+    "companionSemanticChecks": [
+      "repository-path-confinement-and-inventory",
+      "sha256-byte-and-physical-line-counts",
+      "utf8-lf-only-and-final-newline",
+      "exact-version-and-commit-markers",
+      "single-ordered-icann-and-private-section-boundaries",
+      "declared-vs-projected-exact-wildcard-exception-counts",
+      "declared-vs-projected-unicode-containing-line-counts",
+      "upstream-test-corpus-counts",
+      "provenance-license-and-transformation-coherence"
+    ]
+  },
+  "artifacts": {
+    "manifest": {
+      "role": "manifest",
+      "repositoryPath": "packages/public-suffix-list/manifest.json",
+      "selfDigestRecorded": false,
+      "selfDigestPolicy": "record-exact-manifest-digest-in-commit-or-review-evidence"
+    },
+    "runtimeList": {
+      "role": "runtime-public-suffix-list",
+      "file": {
+        "repositoryPath": "Sources/HezoLinkCore/Resources/PublicSuffix/hezolink-public-suffix-list-e1b8015c.dat",
+        "mediaType": "text/plain",
+        "encoding": "UTF-8",
+        "byteCount": 332855,
+        "sha256": "084a5674d77c1d14900b16da5fc8afee9765af2f00a638552a8c7aa18f44ae81",
+        "lineEnding": "LF",
+        "physicalLineCount": 16409,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Public Suffix List project",
+        "sourceURL": "https://publicsuffix.org/list/public_suffix_list.dat",
+        "immutableRevisionURL": "https://github.com/publicsuffix/list/tree/e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20",
+        "revision": "e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20",
+        "version": "2026-07-25_14-20-03_UTC",
+        "sourceForm": "official-distribution-response-with-embedded-wrapper-markers"
+      },
+      "license": {
+        "spdxIdentifier": "MPL-2.0",
+        "licenseRepositoryPath": "Sources/HezoLinkCore/Resources/PublicSuffix/LICENSE-MPL-2.0.txt",
+        "licenseSourceURL": "https://raw.githubusercontent.com/publicsuffix/list/e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20/LICENSE"
+      },
+      "transformations": [
+        {
+          "operation": "byte-for-byte-copy",
+          "contentChanged": false,
+          "description": "Copied from the staged official publicsuffix.org distribution response without changing a content byte."
+        },
+        {
+          "operation": "repository-path-rename-only",
+          "contentChanged": false,
+          "description": "Stored under a revision-bearing runtime resource filename; contents are unchanged."
+        }
+      ]
+    },
+    "runtimeLicense": {
+      "role": "runtime-list-license-text",
+      "file": {
+        "repositoryPath": "Sources/HezoLinkCore/Resources/PublicSuffix/LICENSE-MPL-2.0.txt",
+        "mediaType": "text/plain",
+        "encoding": "UTF-8",
+        "byteCount": 16727,
+        "sha256": "66a3107d5ad6a058aab753eaac2047ccb2ed0e39465dd0fe5844da3e300d5172",
+        "lineEnding": "LF",
+        "physicalLineCount": 373,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Public Suffix List project",
+        "sourceURL": "https://raw.githubusercontent.com/publicsuffix/list/e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20/LICENSE",
+        "revision": "e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20"
+      },
+      "license": {
+        "spdxIdentifier": "MPL-2.0",
+        "artifactIsLicenseText": true
+      },
+      "transformations": [
+        {
+          "operation": "byte-for-byte-copy",
+          "contentChanged": false,
+          "description": "Copied from the staged commit-pinned repository license without changing a content byte."
+        },
+        {
+          "operation": "repository-path-rename-only",
+          "contentChanged": false,
+          "description": "Renamed LICENSE to identify MPL-2.0 beside the runtime resource; contents are unchanged."
+        }
+      ]
+    },
+    "upstreamTestCorpus": {
+      "role": "upstream-public-suffix-test-corpus",
+      "file": {
+        "repositoryPath": "packages/public-suffix-list/upstream/test_psl-e1b8015c.txt",
+        "mediaType": "text/plain",
+        "encoding": "UTF-8",
+        "byteCount": 4308,
+        "sha256": "8f50ad958916d6a8f79fba2363501475571acce752757f9126fe9d2f17dd920d",
+        "lineEnding": "LF",
+        "physicalLineCount": 98,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Public Suffix List project",
+        "sourceURL": "https://raw.githubusercontent.com/publicsuffix/list/e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20/tests/test_psl.txt",
+        "revision": "e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20"
+      },
+      "license": {
+        "spdxIdentifier": "CC0-1.0",
+        "licenseNoticeLocation": "embedded-first-two-comment-lines",
+        "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "counts": {
+        "blankLineCount": 1,
+        "commentLineCount": 19,
+        "testCallLineCount": 78,
+        "nullExpectedResultCount": 26,
+        "registrableDomainExpectedResultCount": 52,
+        "unicodeContainingTestCallLineCount": 9
+      },
+      "transformations": [
+        {
+          "operation": "byte-for-byte-copy",
+          "contentChanged": false,
+          "description": "Copied from the staged commit-pinned official test corpus without changing a content byte."
+        },
+        {
+          "operation": "repository-path-rename-only",
+          "contentChanged": false,
+          "description": "Stored under a revision-bearing repository filename; contents are unchanged."
+        }
+      ]
+    },
+    "manifestSchema": {
+      "role": "manifest-schema",
+      "file": {
+        "repositoryPath": "packages/public-suffix-list/manifest.schema.json",
+        "mediaType": "application/schema+json",
+        "encoding": "UTF-8",
+        "byteCount": 17093,
+        "sha256": "567cab5ed3900c581daa21b3ab334cb4bf3e1a6bea11b4348b852500214b3d5a",
+        "lineEnding": "LF",
+        "physicalLineCount": 456,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Hezo Link project",
+        "sourceType": "project-authored"
+      },
+      "license": {
+        "status": "project-license-not-yet-selected"
+      },
+      "transformations": [
+        {
+          "operation": "project-authored",
+          "contentChanged": true,
+          "description": "Authored as the strict Draft 2020-12 contract for this manifest."
+        }
+      ]
+    },
+    "packageDocumentation": {
+      "role": "package-documentation",
+      "file": {
+        "repositoryPath": "packages/public-suffix-list/README.md",
+        "mediaType": "text/markdown",
+        "encoding": "UTF-8",
+        "byteCount": 7812,
+        "sha256": "e286a00db13705d6f5151c5b030465c0ebf170276c6baa9757aa01950d3d079f",
+        "lineEnding": "LF",
+        "physicalLineCount": 55,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Hezo Link project",
+        "sourceType": "project-authored"
+      },
+      "license": {
+        "status": "project-license-not-yet-selected"
+      },
+      "transformations": [
+        {
+          "operation": "project-authored",
+          "contentChanged": true,
+          "description": "Authored as the dependency, source, use, update, failure, and removal review record."
+        }
+      ]
+    }
+  },
+  "listCounts": {
+    "blankLineCount": 2063,
+    "commentLineCount": 4107,
+    "ruleLineCount": 10239,
+    "unicodeContainingPhysicalLineCount": 517,
+    "unicodeContainingRuleLineCount": 459,
+    "unicodeContainingCommentLineCount": 58,
+    "icann": {
+      "exactRuleCount": 6925,
+      "wildcardRuleCount": 16,
+      "exceptionRuleCount": 8,
+      "totalRuleCount": 6949
+    },
+    "private": {
+      "exactRuleCount": 3025,
+      "wildcardRuleCount": 265,
+      "exceptionRuleCount": 0,
+      "totalRuleCount": 3290
+    },
+    "total": {
+      "exactRuleCount": 9950,
+      "wildcardRuleCount": 281,
+      "exceptionRuleCount": 8,
+      "totalRuleCount": 10239
+    }
+  },
+  "contentRetention": {
+    "runtimeSnapshotMode": "verbatim-byte-for-byte",
+    "upstreamTestCorpusMode": "verbatim-byte-for-byte",
+    "retainUpstreamCommentsVerbatim": true,
+    "retainPublicNamesVerbatim": true,
+    "retainPublicEmailAddressesVerbatim": true,
+    "redactionPermitted": false,
+    "unicodeNormalizationPermitted": false,
+    "newlineConversionPermitted": false,
+    "rationale": "preserve-the-reviewed-public-upstream-artifact-provenance-and-integrity"
+  },
+  "usePolicy": {
+    "classificationOnly": true,
+    "allowedUse": "public-suffix-and-registrable-domain-boundary-classification",
+    "officialWarningURL": "https://publicsuffix.org/learn/",
+    "staticSnapshotWarning": "must-not-be-used-as-a-domain-validity-or-dns-existence-authority",
+    "domainValidityClaimPermitted": false,
+    "dnsExistenceClaimPermitted": false,
+    "reachabilityClaimPermitted": false,
+    "destinationSafetyClaimPermitted": false,
+    "domainOwnershipClaimPermitted": false,
+    "affiliationClaimPermitted": false,
+    "authorizationClaimPermitted": false,
+    "enforcementClaimPermitted": false,
+    "verdictClaimPermitted": false,
+    "userInterfaceClaimPermitted": false,
+    "networkResolutionOrNavigationPermitted": false,
+    "operationalHostDataIncluded": false
+  },
+  "updatePolicy": {
+    "mode": "reviewed-manual-only",
+    "automaticUpdatePermitted": false,
+    "scheduledUpdatePermitted": false,
+    "buildTimeFetchPermitted": false,
+    "runtimeFetchPermitted": false,
+    "mutableFallbackPermitted": false,
+    "independentReviewRequired": true,
+    "requiredSteps": [
+      "obtain-candidate-only-from-official-publicsuffix-org-list-url",
+      "pin-and-verify-embedded-full-commit-and-version",
+      "obtain-test-corpus-and-license-at-the-same-immutable-commit",
+      "review-source-diff-semantics-public-notices-and-license",
+      "copy-bytes-without-content-redaction-normalization-or-reformatting",
+      "verify-utf8-lf-final-newline-digests-bytes-markers-and-all-counts",
+      "replace-runtime-list-license-test-corpus-manifest-schema-docs-and-tests-together",
+      "run-strict-schema-companion-integrity-and-offline-tests",
+      "inspect-complete-diff-and-obtain-independent-review"
+    ]
+  },
+  "removalPolicy": {
+    "mode": "reviewed-manual-coordinated-removal-only",
+    "silentRemovalPermitted": false,
+    "implicitFallbackPermitted": false,
+    "independentReviewRequired": true,
+    "requiredSteps": [
+      "identify-remove-or-migrate-every-classifier-consumer",
+      "update-tests-package-and-xcode-resource-declarations-manifests-notices-and-documentation",
+      "preserve-license-obligations-for-distributed-copies",
+      "document-replacement-classification-and-failure-behavior",
+      "remove-covered-resource-and-license-binding-coherently",
+      "verify-no-implicit-platform-network-or-stale-copy-fallback-remains"
+    ]
+  }
+}
