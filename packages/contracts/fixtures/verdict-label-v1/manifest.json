@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "contract": "verdict-label-v1",
+  "contract_schema": "../../schemas/verdict-label-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-unknown",
+      "path": "valid/unknown.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-no-known-danger",
+      "path": "valid/no-known-danger.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-caution",
+      "path": "valid/caution.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-dangerous",
+      "path": "valid/dangerous.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-alias-safe",
+      "path": "invalid/alias-safe.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-alias-likely-safe",
+      "path": "invalid/alias-likely-safe.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-alias-allow",
+      "path": "invalid/alias-allow.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-alias-warn",
+      "path": "invalid/alias-warn.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-alias-block",
+      "path": "invalid/alias-block.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-alias-malicious",
+      "path": "invalid/alias-malicious.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-alias-suspicious",
+      "path": "invalid/alias-suspicious.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-wrong-type",
+      "path": "invalid/wrong-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "enum"
+      ]
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "enum"
+      ]
+    },
+    {
+      "id": "reject-empty",
+      "path": "invalid/empty.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-uppercase",
+      "path": "invalid/uppercase.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-unrecognized",
+      "path": "invalid/unrecognized.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    }
+  ]
+}

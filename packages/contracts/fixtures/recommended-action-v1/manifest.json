@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "contract": "recommended-action-v1",
+  "contract_schema": "../../schemas/recommended-action-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-allow",
+      "path": "valid/allow.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-warn",
+      "path": "valid/warn.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-avoid",
+      "path": "valid/avoid.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-retry",
+      "path": "valid/retry.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-alias-proceed",
+      "path": "invalid/alias-proceed.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-alias-block",
+      "path": "invalid/alias-block.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-cross-vocabulary-unknown",
+      "path": "invalid/cross-vocabulary-unknown.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-wrong-type",
+      "path": "invalid/wrong-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "enum"
+      ]
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "enum"
+      ]
+    },
+    {
+      "id": "reject-empty",
+      "path": "invalid/empty.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-uppercase",
+      "path": "invalid/uppercase.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-unrecognized",
+      "path": "invalid/unrecognized.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    }
+  ]
+}

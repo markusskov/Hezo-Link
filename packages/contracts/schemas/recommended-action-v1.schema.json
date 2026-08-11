@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:recommended-action:v1",
+  "title": "Hezo Link recommended action V1",
+  "description": "Exact public recommended-action primitive. This standalone value does not authorize label/action coherence or a complete verdict or check response.",
+  "type": "string",
+  "enum": [
+    "allow",
+    "warn",
+    "avoid",
+    "retry"
+  ]
+}

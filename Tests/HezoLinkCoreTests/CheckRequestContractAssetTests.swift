@@ -26,13 +26,19 @@ struct CheckRequestContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.2.0")
+    #expect(info["version"] as? String == "1.3.0")
     #expect(try requireString(info["description"]).isEmpty == false)
 
     let components = try requireObject(openAPI["components"])
     #expect(Set(components.keys) == ["schemas"])
     let schemas = try requireObject(components["schemas"])
-    #expect(Set(schemas.keys) == ["CheckRequestV1", "ProblemV1", "VerdictReasonV1"])
+    #expect(
+      Set(schemas.keys)
+        == [
+          "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+          "RecommendedActionV1",
+        ]
+    )
     let checkRequest = try requireObject(schemas["CheckRequestV1"])
     #expect(Set(checkRequest.keys) == ["$ref"])
     #expect(checkRequest["$ref"] as? String == "./schemas/check-request-v1.schema.json")
@@ -45,6 +51,17 @@ struct CheckRequestContractAssetTests {
     #expect(Set(verdictReason.keys) == ["$ref"])
     #expect(
       verdictReason["$ref"] as? String == "./schemas/verdict-reason-v1.schema.json"
+    )
+
+    let verdictLabel = try requireObject(schemas["VerdictLabelV1"])
+    #expect(Set(verdictLabel.keys) == ["$ref"])
+    #expect(verdictLabel["$ref"] as? String == "./schemas/verdict-label-v1.schema.json")
+
+    let recommendedAction = try requireObject(schemas["RecommendedActionV1"])
+    #expect(Set(recommendedAction.keys) == ["$ref"])
+    #expect(
+      recommendedAction["$ref"] as? String
+        == "./schemas/recommended-action-v1.schema.json"
     )
 
     let openAPIURL = repositoryRoot.appendingPathComponent(
@@ -76,6 +93,17 @@ struct CheckRequestContractAssetTests {
     ).standardizedFileURL
     #expect(referencedVerdictReasonSchemaURL == verdictReasonSchemaURL)
     #expect(FileManager.default.fileExists(atPath: referencedVerdictReasonSchemaURL.path))
+
+    for path in ["verdict-label-v1.schema.json", "recommended-action-v1.schema.json"] {
+      let referencedPrimitiveSchemaURL = openAPIURL.deletingLastPathComponent()
+        .appendingPathComponent("schemas/\(path)")
+        .standardizedFileURL
+      let primitiveSchemaURL = repositoryRoot.appendingPathComponent(
+        "packages/contracts/schemas/\(path)"
+      ).standardizedFileURL
+      #expect(referencedPrimitiveSchemaURL == primitiveSchemaURL)
+      #expect(FileManager.default.fileExists(atPath: referencedPrimitiveSchemaURL.path))
+    }
 
     #expect(
       Set(schema.keys)
@@ -499,14 +527,20 @@ struct VerdictReasonContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.2.0")
+    #expect(info["version"] as? String == "1.3.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
 
     let components = try requireObject(openAPI["components"])
     let schemas = try requireObject(components["schemas"])
-    #expect(Set(schemas.keys) == ["CheckRequestV1", "ProblemV1", "VerdictReasonV1"])
+    #expect(
+      Set(schemas.keys)
+        == [
+          "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+          "RecommendedActionV1",
+        ]
+    )
     let verdictReason = try requireObject(schemas["VerdictReasonV1"])
     #expect(Set(verdictReason.keys) == ["$ref"])
     #expect(
@@ -759,6 +793,247 @@ struct VerdictReasonContractAssetTests {
   }
 }
 
+struct VerdictPrimitiveContractAssetTests {
+  @Test(arguments: VerdictPrimitiveContract.allCases)
+  func schemaAndOpenAPIKeepEachFrozenPrimitiveSurface(
+    primitive: VerdictPrimitiveContract
+  ) throws {
+    let openAPI = try loadObject("packages/contracts/openapi-components.json")
+    let schema = try loadObject(primitive.schemaPath)
+
+    let info = try requireObject(openAPI["info"])
+    #expect(info["title"] as? String == "Hezo Link public contract components")
+    #expect(info["version"] as? String == "1.3.0")
+    #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
+    #expect(openAPI["servers"] == nil)
+    #expect(openAPI["security"] == nil)
+
+    let components = try requireObject(openAPI["components"])
+    let schemas = try requireObject(components["schemas"])
+    #expect(Set(schemas.keys) == expectedOpenAPIComponentNames)
+    let component = try requireObject(schemas[primitive.componentName])
+    #expect(Set(component.keys) == ["$ref"])
+    #expect(component["$ref"] as? String == primitive.openAPIReference)
+
+    let openAPIURL = repositoryRoot.appendingPathComponent(
+      "packages/contracts/openapi-components.json"
+    )
+    let referencedSchemaURL = openAPIURL.deletingLastPathComponent()
+      .appendingPathComponent(primitive.openAPIReference)
+      .standardizedFileURL
+    let schemaURL = repositoryRoot.appendingPathComponent(primitive.schemaPath)
+      .standardizedFileURL
+    #expect(referencedSchemaURL == schemaURL)
+    #expect(FileManager.default.fileExists(atPath: referencedSchemaURL.path))
+
+    #expect(Set(schema.keys) == ["$schema", "$id", "title", "description", "type", "enum"])
+    #expect(schema["$schema"] as? String == "https://json-schema.org/draft/2020-12/schema")
+    #expect(schema["$id"] as? String == primitive.schemaID)
+    #expect(schema["title"] as? String == primitive.schemaTitle)
+    #expect(schema["description"] as? String == primitive.schemaDescription)
+    #expect(schema["type"] as? String == "string")
+    #expect(try requireStringArray(schema["enum"]) == primitive.wireValues)
+  }
+
+  @Test(arguments: VerdictPrimitiveContract.allCases)
+  func manifestHasCompleteUniquePrimitiveFixtureCoverage(
+    primitive: VerdictPrimitiveContract
+  ) throws {
+    let manifest = try loadObject(primitive.manifestPath)
+    #expect(Set(manifest.keys) == ["schema_version", "contract", "contract_schema", "cases"])
+    #expect(integerValue(manifest["schema_version"]) == 1)
+    #expect(manifest["contract"] as? String == primitive.contractName)
+    #expect(manifest["contract_schema"] as? String == primitive.manifestSchemaReference)
+
+    let cases = try requireObjectArray(manifest["cases"])
+    #expect(cases.count == primitive.expectedFixturePaths.count)
+    let pairs = try cases.map { fixtureCase in
+      (try requireString(fixtureCase["id"]), try requireString(fixtureCase["path"]))
+    }
+    let ids = pairs.map(\.0)
+    let paths = pairs.map(\.1)
+    #expect(Set(ids).count == ids.count)
+    #expect(Set(paths).count == paths.count)
+    #expect(Dictionary(uniqueKeysWithValues: pairs) == primitive.expectedFixturePaths)
+    #expect(Set(primitive.expectedFixturePayloads.keys) == Set(ids))
+    #expect(
+      Set(primitive.expectedFailureKeywords.keys)
+        == Set(ids).subtracting(primitive.validFixtureIDs)
+    )
+
+    let fixtureRoot = repositoryRoot.appendingPathComponent(primitive.fixtureRoot)
+      .standardizedFileURL
+    #expect(try fixturePathsOnDisk(relativeTo: fixtureRoot) == Set(paths))
+
+    let manifestURL = repositoryRoot.appendingPathComponent(primitive.manifestPath)
+    let referencedSchemaURL = manifestURL.deletingLastPathComponent()
+      .appendingPathComponent(primitive.manifestSchemaReference)
+      .standardizedFileURL
+    let schemaURL = repositoryRoot.appendingPathComponent(primitive.schemaPath)
+      .standardizedFileURL
+    #expect(referencedSchemaURL == schemaURL)
+  }
+
+  @Test(arguments: VerdictPrimitiveContract.allCases)
+  func everyPrimitiveFixtureMatchesItsDeclaredExpectation(
+    primitive: VerdictPrimitiveContract
+  ) throws {
+    let manifest = try loadObject(primitive.manifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+    var validCount = 0
+    var invalidCount = 0
+
+    for fixtureCase in cases {
+      let fixtureID = try requireString(fixtureCase["id"])
+      let relativePath = try requireString(fixtureCase["path"])
+      let expectedValid = try requireBool(fixtureCase["expected_schema_valid"])
+      let fixture = try loadJSONValue("\(primitive.fixtureRoot)/\(relativePath)")
+      let payload = try primitiveFixturePayload(from: fixture)
+      let failures = primitiveEnumSchemaFailures(
+        in: payload,
+        allowedValues: Set(primitive.wireValues)
+      )
+
+      #expect(
+        payload == primitive.expectedFixturePayloads[fixtureID],
+        "Primitive fixture payload drifted from its declared purpose: \(fixtureID)"
+      )
+
+      if expectedValid {
+        validCount += 1
+        #expect(Set(fixtureCase.keys) == ["id", "path", "expected_schema_valid"])
+        #expect(primitive.validFixtureIDs.contains(fixtureID))
+        #expect(failures.isEmpty)
+      } else {
+        invalidCount += 1
+        let expectedKeywords: Set<String>
+        if let keyword = fixtureCase["expected_failure_keyword"] {
+          #expect(
+            Set(fixtureCase.keys)
+              == ["id", "path", "expected_schema_valid", "expected_failure_keyword"]
+          )
+          expectedKeywords = [try requireString(keyword)]
+        } else {
+          #expect(
+            Set(fixtureCase.keys)
+              == ["id", "path", "expected_schema_valid", "expected_failure_keywords"]
+          )
+          let keywords = try requireStringArray(fixtureCase["expected_failure_keywords"])
+          #expect(keywords.isEmpty == false)
+          #expect(Set(keywords).count == keywords.count)
+          expectedKeywords = Set(keywords)
+        }
+        #expect(expectedKeywords == primitive.expectedFailureKeywords[fixtureID])
+        #expect(failures == expectedKeywords)
+      }
+    }
+
+    #expect(validCount == primitive.validFixtureIDs.count)
+    #expect(invalidCount == primitive.expectedFailureKeywords.count)
+  }
+
+  @Test(arguments: VerdictPrimitiveContract.allCases)
+  func validPrimitiveFixturesRoundTripThroughTheSwiftReader(
+    primitive: VerdictPrimitiveContract
+  ) throws {
+    let manifest = try loadObject(primitive.manifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+
+    for fixtureCase in cases where try requireBool(fixtureCase["expected_schema_valid"]) {
+      let path = try requireString(fixtureCase["path"])
+      let relativePath = "\(primitive.fixtureRoot)/\(path)"
+      let fixtureData = try loadData(relativePath)
+      let fixtureValue = try requirePrimitiveString(loadJSONValue(relativePath))
+
+      let encodedData: Data
+      switch primitive {
+      case .verdictLabel:
+        let decoded = try HezoJSON.makeResponseDecoder().decode(
+          VerdictLabel.self,
+          from: fixtureData
+        )
+        #expect(decoded.rawValue == fixtureValue)
+        encodedData = try HezoJSON.makeEncoder().encode(decoded)
+      case .recommendedAction:
+        let decoded = try HezoJSON.makeResponseDecoder().decode(
+          RecommendedAction.self,
+          from: fixtureData
+        )
+        #expect(decoded.rawValue == fixtureValue)
+        encodedData = try HezoJSON.makeEncoder().encode(decoded)
+      }
+
+      #expect(try requirePrimitiveString(jsonValue(from: encodedData)) == fixtureValue)
+    }
+  }
+
+  @Test(arguments: VerdictPrimitiveContract.allCases)
+  func invalidPrimitiveFixturesFailWithPrivacySafeErrors(
+    primitive: VerdictPrimitiveContract
+  ) throws {
+    let manifest = try loadObject(primitive.manifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+
+    for fixtureCase in cases where try requireBool(fixtureCase["expected_schema_valid"]) == false {
+      let fixtureID = try requireString(fixtureCase["id"])
+      let path = try requireString(fixtureCase["path"])
+      let relativePath = "\(primitive.fixtureRoot)/\(path)"
+      let data = try loadData(relativePath)
+      let rejectedString = try? requirePrimitiveString(loadJSONValue(relativePath))
+
+      do {
+        try decodeVerdictPrimitive(primitive, from: data)
+        Issue.record("A declared invalid primitive fixture was accepted: \(fixtureID)")
+      } catch let error as DecodingError {
+        if let rejectedString, rejectedString.isEmpty == false {
+          #expect(String(describing: error).contains(rejectedString) == false)
+          #expect(String(reflecting: error).contains(rejectedString) == false)
+        }
+      } catch {
+        Issue.record("Primitive decoding used an unexpected error category: \(fixtureID)")
+      }
+    }
+  }
+
+  @Test(arguments: VerdictPrimitiveContract.allCases)
+  func rejectedPrimitiveCanaryIsNeverReflected(
+    primitive: VerdictPrimitiveContract
+  ) throws {
+    let rejectedCandidate = "PRIVATE_SENTINEL_\(primitive.contractName.uppercased())"
+    let data = try JSONEncoder().encode(rejectedCandidate)
+
+    do {
+      try decodeVerdictPrimitive(primitive, from: data)
+      Issue.record("A privacy-canary primitive value was accepted: \(primitive.contractName)")
+    } catch let error as DecodingError {
+      #expect(String(describing: error).contains(rejectedCandidate) == false)
+      #expect(String(reflecting: error).contains(rejectedCandidate) == false)
+    } catch {
+      Issue.record("Primitive privacy canary used an unexpected error category")
+    }
+  }
+
+  @Test func standalonePrimitiveValidityDoesNotAuthorizeACompleteVerdict() throws {
+    let readmeData = try loadData("packages/contracts/README.md")
+    let readme = try #require(String(data: readmeData, encoding: .utf8))
+    #expect(readme.contains(verdictPrimitiveBoundarySentence))
+
+    for primitive in VerdictPrimitiveContract.allCases {
+      let schema = try loadObject(primitive.schemaPath)
+      #expect(schema["type"] as? String == "string")
+      #expect(schema["properties"] == nil)
+      #expect(schema["required"] == nil)
+      #expect(schema["allOf"] == nil)
+      #expect(schema["anyOf"] == nil)
+      #expect(schema["oneOf"] == nil)
+    }
+
+    let openAPI = try loadObject("packages/contracts/openapi-components.json")
+    #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
+    // Pair coherence and evidence-bearing verdict authorization require a separate frozen envelope.
+  }
+}
+
 private enum ContractAssetTestError: Error {
   case invalidAsset
   case unreadableAsset
@@ -768,6 +1043,204 @@ private let repositoryRoot = URL(fileURLWithPath: #filePath)
   .deletingLastPathComponent()
   .deletingLastPathComponent()
   .deletingLastPathComponent()
+
+private let expectedOpenAPIComponentNames: Set<String> = [
+  "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+  "RecommendedActionV1",
+]
+
+private let verdictPrimitiveBoundarySentence =
+  "These standalone primitives validate individual wire values only. They neither define label/action pair coherence nor authorize a complete verdict or check-response envelope."
+
+enum PrimitiveFixturePayload: Equatable, Sendable {
+  case string(String)
+  case integer(Int64)
+  case null
+}
+
+enum VerdictPrimitiveContract: CaseIterable, Sendable {
+  case verdictLabel
+  case recommendedAction
+
+  var contractName: String {
+    switch self {
+    case .verdictLabel: "verdict-label-v1"
+    case .recommendedAction: "recommended-action-v1"
+    }
+  }
+
+  var componentName: String {
+    switch self {
+    case .verdictLabel: "VerdictLabelV1"
+    case .recommendedAction: "RecommendedActionV1"
+    }
+  }
+
+  var schemaPath: String {
+    "packages/contracts/schemas/\(contractName).schema.json"
+  }
+
+  var openAPIReference: String {
+    "./schemas/\(contractName).schema.json"
+  }
+
+  var schemaID: String {
+    "urn:hezo-link:contract:\(contractName.dropLast(3)):v1"
+  }
+
+  var schemaTitle: String {
+    switch self {
+    case .verdictLabel: "Hezo Link verdict label V1"
+    case .recommendedAction: "Hezo Link recommended action V1"
+    }
+  }
+
+  var schemaDescription: String {
+    switch self {
+    case .verdictLabel:
+      "Exact public verdict-label primitive. This standalone value does not authorize label/action coherence or a complete verdict or check response."
+    case .recommendedAction:
+      "Exact public recommended-action primitive. This standalone value does not authorize label/action coherence or a complete verdict or check response."
+    }
+  }
+
+  var wireValues: [String] {
+    switch self {
+    case .verdictLabel: ["unknown", "no_known_danger", "caution", "dangerous"]
+    case .recommendedAction: ["allow", "warn", "avoid", "retry"]
+    }
+  }
+
+  var fixtureRoot: String {
+    "packages/contracts/fixtures/\(contractName)"
+  }
+
+  var manifestPath: String {
+    "\(fixtureRoot)/manifest.json"
+  }
+
+  var manifestSchemaReference: String {
+    "../../schemas/\(contractName).schema.json"
+  }
+
+  var validFixtureIDs: Set<String> {
+    switch self {
+    case .verdictLabel:
+      ["valid-unknown", "valid-no-known-danger", "valid-caution", "valid-dangerous"]
+    case .recommendedAction:
+      ["valid-allow", "valid-warn", "valid-avoid", "valid-retry"]
+    }
+  }
+
+  var expectedFixturePaths: [String: String] {
+    switch self {
+    case .verdictLabel:
+      [
+        "valid-unknown": "valid/unknown.json",
+        "valid-no-known-danger": "valid/no-known-danger.json",
+        "valid-caution": "valid/caution.json",
+        "valid-dangerous": "valid/dangerous.json",
+        "reject-alias-safe": "invalid/alias-safe.json",
+        "reject-alias-likely-safe": "invalid/alias-likely-safe.json",
+        "reject-alias-allow": "invalid/alias-allow.json",
+        "reject-alias-warn": "invalid/alias-warn.json",
+        "reject-alias-block": "invalid/alias-block.json",
+        "reject-alias-malicious": "invalid/alias-malicious.json",
+        "reject-alias-suspicious": "invalid/alias-suspicious.json",
+        "reject-wrong-type": "invalid/wrong-type.json",
+        "reject-null": "invalid/null.json",
+        "reject-empty": "invalid/empty.json",
+        "reject-uppercase": "invalid/uppercase.json",
+        "reject-unrecognized": "invalid/unrecognized.json",
+      ]
+    case .recommendedAction:
+      [
+        "valid-allow": "valid/allow.json",
+        "valid-warn": "valid/warn.json",
+        "valid-avoid": "valid/avoid.json",
+        "valid-retry": "valid/retry.json",
+        "reject-alias-proceed": "invalid/alias-proceed.json",
+        "reject-alias-block": "invalid/alias-block.json",
+        "reject-cross-vocabulary-unknown": "invalid/cross-vocabulary-unknown.json",
+        "reject-wrong-type": "invalid/wrong-type.json",
+        "reject-null": "invalid/null.json",
+        "reject-empty": "invalid/empty.json",
+        "reject-uppercase": "invalid/uppercase.json",
+        "reject-unrecognized": "invalid/unrecognized.json",
+      ]
+    }
+  }
+
+  var expectedFailureKeywords: [String: Set<String>] {
+    switch self {
+    case .verdictLabel:
+      [
+        "reject-alias-safe": ["enum"],
+        "reject-alias-likely-safe": ["enum"],
+        "reject-alias-allow": ["enum"],
+        "reject-alias-warn": ["enum"],
+        "reject-alias-block": ["enum"],
+        "reject-alias-malicious": ["enum"],
+        "reject-alias-suspicious": ["enum"],
+        "reject-wrong-type": ["type", "enum"],
+        "reject-null": ["type", "enum"],
+        "reject-empty": ["enum"],
+        "reject-uppercase": ["enum"],
+        "reject-unrecognized": ["enum"],
+      ]
+    case .recommendedAction:
+      [
+        "reject-alias-proceed": ["enum"],
+        "reject-alias-block": ["enum"],
+        "reject-cross-vocabulary-unknown": ["enum"],
+        "reject-wrong-type": ["type", "enum"],
+        "reject-null": ["type", "enum"],
+        "reject-empty": ["enum"],
+        "reject-uppercase": ["enum"],
+        "reject-unrecognized": ["enum"],
+      ]
+    }
+  }
+
+  var expectedFixturePayloads: [String: PrimitiveFixturePayload] {
+    switch self {
+    case .verdictLabel:
+      [
+        "valid-unknown": .string("unknown"),
+        "valid-no-known-danger": .string("no_known_danger"),
+        "valid-caution": .string("caution"),
+        "valid-dangerous": .string("dangerous"),
+        "reject-alias-safe": .string("safe"),
+        "reject-alias-likely-safe": .string("likely_safe"),
+        "reject-alias-allow": .string("allow"),
+        "reject-alias-warn": .string("warn"),
+        "reject-alias-block": .string("block"),
+        "reject-alias-malicious": .string("malicious"),
+        "reject-alias-suspicious": .string("suspicious"),
+        "reject-wrong-type": .integer(1),
+        "reject-null": .null,
+        "reject-empty": .string(""),
+        "reject-uppercase": .string("DANGEROUS"),
+        "reject-unrecognized": .string("future_label"),
+      ]
+    case .recommendedAction:
+      [
+        "valid-allow": .string("allow"),
+        "valid-warn": .string("warn"),
+        "valid-avoid": .string("avoid"),
+        "valid-retry": .string("retry"),
+        "reject-alias-proceed": .string("proceed"),
+        "reject-alias-block": .string("block"),
+        "reject-cross-vocabulary-unknown": .string("unknown"),
+        "reject-wrong-type": .integer(1),
+        "reject-null": .null,
+        "reject-empty": .string(""),
+        "reject-uppercase": .string("ALLOW"),
+        "reject-unrecognized": .string("future_action"),
+      ]
+    }
+  }
+}
 
 private let verdictReasonStableValuePattern = "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
 
@@ -1261,6 +1734,64 @@ private func expectedVerdictReasonFixture(
     object.removeValue(forKey: property)
   }
   return object
+}
+
+private func loadJSONValue(_ relativePath: String) throws -> Any {
+  try jsonValue(from: loadData(relativePath))
+}
+
+private func jsonValue(from data: Data) throws -> Any {
+  do {
+    return try JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])
+  } catch {
+    throw ContractAssetTestError.invalidAsset
+  }
+}
+
+private func primitiveFixturePayload(from value: Any) throws -> PrimitiveFixturePayload {
+  if let string = value as? String {
+    return .string(string)
+  }
+  if value is NSNull {
+    return .null
+  }
+  if let integer = integerValue(value) {
+    return .integer(integer)
+  }
+  throw ContractAssetTestError.invalidAsset
+}
+
+private func requirePrimitiveString(_ value: Any) throws -> String {
+  guard let string = value as? String else {
+    throw ContractAssetTestError.invalidAsset
+  }
+  return string
+}
+
+// This independently evaluates only the frozen scalar string-enum vocabulary used by these
+// fixtures; it is not a general JSON Schema implementation.
+private func primitiveEnumSchemaFailures(
+  in payload: PrimitiveFixturePayload,
+  allowedValues: Set<String>
+) -> Set<String> {
+  switch payload {
+  case .string(let value):
+    allowedValues.contains(value) ? [] : ["enum"]
+  case .integer, .null:
+    ["type", "enum"]
+  }
+}
+
+private func decodeVerdictPrimitive(
+  _ primitive: VerdictPrimitiveContract,
+  from data: Data
+) throws {
+  switch primitive {
+  case .verdictLabel:
+    _ = try HezoJSON.makeResponseDecoder().decode(VerdictLabel.self, from: data)
+  case .recommendedAction:
+    _ = try HezoJSON.makeResponseDecoder().decode(RecommendedAction.self, from: data)
+  }
 }
 
 private func loadObject(_ relativePath: String) throws -> [String: Any] {
