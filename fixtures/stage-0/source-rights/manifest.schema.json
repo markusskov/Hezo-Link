@@ -1,0 +1,493 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:stage-0:source-rights:manifest:v1",
+  "title": "Hezo Link S0-F public synthetic provider-policy manifest",
+  "description": "Type-specific manifest for the data-only S0-F public synthetic registry and provider-policy vectors.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "fixture_type",
+    "fixture_id",
+    "artifact",
+    "schemas",
+    "provenance",
+    "determinism",
+    "registry_counts",
+    "case_counts",
+    "safety",
+    "validations",
+    "scope"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "manifest_id": {
+      "const": "s0-f-public-synthetic-provider-policy-vectors-1-manifest"
+    },
+    "fixture_type": {
+      "const": "source_rights_provider_policy_vector_set"
+    },
+    "fixture_id": {
+      "const": "s0-f-public-synthetic-provider-policy-vectors-1"
+    },
+    "artifact": {
+      "$ref": "#/$defs/artifact"
+    },
+    "schemas": {
+      "$ref": "#/$defs/schemas"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "determinism": {
+      "$ref": "#/$defs/determinism"
+    },
+    "registry_counts": {
+      "$ref": "#/$defs/registryCounts"
+    },
+    "case_counts": {
+      "$ref": "#/$defs/caseCounts"
+    },
+    "safety": {
+      "$ref": "#/$defs/safety"
+    },
+    "validations": {
+      "$ref": "#/$defs/validations"
+    },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "media_type",
+        "encoding",
+        "line_endings",
+        "final_newline",
+        "byte_length",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "const": "fixtures/stage-0/source-rights/provider-policy-vectors.json"
+        },
+        "media_type": {
+          "const": "application/json"
+        },
+        "encoding": {
+          "const": "UTF-8"
+        },
+        "line_endings": {
+          "const": "LF"
+        },
+        "final_newline": {
+          "const": true
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "schemaArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "schema_id",
+        "dialect",
+        "strict_mode",
+        "byte_length",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "enum": [
+            "fixtures/stage-0/source-rights/source-rights-registry.schema.json",
+            "fixtures/stage-0/source-rights/provider-policy-vectors.schema.json"
+          ]
+        },
+        "schema_id": {
+          "enum": [
+            "urn:hezo-link:stage-0:source-rights:registry:v1",
+            "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v1"
+          ]
+        },
+        "dialect": {
+          "const": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "strict_mode": {
+          "const": true
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "schemas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registry",
+        "vectors"
+      ],
+      "properties": {
+        "registry": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/schemaArtifact"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "const": "fixtures/stage-0/source-rights/source-rights-registry.schema.json"
+                },
+                "schema_id": {
+                  "const": "urn:hezo-link:stage-0:source-rights:registry:v1"
+                }
+              }
+            }
+          ]
+        },
+        "vectors": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/schemaArtifact"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "const": "fixtures/stage-0/source-rights/provider-policy-vectors.schema.json"
+                },
+                "schema_id": {
+                  "const": "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v1"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "construction_method_id",
+        "construction_method_version",
+        "redistribution_basis",
+        "generated_from_live_or_restricted_data"
+      ],
+      "properties": {
+        "source": {
+          "const": "project_generated_public_synthetic"
+        },
+        "construction_method_id": {
+          "const": "s0-f-fictional-source-rights-policy-matrix"
+        },
+        "construction_method_version": {
+          "const": 1
+        },
+        "redistribution_basis": {
+          "const": "project_authored_public_test_data"
+        },
+        "generated_from_live_or_restricted_data": {
+          "const": false
+        }
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "randomness_used",
+        "network_independent",
+        "clock_independent",
+        "locale_independent",
+        "timezone_independent",
+        "architecture_independent",
+        "machine_state_independent",
+        "historical_reference_time"
+      ],
+      "properties": {
+        "randomness_used": {
+          "const": false
+        },
+        "network_independent": {
+          "const": true
+        },
+        "clock_independent": {
+          "const": true
+        },
+        "locale_independent": {
+          "const": true
+        },
+        "timezone_independent": {
+          "const": true
+        },
+        "architecture_independent": {
+          "const": true
+        },
+        "machine_state_independent": {
+          "const": true
+        },
+        "historical_reference_time": {
+          "const": "2000-02-15T12:00:00Z"
+        }
+      }
+    },
+    "registryCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sources",
+        "terms_decisions",
+        "operational_policies"
+      ],
+      "properties": {
+        "sources": {
+          "const": 5
+        },
+        "terms_decisions": {
+          "const": 5
+        },
+        "operational_policies": {
+          "const": 5
+        }
+      }
+    },
+    "caseCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enablement",
+        "rights",
+        "notices",
+        "freshness",
+        "resource_control",
+        "source_class",
+        "withdrawal",
+        "negative_contract",
+        "decision_total",
+        "all_total"
+      ],
+      "properties": {
+        "enablement": {
+          "const": 8
+        },
+        "rights": {
+          "const": 10
+        },
+        "notices": {
+          "const": 3
+        },
+        "freshness": {
+          "const": 8
+        },
+        "resource_control": {
+          "const": 7
+        },
+        "source_class": {
+          "const": 6
+        },
+        "withdrawal": {
+          "const": 8
+        },
+        "negative_contract": {
+          "const": 10
+        },
+        "decision_total": {
+          "const": 50
+        },
+        "all_total": {
+          "const": 60
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "offline_only",
+        "reserved_identities_only",
+        "historical_instants_only",
+        "fictional_xts_thresholds_only",
+        "contains_provider_response_feed_row_or_indicator",
+        "contains_terms_text_snapshot_or_contract",
+        "contains_endpoint_credential_account_or_private_budget",
+        "contains_real_source_selection_approval_or_proof",
+        "operational_use_forbidden"
+      ],
+      "properties": {
+        "classification": {
+          "const": "public_synthetic"
+        },
+        "offline_only": {
+          "const": true
+        },
+        "reserved_identities_only": {
+          "const": true
+        },
+        "historical_instants_only": {
+          "const": true
+        },
+        "fictional_xts_thresholds_only": {
+          "const": true
+        },
+        "contains_provider_response_feed_row_or_indicator": {
+          "const": false
+        },
+        "contains_terms_text_snapshot_or_contract": {
+          "const": false
+        },
+        "contains_endpoint_credential_account_or_private_budget": {
+          "const": false
+        },
+        "contains_real_source_selection_approval_or_proof": {
+          "const": false
+        },
+        "operational_use_forbidden": {
+          "const": true
+        }
+      }
+    },
+    "validations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_schema_strict_compile",
+        "registry_schema_strict_compile",
+        "vector_schema_strict_compile",
+        "payload_schema_validation",
+        "duplicate_json_keys_rejected",
+        "case_counts_verified",
+        "case_ids_unique",
+        "registry_ids_unique",
+        "references_resolved_and_source_isolated",
+        "temporal_and_half_open_semantics_verified",
+        "rights_notice_scope_and_retention_semantics_verified",
+        "quota_cost_retry_after_and_outage_semantics_verified",
+        "withdrawal_and_idempotence_semantics_verified",
+        "negative_mutations_exercised",
+        "artifact_digest_and_size_verified",
+        "public_safety_review"
+      ],
+      "properties": {
+        "manifest_schema_strict_compile": {
+          "const": true
+        },
+        "registry_schema_strict_compile": {
+          "const": true
+        },
+        "vector_schema_strict_compile": {
+          "const": true
+        },
+        "payload_schema_validation": {
+          "const": true
+        },
+        "duplicate_json_keys_rejected": {
+          "const": true
+        },
+        "case_counts_verified": {
+          "const": true
+        },
+        "case_ids_unique": {
+          "const": true
+        },
+        "registry_ids_unique": {
+          "const": true
+        },
+        "references_resolved_and_source_isolated": {
+          "const": true
+        },
+        "temporal_and_half_open_semantics_verified": {
+          "const": true
+        },
+        "rights_notice_scope_and_retention_semantics_verified": {
+          "const": true
+        },
+        "quota_cost_retry_after_and_outage_semantics_verified": {
+          "const": true
+        },
+        "withdrawal_and_idempotence_semantics_verified": {
+          "const": true
+        },
+        "negative_mutations_exercised": {
+          "const": true
+        },
+        "artifact_digest_and_size_verified": {
+          "const": true
+        },
+        "public_safety_review": {
+          "enum": [
+            "pending_independent_review",
+            "independent_review_complete"
+          ]
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data_only_contract",
+        "runnable_harness_included",
+        "application_or_connector_code_included",
+        "provider_called",
+        "production_dependency_selected",
+        "rights_approval_claimed",
+        "provider_proof_pass_claimed",
+        "s0_f_pass_claimed"
+      ],
+      "properties": {
+        "data_only_contract": {
+          "const": true
+        },
+        "runnable_harness_included": {
+          "const": false
+        },
+        "application_or_connector_code_included": {
+          "const": false
+        },
+        "provider_called": {
+          "const": false
+        },
+        "production_dependency_selected": {
+          "const": false
+        },
+        "rights_approval_claimed": {
+          "const": false
+        },
+        "provider_proof_pass_claimed": {
+          "const": false
+        },
+        "s0_f_pass_claimed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

@@ -36,6 +36,8 @@ This is the sanitized public decision register. It contains architectural decisi
 
 ## Proposed technical decisions
 
+Every entry in this table remains **Proposed** until its named decision point produces an owner-approved record. Listing a proposal here, assessing public terms in document 09, or adding a synthetic fixture does not accept it. P-010 and P-011 are explicitly still Proposed.
+
 | ID | Proposal | Decision point |
 |---|---|---|
 | P-001 | Swift and SwiftUI for the iOS app and extensions. | ADR before Stage 1. |
@@ -47,8 +49,8 @@ This is the sanitized public decision register. It contains architectural decisi
 | P-007 | V1 browser navigation supports HTTP/HTTPS on ports 80 and 443 only. | Threat-model review in Stage 0; surface unsupported port truthfully. |
 | P-008 | Raw URLs have a 24-hour hard maximum and a shorter normal target. | Privacy/legal approval before Stage 2. |
 | P-009 | Raw MPD tokens live for current month plus 45-day correction window. | Privacy approval before Stage 8. |
-| P-010 | Google Web Risk Lookup is the initial commercial exact-source integration. | Cost, terms, and procurement review before Stage 2. |
-| P-011 | CISA dot-gov data seeds official US government relationships. | Source-rights and ingestion review before Stage 3. |
+| P-010 | Google Web Risk Lookup is the candidate initial commercial exact-source integration; no provider is selected yet. | Stage 0 viability, rights, and proof-spend decision; production cost, terms, account, and procurement approval before Stage 2. |
+| P-011 | CISA dot-gov data is candidate official-US-government relationship enrichment only; it cannot satisfy the qualified exact-threat source gate. | Source-rights and ingestion review before Stage 3. |
 | P-012 | Product analytics is omitted unless specific V1 questions justify an event allowlist. | Product/privacy review before Stage 8. |
 
 ## Open decisions
@@ -64,7 +66,7 @@ These are deliberate owner decisions, not invitations for Codex to guess.
 | O-005 | Accountless PIR bearer-token design accepted by Apple/sample implementation. | iOS/security owner | Stage 0 |
 | O-006 | Production sandbox isolation technology and patch SLA ownership. | Security/infrastructure | Stage 0 |
 | O-007 | Exact raw-URL retention, incident-hold authority, and backup deletion windows. | Privacy/legal/security | Stage 2 |
-| O-008 | Commercial source contracts and annual source budget. | Founder/legal | Stage 2 |
+| O-008 | Stage 0: decide qualified exact-threat source viability, rights, and bounded proof spend. Before Stage 2: approve production procurement/contract, provider account, cost controls, and annual source budget. | Founder/legal | Stage 0 exit / before Stage 2 |
 | O-009 | Initial protected-brand registry and evidence needed to call a domain official. | Product/intelligence | Stage 3 |
 | O-010 | Public privacy policy, consent copy, App Store label, and age-rating decisions. | Product/privacy/legal | TestFlight |
 | O-011 | Exact public wording and display location for MPD. | Founder/product/privacy | Stage 8 |
@@ -131,9 +133,11 @@ Mitigation:
 
 - source-rights registry and terms snapshots;
 - default production/redistribution/model-training permissions to false;
-- Google Web Risk rather than noncommercial Safe Browsing;
+- evaluate the proposed commercial exact-threat candidate without treating P-010 or any public-terms label as selection or approval; noncommercial Safe Browsing remains blocked;
 - keep PhishTank, OpenPhish, and URLhaus community connectors off until written rights;
 - recompute derived outputs when a source is disabled.
+
+Real terms archives, contracts, negotiated budgets, provider-account details, credentials, named decisions, and proof evidence remain restricted and human-controlled. Git may contain only public-source assessments, synthetic contracts/vectors, generic roles, sanitized outcomes, and opaque references.
 
 ### R-005 Sandbox escape or SSRF
 
@@ -301,7 +305,7 @@ The documentation handoff is ready when:
 - Codex can identify exactly one first work package;
 - application code has not been prematurely scaffolded.
 
-Implementation itself is not ready to pass Stage 0 until O-001 through O-008, O-014, and O-018 have explicit owners and outcomes. O-017 may remain open during earlier manual-check stages but must be decided before Stage 6 report intake begins.
+Implementation itself is not ready to pass Stage 0 until O-001 through O-007, the Stage 0 viability/rights/proof-spend portion of O-008, O-014, and O-018 have explicit owners and outcomes. The production procurement/account/annual-budget portion of O-008 may remain open through Stage 1 but must be approved before Stage 2. Stage 0 also requires a commercially permitted qualified exact-threat source suitable for the Stage 2 manual-check slice; P-011/CISA enrichment cannot satisfy that requirement. O-017 may remain open during earlier manual-check stages but must be decided before Stage 6 report intake begins.
 
 ## Change policy
 

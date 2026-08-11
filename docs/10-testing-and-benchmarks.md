@@ -185,6 +185,24 @@ OpenAPI 3.1 and generated schemas are the contract source of truth. Test:
 
 The negative data-plane tests are mandatory. A schema that merely omits a forbidden field is insufficient if an unstructured metadata object can carry it.
 
+## S0-F offline source-rights contract matrix
+
+Before any real provider call, reserved and wholly synthetic fixtures must define the fail-closed source-rights behavior below. Public fixtures use fictional provider/product names, permanently historical times, fictional quota/cost units, generic roles, and opaque references. They contain no copied terms, contract, private budget, credential, endpoint, provider response, feed row, or real indicator.
+
+| Case family | Required assertions |
+|---|---|
+| State and references | Selection, legal, proof, and runtime states remain independent; duplicate, dangling, and cross-source references fail; production is denied unless the source is selected, legally approved, proof-passed, and backed by current approved terms and policy. |
+| Absent or narrowed rights | Every right is explicit; missing, null, or false rights deny the affected purpose; effective purposes are the intersection of terms and policy; consumer verdict, explanation, client enforcement, benchmark output, derived B2B, raw redistribution, model training, and model validation are tested independently. |
+| Effective time and expiry | Terms and policy apply on a half-open interval from effective time through but excluding expiry; equality is expired; the earlier provider or policy hard expiry removes support and schedules recomputation. |
+| No match, timeout, and outage | A no-match response supplies no threat support; timeout, unavailable, stale, or exhausted dependency states become incomplete/Unknown as policy requires and never become clean evidence. Last-known-good support ends at its hard expiry. |
+| Quota and cost | Below-warning use is allowed, the warning boundary allows and alerts, projected use equal to or above the hard stop is denied, unknown usage is denied, and period reset behavior is deterministic. Thresholds are synthetic, not a production budget. |
+| Attribution and advisory notices | Any purpose requiring attribution or advisory copy is denied without the matching approved template reference; a purpose marked `not_required` must not retain a stale template reference. |
+| Kill switch and state change | Disabled, blocked, conditional, expired, material-change, and kill-switch cases prevent requests, ingestion, and new support without being represented as a clean result. |
+| Terms change | A changed terms digest creates an unapproved snapshot, pauses affected use, prevents silent carry-forward, and requires a new human decision before re-enable. |
+| Withdrawal and replay | Retirement, rights narrowing, and retraction stop future access, purge prohibited raw/derived copies and backups, tombstone affected enforcement, recompute outputs, preserve independently permitted Hezo evidence, and remain idempotent on replay. |
+
+Schema validation proves only artifact shape. Semantic execution against all positive and negative cases, owner-controlled source selection and rights decisions, an authorized proof-spend outcome, reserved-input provider behavior, and restricted evidence are separate requirements. Adding or validating new data-only vectors cannot pass S0-F, and real terms archives, contracts, negotiated budgets, provider evidence, credentials, or named approvals must remain outside Git under human control.
+
 ## End-to-end analysis tests
 
 Build a controlled fixture web with deterministic DNS, TLS, redirects, HTML, scripts, forms, and resources. Exercise:

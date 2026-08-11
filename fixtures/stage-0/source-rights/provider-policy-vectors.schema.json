@@ -1,0 +1,988 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v1",
+  "title": "Hezo Link S0-F public synthetic provider-policy vectors",
+  "description": "Strict shape for deterministic, offline source enablement, rights, notice, freshness, resource-control, source-class, and withdrawal decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "fixture_type",
+    "fixture_id",
+    "evaluation_reference_time",
+    "safety",
+    "registry",
+    "enablement_cases",
+    "rights_cases",
+    "notice_cases",
+    "freshness_cases",
+    "resource_control_cases",
+    "source_class_cases",
+    "withdrawal_cases",
+    "negative_contract_cases",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "fixture_type": {
+      "const": "source_rights_provider_policy_vector_set"
+    },
+    "fixture_id": {
+      "const": "s0-f-public-synthetic-provider-policy-vectors-1"
+    },
+    "evaluation_reference_time": {
+      "const": "2000-02-15T12:00:00Z"
+    },
+    "safety": {
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/safety"
+    },
+    "registry": {
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1"
+    },
+    "enablement_cases": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/enablementCase"
+      }
+    },
+    "rights_cases": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/$defs/rightsCase"
+      }
+    },
+    "notice_cases": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/noticeCase"
+      }
+    },
+    "freshness_cases": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/freshnessCase"
+      }
+    },
+    "resource_control_cases": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "$ref": "#/$defs/resourceControlCase"
+      }
+    },
+    "source_class_cases": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/$defs/sourceClassCase"
+      }
+    },
+    "withdrawal_cases": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/withdrawalCase"
+      }
+    },
+    "negative_contract_cases": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/$defs/negativeContractCase"
+      }
+    },
+    "limitations": {
+      "$ref": "#/$defs/limitations"
+    }
+  },
+  "$defs": {
+    "safeId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 3,
+      "maxLength": 112
+    },
+    "historicalInstant": {
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/historicalInstant"
+    },
+    "rightsMatrix": {
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/rightsMatrix"
+    },
+    "noticeRequirement": {
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/noticeRequirement"
+    },
+    "caseId": {
+      "type": "string",
+      "pattern": "^(?:enable|right|notice|fresh|resource|class|withdraw|reject)-[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 8,
+      "maxLength": 112
+    },
+    "enablementCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "input",
+        "expected"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/caseId"
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "selection_state",
+            "proof_state",
+            "legal_state",
+            "runtime_state",
+            "terms_decision",
+            "terms_current",
+            "policy_state",
+            "policy_current",
+            "kill_switch_engaged",
+            "material_terms_change_detected"
+          ],
+          "properties": {
+            "selection_state": {
+              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/selectionState"
+            },
+            "proof_state": {
+              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/proofState"
+            },
+            "legal_state": {
+              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/legalState"
+            },
+            "runtime_state": {
+              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/runtimeState"
+            },
+            "terms_decision": {
+              "enum": [
+                "approved",
+                "conditional",
+                "rejected",
+                "revoked"
+              ]
+            },
+            "terms_current": {
+              "type": "boolean"
+            },
+            "policy_state": {
+              "enum": [
+                "draft",
+                "approved",
+                "paused",
+                "retired"
+              ]
+            },
+            "policy_current": {
+              "type": "boolean"
+            },
+            "kill_switch_engaged": {
+              "type": "boolean"
+            },
+            "material_terms_change_detected": {
+              "type": "boolean"
+            }
+          }
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "production_request_allowed",
+            "production_ingestion_allowed",
+            "source_support_allowed",
+            "reason"
+          ],
+          "properties": {
+            "production_request_allowed": {
+              "type": "boolean"
+            },
+            "production_ingestion_allowed": {
+              "type": "boolean"
+            },
+            "source_support_allowed": {
+              "type": "boolean"
+            },
+            "reason": {
+              "enum": [
+                "all_gates_satisfied",
+                "source_not_selected",
+                "provider_proof_not_passed",
+                "legal_state_not_approved",
+                "runtime_not_production",
+                "governance_record_not_current",
+                "kill_switch_engaged",
+                "material_terms_change_detected"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "rightsCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "requested_right",
+        "terms_rights",
+        "policy_rights",
+        "expected"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/caseId"
+        },
+        "requested_right": {
+          "enum": [
+            "commercial_internal_use_allowed",
+            "consumer_verdict_allowed",
+            "consumer_explanation_allowed",
+            "client_enforcement_allowed",
+            "benchmark_output_allowed",
+            "derived_b2b_allowed",
+            "raw_redistribution_allowed",
+            "model_training_allowed",
+            "model_validation_allowed"
+          ]
+        },
+        "terms_rights": {
+          "$ref": "#/$defs/rightsMatrix"
+        },
+        "policy_rights": {
+          "$ref": "#/$defs/rightsMatrix"
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "allowed",
+            "reason"
+          ],
+          "properties": {
+            "allowed": {
+              "type": "boolean"
+            },
+            "reason": {
+              "enum": [
+                "both_terms_and_policy_allow",
+                "independent_right_false"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "noticeCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "input",
+        "expected"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/caseId"
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "terms_attribution",
+            "terms_advisory",
+            "policy_attribution",
+            "policy_advisory",
+            "rendered_attribution",
+            "rendered_advisory"
+          ],
+          "properties": {
+            "terms_attribution": {
+              "$ref": "#/$defs/noticeRequirement"
+            },
+            "terms_advisory": {
+              "$ref": "#/$defs/noticeRequirement"
+            },
+            "policy_attribution": {
+              "$ref": "#/$defs/noticeRequirement"
+            },
+            "policy_advisory": {
+              "$ref": "#/$defs/noticeRequirement"
+            },
+            "rendered_attribution": {
+              "type": "boolean"
+            },
+            "rendered_advisory": {
+              "type": "boolean"
+            }
+          }
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "consumer_explanation_allowed",
+            "reason"
+          ],
+          "properties": {
+            "consumer_explanation_allowed": {
+              "type": "boolean"
+            },
+            "reason": {
+              "enum": [
+                "required_notices_satisfied",
+                "required_attribution_missing",
+                "required_advisory_missing"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "freshnessCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "input",
+        "expected"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/caseId"
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "evaluated_at",
+            "last_confirmed_at",
+            "normal_freshness_ends_at",
+            "provider_expires_at",
+            "policy_hard_expiry_at",
+            "effective_expiry_at",
+            "availability",
+            "lookup_result",
+            "last_known_good_exists"
+          ],
+          "properties": {
+            "evaluated_at": {
+              "$ref": "#/$defs/historicalInstant"
+            },
+            "last_confirmed_at": {
+              "$ref": "#/$defs/historicalInstant"
+            },
+            "normal_freshness_ends_at": {
+              "$ref": "#/$defs/historicalInstant"
+            },
+            "provider_expires_at": {
+              "$ref": "#/$defs/historicalInstant"
+            },
+            "policy_hard_expiry_at": {
+              "$ref": "#/$defs/historicalInstant"
+            },
+            "effective_expiry_at": {
+              "$ref": "#/$defs/historicalInstant"
+            },
+            "availability": {
+              "enum": [
+                "available",
+                "unavailable",
+                "rate_limited"
+              ]
+            },
+            "lookup_result": {
+              "enum": [
+                "match",
+                "no_match",
+                "timeout",
+                "not_attempted"
+              ]
+            },
+            "last_known_good_exists": {
+              "type": "boolean"
+            },
+            "retry_after_seconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            }
+          }
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "contributes_source_support",
+            "clean_claim_allowed",
+            "recompute_scheduled"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "current_support",
+                "stale_last_known_good_support",
+                "excluded_expired",
+                "no_source_support",
+                "incomplete_without_source_support"
+              ]
+            },
+            "contributes_source_support": {
+              "type": "boolean"
+            },
+            "clean_claim_allowed": {
+              "const": false
+            },
+            "recompute_scheduled": {
+              "type": "boolean"
+            },
+            "retry_deferred_seconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "input": {
+                "type": "object",
+                "properties": {
+                  "availability": {
+                    "const": "rate_limited"
+                  }
+                },
+                "required": [
+                  "availability"
+                ]
+              }
+            },
+            "required": [
+              "input"
+            ]
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "type": "object",
+                "properties": {
+                  "retry_after_seconds": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3600
+                  }
+                },
+                "required": [
+                  "retry_after_seconds"
+                ]
+              },
+              "expected": {
+                "type": "object",
+                "properties": {
+                  "retry_deferred_seconds": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3600
+                  }
+                },
+                "required": [
+                  "retry_deferred_seconds"
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "input": {
+                "type": "object",
+                "not": {
+                  "properties": {
+                    "retry_after_seconds": {}
+                  },
+                  "required": [
+                    "retry_after_seconds"
+                  ]
+                }
+              },
+              "expected": {
+                "type": "object",
+                "not": {
+                  "properties": {
+                    "retry_deferred_seconds": {}
+                  },
+                  "required": [
+                    "retry_deferred_seconds"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "knownUsage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "current_total"
+      ],
+      "properties": {
+        "status": {
+          "const": "known"
+        },
+        "current_total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        }
+      }
+    },
+    "unknownUsage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "const": "unknown"
+        }
+      }
+    },
+    "resourceControlCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "input",
+        "expected"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/caseId"
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "resource",
+            "period",
+            "evaluated_at",
+            "period_started_at",
+            "usage",
+            "projected_increment",
+            "warning_threshold",
+            "hard_stop_threshold",
+            "period_reset_applied"
+          ],
+          "properties": {
+            "resource": {
+              "enum": [
+                "quota_fictional_request_unit",
+                "cost_fictional_micro_xts"
+              ]
+            },
+            "period": {
+              "enum": [
+                "utc_day",
+                "utc_month"
+              ]
+            },
+            "evaluated_at": {
+              "$ref": "#/$defs/historicalInstant"
+            },
+            "period_started_at": {
+              "$ref": "#/$defs/historicalInstant"
+            },
+            "usage": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/knownUsage"
+                },
+                {
+                  "$ref": "#/$defs/unknownUsage"
+                }
+              ]
+            },
+            "projected_increment": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "warning_threshold": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "hard_stop_threshold": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 1000000001
+            },
+            "period_reset_applied": {
+              "type": "boolean"
+            }
+          }
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "allowed",
+            "alert",
+            "reason"
+          ],
+          "properties": {
+            "allowed": {
+              "type": "boolean"
+            },
+            "alert": {
+              "type": "boolean"
+            },
+            "reason": {
+              "enum": [
+                "below_warning",
+                "at_warning_allow_and_alert",
+                "projected_total_at_hard_stop",
+                "usage_unknown",
+                "new_utc_period"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "sourceClassCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "source_class",
+        "requested_use",
+        "has_independent_qualified_support",
+        "expected"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/caseId"
+        },
+        "source_class": {
+          "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/sourceClass"
+        },
+        "requested_use": {
+          "enum": [
+            "sole_support_dangerous",
+            "client_enforcement",
+            "context_only",
+            "benchmark_output"
+          ]
+        },
+        "has_independent_qualified_support": {
+          "type": "boolean"
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "allowed",
+            "reason"
+          ],
+          "properties": {
+            "allowed": {
+              "type": "boolean"
+            },
+            "reason": {
+              "enum": [
+                "qualified_threat_support_allowed",
+                "infrastructure_not_sufficient",
+                "public_context_not_danger_support",
+                "public_context_not_enforcement",
+                "benchmark_not_production_support"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "withdrawalState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requests_enabled",
+        "ingestion_enabled",
+        "source_observation_count",
+        "raw_artifact_count",
+        "backup_artifact_count",
+        "prohibited_derived_output_count",
+        "enforcement_entry_count",
+        "recompute_job_count",
+        "withdrawal_receipt_count",
+        "independent_hezo_support_count"
+      ],
+      "properties": {
+        "requests_enabled": {
+          "type": "boolean"
+        },
+        "ingestion_enabled": {
+          "type": "boolean"
+        },
+        "source_observation_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "raw_artifact_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "backup_artifact_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "prohibited_derived_output_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "enforcement_entry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "recompute_job_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "withdrawal_receipt_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "independent_hezo_support_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "withdrawalCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "trigger",
+        "run_number",
+        "support_composition",
+        "state_before",
+        "effective_rights_before",
+        "expected"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/caseId"
+        },
+        "trigger": {
+          "enum": [
+            "source_retired",
+            "provider_retraction",
+            "rights_narrowed",
+            "terms_revoked",
+            "hard_expiry",
+            "repeat_withdrawal"
+          ]
+        },
+        "run_number": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "support_composition": {
+          "enum": [
+            "source_only",
+            "source_plus_independent_hezo",
+            "multiple_external_sources_intersection"
+          ]
+        },
+        "state_before": {
+          "$ref": "#/$defs/withdrawalState"
+        },
+        "effective_rights_before": {
+          "$ref": "#/$defs/rightsMatrix"
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state_after",
+            "effective_rights_after",
+            "withdrawal_applied",
+            "duplicate_effect",
+            "independent_hezo_support_preserved",
+            "actions"
+          ],
+          "properties": {
+            "state_after": {
+              "$ref": "#/$defs/withdrawalState"
+            },
+            "effective_rights_after": {
+              "$ref": "#/$defs/rightsMatrix"
+            },
+            "withdrawal_applied": {
+              "type": "boolean"
+            },
+            "duplicate_effect": {
+              "type": "boolean"
+            },
+            "independent_hezo_support_preserved": {
+              "type": "boolean"
+            },
+            "actions": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "disable_new_requests",
+                  "disable_new_ingestion",
+                  "locate_supported_observations",
+                  "purge_raw_and_prohibited_derived_material",
+                  "purge_backup_material",
+                  "tombstone_disallowed_enforcement",
+                  "schedule_affected_output_recompute",
+                  "preserve_independent_hezo_support"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "negativeContractCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "validation_layer",
+        "mutation",
+        "affected_json_pointers",
+        "expected"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/caseId"
+        },
+        "validation_layer": {
+          "enum": [
+            "json_schema",
+            "semantic_validator"
+          ]
+        },
+        "mutation": {
+          "enum": [
+            "remove_each_required_field",
+            "add_unknown_property",
+            "replace_with_url_shaped_reference",
+            "replace_with_path_shaped_reference",
+            "make_production_gate_inconsistent",
+            "make_reference_dangling_or_cross_source",
+            "broaden_policy_beyond_terms",
+            "make_thresholds_unordered",
+            "make_freshness_unordered",
+            "exceed_terms_retention_or_mismatch_notice"
+          ]
+        },
+        "affected_json_pointers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^/(?:[a-z0-9_~-]+/?)+$",
+            "maxLength": 200
+          }
+        },
+        "expected": {
+          "enum": [
+            "schema_rejected",
+            "semantic_rejected"
+          ]
+        }
+      }
+    },
+    "limitations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data_only_contract",
+        "runnable_validator_included",
+        "provider_connector_included",
+        "provider_network_call_made",
+        "production_registry_instance_included",
+        "real_terms_or_contract_included",
+        "real_quota_or_cost_included",
+        "real_rights_approval_proven",
+        "real_provider_proof_passed",
+        "s0_f_passed"
+      ],
+      "properties": {
+        "data_only_contract": {
+          "const": true
+        },
+        "runnable_validator_included": {
+          "const": false
+        },
+        "provider_connector_included": {
+          "const": false
+        },
+        "provider_network_call_made": {
+          "const": false
+        },
+        "production_registry_instance_included": {
+          "const": false
+        },
+        "real_terms_or_contract_included": {
+          "const": false
+        },
+        "real_quota_or_cost_included": {
+          "const": false
+        },
+        "real_rights_approval_proven": {
+          "const": false
+        },
+        "real_provider_proof_passed": {
+          "const": false
+        },
+        "s0_f_passed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

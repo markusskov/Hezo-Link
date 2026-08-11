@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "manifest_id": "s0-f-public-synthetic-provider-policy-vectors-1-manifest",
+  "fixture_type": "source_rights_provider_policy_vector_set",
+  "fixture_id": "s0-f-public-synthetic-provider-policy-vectors-1",
+  "artifact": {
+    "path": "fixtures/stage-0/source-rights/provider-policy-vectors.json",
+    "media_type": "application/json",
+    "encoding": "UTF-8",
+    "line_endings": "LF",
+    "final_newline": true,
+    "byte_length": 92411,
+    "sha256": "74ade6dd0c58584420d5f4e0dd44dd990405852f336a0580099a1d51ca9e0a5a"
+  },
+  "schemas": {
+    "registry": {
+      "path": "fixtures/stage-0/source-rights/source-rights-registry.schema.json",
+      "schema_id": "urn:hezo-link:stage-0:source-rights:registry:v1",
+      "dialect": "https://json-schema.org/draft/2020-12/schema",
+      "strict_mode": true,
+      "byte_length": 30121,
+      "sha256": "5560cef3a1808f1b566fe5bc9d8da6ccd11a5a621b0e127a06d7a9a783a2b640"
+    },
+    "vectors": {
+      "path": "fixtures/stage-0/source-rights/provider-policy-vectors.schema.json",
+      "schema_id": "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v1",
+      "dialect": "https://json-schema.org/draft/2020-12/schema",
+      "strict_mode": true,
+      "byte_length": 26189,
+      "sha256": "68b9b908bf4ebbae607466d0ee919937a182025551c644c0eaed4390618241f3"
+    }
+  },
+  "provenance": {
+    "source": "project_generated_public_synthetic",
+    "construction_method_id": "s0-f-fictional-source-rights-policy-matrix",
+    "construction_method_version": 1,
+    "redistribution_basis": "project_authored_public_test_data",
+    "generated_from_live_or_restricted_data": false
+  },
+  "determinism": {
+    "randomness_used": false,
+    "network_independent": true,
+    "clock_independent": true,
+    "locale_independent": true,
+    "timezone_independent": true,
+    "architecture_independent": true,
+    "machine_state_independent": true,
+    "historical_reference_time": "2000-02-15T12:00:00Z"
+  },
+  "registry_counts": {
+    "sources": 5,
+    "terms_decisions": 5,
+    "operational_policies": 5
+  },
+  "case_counts": {
+    "enablement": 8,
+    "rights": 10,
+    "notices": 3,
+    "freshness": 8,
+    "resource_control": 7,
+    "source_class": 6,
+    "withdrawal": 8,
+    "negative_contract": 10,
+    "decision_total": 50,
+    "all_total": 60
+  },
+  "safety": {
+    "classification": "public_synthetic",
+    "offline_only": true,
+    "reserved_identities_only": true,
+    "historical_instants_only": true,
+    "fictional_xts_thresholds_only": true,
+    "contains_provider_response_feed_row_or_indicator": false,
+    "contains_terms_text_snapshot_or_contract": false,
+    "contains_endpoint_credential_account_or_private_budget": false,
+    "contains_real_source_selection_approval_or_proof": false,
+    "operational_use_forbidden": true
+  },
+  "validations": {
+    "manifest_schema_strict_compile": true,
+    "registry_schema_strict_compile": true,
+    "vector_schema_strict_compile": true,
+    "payload_schema_validation": true,
+    "duplicate_json_keys_rejected": true,
+    "case_counts_verified": true,
+    "case_ids_unique": true,
+    "registry_ids_unique": true,
+    "references_resolved_and_source_isolated": true,
+    "temporal_and_half_open_semantics_verified": true,
+    "rights_notice_scope_and_retention_semantics_verified": true,
+    "quota_cost_retry_after_and_outage_semantics_verified": true,
+    "withdrawal_and_idempotence_semantics_verified": true,
+    "negative_mutations_exercised": true,
+    "artifact_digest_and_size_verified": true,
+    "public_safety_review": "independent_review_complete"
+  },
+  "scope": {
+    "data_only_contract": true,
+    "runnable_harness_included": false,
+    "application_or_connector_code_included": false,
+    "provider_called": false,
+    "production_dependency_selected": false,
+    "rights_approval_claimed": false,
+    "provider_proof_pass_claimed": false,
+    "s0_f_pass_claimed": false
+  }
+}
