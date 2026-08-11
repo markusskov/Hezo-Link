@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:schema:stage-0-fixture-manifest:1.0.0",
+  "title": "Hezo Link Stage 0 synthetic URL Filter fixture manifest",
+  "description": "Strict manifest for a public, deterministic, project-generated, offline URL Filter key set.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "fixture_id",
+    "fixture_type",
+    "description",
+    "file",
+    "format",
+    "construction",
+    "content",
+    "digest",
+    "safety",
+    "validation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "fixture_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "fixture_type": {
+      "const": "url_filter_record_set"
+    },
+    "description": {
+      "$ref": "#/$defs/sanitizedText"
+    },
+    "file": {
+      "$ref": "#/$defs/repositoryPath"
+    },
+    "format": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "media_type",
+        "character_encoding",
+        "line_ending",
+        "final_newline"
+      ],
+      "properties": {
+        "media_type": {
+          "const": "text/plain"
+        },
+        "character_encoding": {
+          "const": "UTF-8"
+        },
+        "line_ending": {
+          "const": "LF"
+        },
+        "final_newline": {
+          "const": true
+        }
+      }
+    },
+    "construction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "method_id",
+        "ordering",
+        "locale_independent",
+        "randomness_used"
+      ],
+      "properties": {
+        "source": {
+          "const": "synthetic"
+        },
+        "method_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "ordering": {
+          "const": "utf8_bytewise_ascending"
+        },
+        "locale_independent": {
+          "const": true
+        },
+        "randomness_used": {
+          "const": false
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_count",
+        "unique_record_count",
+        "blank_record_count",
+        "record_grammar",
+        "reserved_names_only",
+        "allowed_domain_suffixes",
+        "record_value"
+      ],
+      "properties": {
+        "record_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "unique_record_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "blank_record_count": {
+          "const": 0
+        },
+        "record_grammar": {
+          "const": "apple_url_filter_key_without_scheme"
+        },
+        "reserved_names_only": {
+          "const": true
+        },
+        "allowed_domain_suffixes": {
+          "const": [
+            ".test"
+          ]
+        },
+        "record_value": {
+          "const": 1
+        }
+      }
+    },
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "hex",
+        "byte_count"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "hex": {
+          "$ref": "#/$defs/sha256"
+        },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1073741824
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "offline_only",
+        "live_network_required",
+        "contains_real_endpoints",
+        "contains_live_threat_data",
+        "contains_feed_data",
+        "contains_malware",
+        "contains_secrets",
+        "contains_personal_data",
+        "contains_private_evidence"
+      ],
+      "properties": {
+        "classification": {
+          "const": "public_synthetic"
+        },
+        "offline_only": {
+          "const": true
+        },
+        "live_network_required": {
+          "const": false
+        },
+        "contains_real_endpoints": {
+          "const": false
+        },
+        "contains_live_threat_data": {
+          "const": false
+        },
+        "contains_feed_data": {
+          "const": false
+        },
+        "contains_malware": {
+          "const": false
+        },
+        "contains_secrets": {
+          "const": false
+        },
+        "contains_personal_data": {
+          "const": false
+        },
+        "contains_private_evidence": {
+          "const": false
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "utf8_valid",
+        "lf_only",
+        "record_count_verified",
+        "unique_records_verified",
+        "ordering_verified",
+        "reserved_names_verified",
+        "digest_verified"
+      ],
+      "properties": {
+        "utf8_valid": {
+          "const": true
+        },
+        "lf_only": {
+          "const": true
+        },
+        "record_count_verified": {
+          "const": true
+        },
+        "unique_records_verified": {
+          "const": true
+        },
+        "ordering_verified": {
+          "const": true
+        },
+        "reserved_names_verified": {
+          "const": true
+        },
+        "digest_verified": {
+          "const": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^(?!.*(?:^|/)\\.)(?:fixtures/stage-0/)[A-Za-z0-9._/-]+$"
+    },
+    "sanitizedText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?://|[Ff][Ii][Ll][Ee]://|/[Uu]sers/|/[Hh]ome/|[A-Za-z]:\\\\|[Bb][Ee][Gg][Ii][Nn] [A-Za-z ]*[Pp][Rr][Ii][Vv][Aa][Tt][Ee] [Kk][Ee][Yy]|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}))[ -~]+$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

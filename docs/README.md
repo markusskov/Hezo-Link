@@ -19,6 +19,20 @@ This directory is the implementation source of truth for V1.
 | [11 Implementation plan](11-implementation-plan.md) | In what order should Codex build and verify the system? |
 | [12 Decisions and risks](12-risks-decisions-and-open-questions.md) | What is accepted, proposed, unresolved, or capable of killing the plan? |
 
+## Implementation governance
+
+| Resource | Purpose |
+|---|---|
+| [ADR policy, template, and index](adr/README.md) | How are material decisions numbered, reviewed, accepted, and superseded? |
+| [Stage 0 map and evidence rule](stage-0/README.md) | How do S0-A through S0-F invalidate kill risks before product foundations begin? |
+| [Proof-plan template](stage-0/proof-plan-template.md) | What must every bounded Stage 0 proof plan declare before execution? |
+| [Evidence-bundle schema](stage-0/evidence-bundle.schema.json) | Which public-safe metadata records a proof result without committing raw evidence? |
+| [Repository safety boundary](stage-0/repository-safety.md) | What may be committed, and what must remain in restricted storage outside Git? |
+| [Spike teardown checklist](stage-0/teardown-checklist.md) | How is a proof closed through teardown or separate productionization? |
+| [Stage 0 fixture catalog](../fixtures/stage-0/README.md) | Which deterministic synthetic or reserved fixtures may proofs use? |
+
+These resources define process and evidence requirements; they do not record that any decision, proof, review, external request, or gate has passed.
+
 ## Requirement language
 
 - Must and must not are release requirements.

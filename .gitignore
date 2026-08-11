@@ -17,6 +17,7 @@
 xcuserdata/
 *.xcuserstate
 *.xcresult/
+*.xcarchive/
 *.dSYM/
 *.ipa
 

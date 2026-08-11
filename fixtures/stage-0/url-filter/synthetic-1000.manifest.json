@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "s0-b-url-filter-synthetic-1000-v1",
+  "fixture_type": "url_filter_record_set",
+  "description": "Deterministic reserved-domain URL Filter key seed numbered 0001 through 1000.",
+  "file": "fixtures/stage-0/url-filter/synthetic-1000.txt",
+  "format": {
+    "media_type": "text/plain",
+    "character_encoding": "UTF-8",
+    "line_ending": "LF",
+    "final_newline": true
+  },
+  "construction": {
+    "source": "synthetic",
+    "method_id": "numbered-reserved-url-filter-keys-v1",
+    "ordering": "utf8_bytewise_ascending",
+    "locale_independent": true,
+    "randomness_used": false
+  },
+  "content": {
+    "record_count": 1000,
+    "unique_record_count": 1000,
+    "blank_record_count": 0,
+    "record_grammar": "apple_url_filter_key_without_scheme",
+    "reserved_names_only": true,
+    "allowed_domain_suffixes": [
+      ".test"
+    ],
+    "record_value": 1
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "hex": "2d6751a70fb1de63e50ce5559e968dfd2dbe0f9f15b781b19fc9cf89f28e7653",
+    "byte_count": 36000
+  },
+  "safety": {
+    "classification": "public_synthetic",
+    "offline_only": true,
+    "live_network_required": false,
+    "contains_real_endpoints": false,
+    "contains_live_threat_data": false,
+    "contains_feed_data": false,
+    "contains_malware": false,
+    "contains_secrets": false,
+    "contains_personal_data": false,
+    "contains_private_evidence": false
+  },
+  "validation": {
+    "utf8_valid": true,
+    "lf_only": true,
+    "record_count_verified": true,
+    "unique_records_verified": true,
+    "ordering_verified": true,
+    "reserved_names_verified": true,
+    "digest_verified": true
+  }
+}
