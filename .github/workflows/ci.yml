@@ -188,6 +188,11 @@ jobs:
               'Unicode-3.0',
               'Zlib'
             ])
+            // GitHub currently omits license metadata for Actions dependencies.
+            // Keep exceptions exact and commit-pinned; this action was reviewed as MIT.
+            const reviewedMissingLicenseMetadata = new Set([
+              'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
+            ])
             const violations = []
 
             for (const change of comparison.changes) {
@@ -196,7 +201,11 @@ jobs:
               }
 
               const dependency = `${change.name}@${change.version}`
-              if (!allowedLicenses.has(change.license ?? '')) {
+              const licenseIsAllowed = allowedLicenses.has(change.license ?? '')
+              const missingLicenseWasReviewed =
+                change.license == null &&
+                reviewedMissingLicenseMetadata.has(dependency)
+              if (!licenseIsAllowed && !missingLicenseWasReviewed) {
                 violations.push(
                   `${dependency}: license is absent or outside the reviewed allowlist`
                 )
