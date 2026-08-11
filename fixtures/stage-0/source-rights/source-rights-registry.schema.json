@@ -980,6 +980,7 @@
         "warning_threshold_is_below_hard_stop",
         "projected_total_at_hard_stop_is_denied",
         "unknown_usage_is_denied",
+        "resource_period_reset_uses_utc_boundary",
         "policy_notices_match_terms_obligations",
         "policy_raw_and_backup_retention_do_not_exceed_terms",
         "source_class_limits_are_enforced",
@@ -1028,6 +1029,9 @@
           "const": true
         },
         "unknown_usage_is_denied": {
+          "const": true
+        },
+        "resource_period_reset_uses_utc_boundary": {
           "const": true
         },
         "policy_notices_match_terms_obligations": {

@@ -9,8 +9,8 @@
     "encoding": "UTF-8",
     "line_endings": "LF",
     "final_newline": true,
-    "byte_length": 92411,
-    "sha256": "74ade6dd0c58584420d5f4e0dd44dd990405852f336a0580099a1d51ca9e0a5a"
+    "byte_length": 92466,
+    "sha256": "01a96b6c52f905c3dd5510960427bee4b34bf249df6655886fac43c6e3999547"
   },
   "schemas": {
     "registry": {
@@ -18,8 +18,8 @@
       "schema_id": "urn:hezo-link:stage-0:source-rights:registry:v1",
       "dialect": "https://json-schema.org/draft/2020-12/schema",
       "strict_mode": true,
-      "byte_length": 30121,
-      "sha256": "5560cef3a1808f1b566fe5bc9d8da6ccd11a5a621b0e127a06d7a9a783a2b640"
+      "byte_length": 30260,
+      "sha256": "6e634ef6a3dabee668ce193b678b2a942fa5c8846a3bd608da2c622ed4d8af2f"
     },
     "vectors": {
       "path": "fixtures/stage-0/source-rights/provider-policy-vectors.schema.json",
