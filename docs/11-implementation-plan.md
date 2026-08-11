@@ -157,7 +157,7 @@ Proceed only if:
 - the sandbox has zero boundary-canary contacts;
 - at least one commercially permitted qualified exact-threat source is selected and proof-passed as suitable for the Stage 2 manual-check slice, with the Stage 0 portion of O-008 resolved; infrastructure, context, benchmark, CISA advisory, and CISA `.gov` enrichment sources do not satisfy this gate;
 - the privacy owner approves the Stage 0 data inventory and canonical MPD definition and limitations, without accepting P-009 or closing the final O-010/O-011 launch decisions;
-- O-020 has an owner-approved outcome; until then, the conservative document-12 rule treats O-001 through O-007 as unresolved Stage 0 blockers regardless of their later table deadlines;
+- O-020 has an owner-approved outcome; [Proposed ADR 0001](adr/0001-stage-0-gate-timing.md) records a recommendation but grants no authority, and until a human outcome is accepted the conservative document-12 rule treats O-001 through O-007 as unresolved Stage 0 blockers regardless of their later table deadlines;
 - no critical open decision in document 12 remains ownerless.
 
 If URL Filter approval appears infeasible, decide explicitly whether the manual-only product remains commercially worthwhile before continuing. O-014 does not waive a failed URL Filter exit criterion by itself: continuing as a manual-only product requires an Accepted rescope ADR that updates the product promise, Stage 0 exit criteria, build order, tests, and affected documents before Stage 1 begins.

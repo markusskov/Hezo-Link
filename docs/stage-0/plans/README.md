@@ -1,0 +1,11 @@
+# Stage 0 proof plans
+
+This directory indexes public-safe plans for bounded Stage 0 proofs. A plan records a question and the evidence needed to answer it; it does not authorize execution, select production architecture, or prove a gate.
+
+Use the [proof-plan template](../proof-plan-template.md) and follow the [repository safety boundary](../repository-safety.md). Restricted owner, device, cloud, legal, security, and raw proof records remain outside Git.
+
+| Proof | Work package | Plan status | Proof location | Evidence bundle | Gate decision |
+|---|---|---|---|---|---|
+| [S0-A decision and proof harness](s0-a-decision-and-proof-harness.md) | S0-A | Draft | Not authorized | Not authorized | Not decided |
+
+Only an accountable human role may approve a plan to run, complete a review, or make a gate decision. Missing plans and Draft plans leave their work packages open.

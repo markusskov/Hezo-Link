@@ -9,11 +9,13 @@ Copy this checklist into the proof closeout record and replace every prompt. Kee
 | Proof ID and work package | Stable IDs |
 | Spike location | Path authorized by the applicable ADR |
 | Accountable role | Generic role |
-| Execution stopped at | Timestamp or `Not run` |
+| Execution started at | Exact UTC `run_started_at`, or `Not run` |
+| Execution stopped at | Exact UTC `run_ended_at`, or `Not run` |
 | Evidence-bundle reference | Public-safe path or opaque approved ID |
 | Gate outcome | Pass, Stop, Inconclusive, or Not decided |
 | Closeout outcome | Teardown or Productionize separately |
-| Closeout review date | Date or `Not reviewed` |
+| Closeout completed at | Exact UTC `closeout.completed_at`, or `Not complete` |
+| Closeout review date | Exact UTC review time, or `Not reviewed` |
 
 ## Common closeout checks
 

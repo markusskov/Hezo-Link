@@ -23,7 +23,8 @@ The table assigns generic roles, not private individuals. External requests, con
 
 - [ADR policy and index](../adr/README.md) records owner-approved material decisions and supersession.
 - [Proof-plan template](proof-plan-template.md) defines the question, prerequisites, fixtures, environment, expected cases, pass/stop gates, limitations, evidence, closure, and review for one proof.
-- [Evidence-bundle schema](evidence-bundle.schema.json) defines the public-safe evidence metadata contract. Raw evidence remains outside Git.
+- [Proof-plan index](plans/README.md) lists bounded public plans and their truthful authorization and gate states. The first [S0-A plan](plans/s0-a-decision-and-proof-harness.md) remains Draft with no authorized runner or evidence location.
+- [Evidence-bundle schema 2.0.0](evidence-bundle.schema.json) defines the current public-safe evidence metadata contract. [Schema 1.0.0](evidence-bundle-1.0.0.schema.json) is preserved for exact historical dispatch but cannot support a new final gate because it lacks the lifecycle and per-case contact fields required by the companion validator. Raw evidence remains outside Git.
 - [Fixture catalog and policy](../../fixtures/stage-0/README.md) governs deterministic, synthetic, reserved, and offline inputs.
 - [MPD v1 public synthetic vectors](../../fixtures/stage-0/mpd/month-token-vectors.json) cover only the data-only, stack-neutral portion of S0-E; their manifest expressly records that no runnable proof or package pass is claimed.
 - [Source-rights and provider-policy synthetic vectors](../../fixtures/stage-0/source-rights/README.md) cover only the data-only, stack-neutral portion of S0-F; fictional eligible states are test inputs and cannot evidence a real rights decision, provider exercise, package pass, or production authorization.
@@ -50,18 +51,22 @@ A Stop outcome is useful Stage 0 learning, but it is not a passed gate. An Incon
 Evidence supporting a proof outcome must identify, at minimum:
 
 - the proof and work-package IDs;
+- the run start and end instants, plus the result interval and recording time for every executed case;
 - the exact source revision and relevant artifact or image digests;
 - fixture manifest IDs and versions;
 - the declared environment class and material version information;
 - every required case and its pass, fail, skipped, or not-run result;
+- bounded per-case contact counters and the corresponding bundle-wide aggregate;
 - boundary-canary results when the proof has an isolation claim;
 - the state of any required external decision or approval;
 - limitations, deviations, expiry, and unresolved contradictions;
 - sanitized or opaque references to the underlying evidence;
 - review outcomes by generic accountable roles; and
-- the teardown or productionization outcome.
+- the teardown or productionization outcome and its completion time when complete.
 
 Evidence that cannot be reproduced, authenticated, reviewed by an authorized role, or retained under its approved policy cannot support a pass.
+
+Root `recorded_at` is the instant the current complete bundle state was recorded. For a final bundle, it is also the gate-decision recording time and must equal `review.decided_at`; the companion validator enforces that equality and the lifecycle ordering below.
 
 The evidence schema records one proof per bundle. It rejects undeclared fields, raw evidence payloads, a passing decision with a required failed, skipped, unrun, or not-applicable case, an unreviewed final decision, an incomplete closeout, and any nonzero prohibited S0-D contact count. Schema validation alone never promotes a result.
 
@@ -70,17 +75,19 @@ The evidence schema records one proof per bundle. It rejects undeclared fields, 
 The S0-A harness must provide a separate semantic and leak validator before any evidence bundle may record Pass, Stop, or Inconclusive. That validator must:
 
 - require the proof ID, work-package ID, and every case-ID prefix to agree;
+- require root `gate_decision` and `review.final_decision` to agree, with `not_decided` on either side forbidding a nested favorable or final outcome;
 - prove all IDs are unique and every revision, fixture, environment, evidence, limitation, decision, review, and closeout reference resolves to the expected type;
 - parse every timestamp as a real RFC 3339 UTC instant, rejecting impossible calendar dates rather than checking shape alone;
-- enforce coherent chronology and freshness at both final-decision time and every later gate consumption: review and evidence timestamps must follow the recorded run, `review_due_at` must still be current, any `evidence_expires_at` must be absent or in the future, and external states must remain within their approved freshness policy; an expired or overdue bundle reverts to unusable evidence until it is rerun or re-reviewed;
+- reject terminal CR, LF, and other suffix bytes in every constrained identifier, digest, timestamp, path, opaque reference, and safe-text value identically across approved validators;
+- enforce coherent chronology and freshness at both final-decision time and every later gate consumption: run-result evidence, executed-case results, semantic validation, sanitization review, closeout, and final decision must follow their applicable run events, while prerequisite schemas, fixtures, ADRs, and approvals may legitimately predate the run; bundle `review_due_at`, any `evidence_expires_at`, every external-state `review_due_at`, and accepted case-exception expiry must still be current; an expired or overdue bundle reverts to unusable evidence until it is rerun or re-reviewed;
 - recompute every cited public file digest and size and validate every fixture against its declared manifest and grammar;
 - prove required case coverage is complete and derive the permitted gate outcome from case results, required external states, open limitations, reviews, and closeout state;
-- accept a skipped or not-applicable exception only when its cited decision is Accepted, unexpired, and explicitly covers that case;
-- recompute S0-D contact totals from case evidence and require every prohibited contact count to be zero for a pass;
+- accept any optional non-pass outcome only when its cited exception decision is Accepted, unexpired, and explicitly covers that case;
+- require every skipped, not-run, or not-applicable case to declare contact counting inapplicable with all counters zero; recompute every root contact counter as the sum of the typed per-case `contact_counts`; for S0-D Pass, require every per-case and aggregate prohibited TCP, UDP, application, metadata, production-resource, and cross-job contact count to be zero;
 - scan every string and referenced public artifact for secrets, contact details, local/private paths, live targets, account/device/application identifiers, raw URLs or submissions, attestation material, and other restricted values; and
 - reject opaque evidence IDs that encode a provider, location, target, person, account, or enumerable restricted identifier.
 
-The evidence bundle must identify the exact validator revision and sanitized validation result. It also requires a successful repository leak scan and human public-safety review. Until both records pass with zero findings, the schema permits only `not_decided`; no package gate may consume the bundle.
+The evidence bundle must identify the exact validator revision and sanitized validation result. It also requires a successful repository leak scan and human public-safety review. Until both records pass with zero findings, the schema permits only `not_decided`; no package gate may consume the bundle. Schema versions are independently dispatched closed contracts: a 1.0.0 record must not be relabeled or populated with inferred times or contact allocation to imitate 2.0.0. It must be rerun and re-reviewed when 2.0.0 evidence is required.
 
 ## Stage 0 exit
 

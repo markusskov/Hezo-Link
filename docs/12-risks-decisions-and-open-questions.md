@@ -78,7 +78,7 @@ These are deliberate owner decisions, not invitations for Codex to guess.
 | O-017 | Exact lifecycle for restricted report URL/comment/receipt, deletion-capability and idempotency digests, per-record key destruction, backups, and report-only derived support. The proposed ceiling is delete after triage/derivation and no later than 30 days, with a 24-hour replay digest. | Privacy/legal/intelligence/operations | Before Stage 6 |
 | O-018 | Exact inactivity and absolute expiry for Apple PIR `User-Identifier` digest/evaluation-key state, validated against Apple's protocol lifecycle, capacity, and recovery behavior. | iOS/security/privacy/infrastructure | Stage 0 distribution proof |
 | O-019 | Project license or explicit proprietary policy, contribution terms, and copyright owner wording. Until selected, do not imply that public visibility grants reuse rights. | Founder/legal | Before accepting external contributions or promoting reuse |
-| O-020 | Reconcile whether O-001, O-003, and O-007 are Stage 0 exit requirements or retain their table deadlines, and distinguish the Stage 0 privacy proof approval from final P-009/O-010/O-011 decisions. | Founder/technical/privacy | Before Stage 0 gate review |
+| O-020 | Reconcile whether O-001, O-003, and O-007 are Stage 0 exit requirements or retain their table deadlines, and distinguish the Stage 0 privacy proof approval from final P-009/O-010/O-011 decisions. [ADR 0001](adr/0001-stage-0-gate-timing.md) is a Proposed recommendation only. | Founder/technical/privacy | Before Stage 0 gate review |
 
 ## External dependencies and kill risks
 

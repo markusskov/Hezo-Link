@@ -81,3 +81,4 @@ ADRs may cite public, sanitized repository artifacts or opaque evidence identifi
 | Record | Status | Summary |
 |---|---|---|
 | [0000](0000-template.md) | Template | Copy this file to create a decision record. |
+| [0001](0001-stage-0-gate-timing.md) | Proposed | Recommends explicit decision boundaries for Stage 0 proof authorization, Stage 1 entry, and Stage 2 entry; the conservative current block remains until human acceptance. |
