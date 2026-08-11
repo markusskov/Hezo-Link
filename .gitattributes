@@ -1,0 +1,2 @@
+# Preserve digest-pinned upstream oracle corpora byte-for-byte.
+packages/url-policy-oracles/upstream/** -whitespace

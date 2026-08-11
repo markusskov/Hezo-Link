@@ -1,0 +1,1035 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "hezo-url-address-policy-v1",
+  "policyScope": "manual-url-syntax-profile-2-address-literals",
+  "safety": {
+    "executionBoundary": "offline-only",
+    "networkAccessPermitted": false,
+    "operationalUsePermitted": false,
+    "inputOrigin": "project-authored-from-public-rfcs",
+    "addressPolicy": "reserved-documentation-addresses-and-standard-mechanism-prefixes-only",
+    "containsCapturedInputs": false,
+    "containsOperationalInputs": false,
+    "containsPotentiallyResolvableNames": false,
+    "containsSecrets": false
+  },
+  "categoryCounts": {
+    "canonical-ipv4": 3,
+    "alternate-ipv4-rejection": 12,
+    "ipv6-rfc5952-normalization": 7,
+    "ipv4-mapped-ipv6": 3,
+    "nat64": 2,
+    "6to4": 2,
+    "teredo": 2,
+    "malformed-ipv6-rejection": 8,
+    "zone-identifier-rejection": 3
+  },
+  "cases": [
+    {
+      "id": "ADDR-001",
+      "category": "canonical-ipv4",
+      "inputURL": "https://192.0.2.1/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "192.0.2.1",
+        "addressFamily": "ipv4",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc3986-ipv4",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        }
+      ],
+      "rationale": "Canonical dotted decimal in TEST-NET-1 is accepted without rewriting."
+    },
+    {
+      "id": "ADDR-002",
+      "category": "canonical-ipv4",
+      "inputURL": "https://198.51.100.254/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "198.51.100.254",
+        "addressFamily": "ipv4",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc3986-ipv4",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        }
+      ],
+      "rationale": "Canonical dotted decimal in TEST-NET-2 is accepted without rewriting."
+    },
+    {
+      "id": "ADDR-003",
+      "category": "canonical-ipv4",
+      "inputURL": "https://203.0.113.0/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "203.0.113.0",
+        "addressFamily": "ipv4",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc3986-ipv4",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        }
+      ],
+      "rationale": "Canonical dotted decimal in TEST-NET-3 is accepted without rewriting."
+    },
+    {
+      "id": "ADDR-004",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://192.0.2.01/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "7.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-7.4"
+        }
+      ],
+      "rationale": "A leading zero can trigger octal interpretation and is rejected."
+    },
+    {
+      "id": "ADDR-005",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://0300.0000.0002.0001/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "7.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-7.4"
+        }
+      ],
+      "rationale": "Dotted octal spelling of a TEST-NET-1 address is rejected."
+    },
+    {
+      "id": "ADDR-006",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://0xc0.0x00.0x02.0x01/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "7.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-7.4"
+        }
+      ],
+      "rationale": "Dotted hexadecimal spelling of a TEST-NET-1 address is rejected."
+    },
+    {
+      "id": "ADDR-007",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://192.0x0.0x2.1/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "7.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-7.4"
+        }
+      ],
+      "rationale": "Mixed decimal and hexadecimal components are rejected as ambiguous."
+    },
+    {
+      "id": "ADDR-008",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://3221225985/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "7.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-7.4"
+        }
+      ],
+      "rationale": "A single decimal integer equivalent to 192.0.2.1 is rejected."
+    },
+    {
+      "id": "ADDR-009",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://0xc0000201/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "7.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-7.4"
+        }
+      ],
+      "rationale": "A single hexadecimal integer equivalent to 192.0.2.1 is rejected."
+    },
+    {
+      "id": "ADDR-010",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://192.513/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "7.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-7.4"
+        }
+      ],
+      "rationale": "A two-component historical spelling equivalent to 192.0.2.1 is rejected."
+    },
+    {
+      "id": "ADDR-011",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://192.0.513/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "7.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-7.4"
+        }
+      ],
+      "rationale": "A three-component historical spelling equivalent to 192.0.2.1 is rejected."
+    },
+    {
+      "id": "ADDR-012",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://+192.0.2.1/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        }
+      ],
+      "rationale": "A leading plus sign is outside the IPv4address grammar and is rejected."
+    },
+    {
+      "id": "ADDR-013",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://-192.0.2.1/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        }
+      ],
+      "rationale": "A leading minus sign is outside the IPv4address grammar and is rejected."
+    },
+    {
+      "id": "ADDR-014",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://192.0.2.256/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "malformed-ipv4"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        }
+      ],
+      "rationale": "An overflowing decimal octet is rejected instead of wrapping."
+    },
+    {
+      "id": "ADDR-015",
+      "category": "alternate-ipv4-rejection",
+      "inputURL": "https://192.0.2.%31/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "7.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-7.4"
+        }
+      ],
+      "rationale": "Percent-encoding a host digit is rejected before address interpretation."
+    },
+    {
+      "id": "ADDR-016",
+      "category": "ipv6-rfc5952-normalization",
+      "inputURL": "https://[2001:0DB8:0000:0000:0000:0000:0000:0001]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2001:db8::1",
+        "addressFamily": "ipv6",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.1",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.1"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.2.1",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.2.1"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.3"
+        }
+      ],
+      "rationale": "Expanded uppercase documentation address compresses and lowercases canonically."
+    },
+    {
+      "id": "ADDR-017",
+      "category": "ipv6-rfc5952-normalization",
+      "inputURL": "https://[2001:DB8::ABCD]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2001:db8::abcd",
+        "addressFamily": "ipv6",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.3"
+        }
+      ],
+      "rationale": "An already compressed address is normalized to lowercase hexadecimal."
+    },
+    {
+      "id": "ADDR-018",
+      "category": "ipv6-rfc5952-normalization",
+      "inputURL": "https://[2001:0db8:0000:0001:0000:0000:0000:0001]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2001:db8:0:1::1",
+        "addressFamily": "ipv6",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.1",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.1"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.2.1",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.2.1"
+        }
+      ],
+      "rationale": "Leading zeros are removed and the longest zero run is compressed."
+    },
+    {
+      "id": "ADDR-019",
+      "category": "ipv6-rfc5952-normalization",
+      "inputURL": "https://[2001:0db8:0000:0000:0001:0000:0000:0001]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2001:db8::1:0:0:1",
+        "addressFamily": "ipv6",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.2.3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.2.3"
+        }
+      ],
+      "rationale": "Equal-length zero runs select the leftmost run for compression."
+    },
+    {
+      "id": "ADDR-020",
+      "category": "ipv6-rfc5952-normalization",
+      "inputURL": "https://[2001:0db8:0001:0000:0000:0000:0000:0000]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2001:db8:1::",
+        "addressFamily": "ipv6",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.2.1",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.2.1"
+        }
+      ],
+      "rationale": "A longest trailing run of zero fields compresses to a trailing double colon."
+    },
+    {
+      "id": "ADDR-021",
+      "category": "ipv6-rfc5952-normalization",
+      "inputURL": "https://[2001:0DB8:0000:0001:0001:0001:0001:0001]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2001:db8:0:1:1:1:1:1",
+        "addressFamily": "ipv6",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.2.2"
+        }
+      ],
+      "rationale": "A single zero field remains explicit instead of being compressed."
+    },
+    {
+      "id": "ADDR-022",
+      "category": "ipv6-rfc5952-normalization",
+      "inputURL": "https://[2001:0DB8:ABCD:EF01:2345:6789:ABCD:EF01]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2001:db8:abcd:ef01:2345:6789:abcd:ef01",
+        "addressFamily": "ipv6",
+        "mechanism": "ordinary",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.1",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.1"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4.3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4.3"
+        }
+      ],
+      "rationale": "Nonzero hexadecimal fields lose leading zeros and become lowercase."
+    },
+    {
+      "id": "ADDR-023",
+      "category": "ipv4-mapped-ipv6",
+      "inputURL": "https://[::ffff:192.0.2.128]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "192.0.2.128",
+        "addressFamily": "ipv4",
+        "mechanism": "ipv4-mapped-ipv6",
+        "normalizationBasis": "hezo-profile-2-ipv4-mapped-policy-identity",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.5.5.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.5.5.2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "5",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-5"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        }
+      ],
+      "rationale": "Profile 2 deliberately collapses a mapped TEST-NET-1 literal to the shared IPv4 policy identity; this is not RFC 5952 mixed-text canonicalization."
+    },
+    {
+      "id": "ADDR-024",
+      "category": "ipv4-mapped-ipv6",
+      "inputURL": "https://[0:0:0:0:0:FFFF:C000:0280]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "192.0.2.128",
+        "addressFamily": "ipv4",
+        "mechanism": "ipv4-mapped-ipv6",
+        "normalizationBasis": "hezo-profile-2-ipv4-mapped-policy-identity",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.5.5.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.5.5.2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "5",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-5"
+        }
+      ],
+      "rationale": "Profile 2 deliberately collapses the expanded mapped literal to the same IPv4 policy identity; this is not RFC 5952 mixed-text canonicalization."
+    },
+    {
+      "id": "ADDR-025",
+      "category": "ipv4-mapped-ipv6",
+      "inputURL": "https://[::ffff:192.0.2.001]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "alternate-ipv4-notation"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.5.5.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.5.5.2"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "5",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-5"
+        }
+      ],
+      "rationale": "Mapped notation cannot smuggle a leading-zero IPv4 component."
+    },
+    {
+      "id": "ADDR-026",
+      "category": "nat64",
+      "inputURL": "https://[0064:FF9B:0000:0000:0000:0000:C000:0221]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "64:ff9b::c000:221",
+        "addressFamily": "ipv6",
+        "mechanism": "nat64",
+        "normalizationBasis": "hezo-profile-2-ipv6-rendering",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 6052",
+          "section": "2.1",
+          "url": "https://www.rfc-editor.org/rfc/rfc6052.html#section-2.1"
+        },
+        {
+          "document": "RFC 6052",
+          "section": "2.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc6052.html#section-2.4"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        },
+        {
+          "document": "RFC 5952",
+          "section": "4",
+          "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4"
+        }
+      ],
+      "rationale": "Profile 2 accepts the NAT64 well-known prefix with embedded 192.0.2.33 and records a project-owned hexadecimal rendering, not an RFC mixed-text canonicalization."
+    },
+    {
+      "id": "ADDR-027",
+      "category": "nat64",
+      "inputURL": "https://[64:ff9b::192.0.2.33]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "64:ff9b::c000:221",
+        "addressFamily": "ipv6",
+        "mechanism": "nat64",
+        "normalizationBasis": "hezo-profile-2-ipv6-rendering",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 6052",
+          "section": "2.1",
+          "url": "https://www.rfc-editor.org/rfc/rfc6052.html#section-2.1"
+        },
+        {
+          "document": "RFC 6052",
+          "section": "2.4",
+          "url": "https://www.rfc-editor.org/rfc/rfc6052.html#section-2.4"
+        },
+        {
+          "document": "RFC 4291",
+          "section": "2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.2"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        }
+      ],
+      "rationale": "Profile 2 maps dotted embedded TEST-NET-1 bytes to the same NAT64 policy identity using a project-owned hexadecimal rendering, not an RFC mixed-text canonicalization."
+    },
+    {
+      "id": "ADDR-028",
+      "category": "6to4",
+      "inputURL": "https://[2002:C000:0201:0000:0000:0000:0000:0000]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2002:c000:201::",
+        "addressFamily": "ipv6",
+        "mechanism": "6to4",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3056",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3056.html#section-2"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        }
+      ],
+      "rationale": "A 6to4 literal embedding 192.0.2.1 normalizes without classifying reachability."
+    },
+    {
+      "id": "ADDR-029",
+      "category": "6to4",
+      "inputURL": "https://[2002:C633:6402::1]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2002:c633:6402::1",
+        "addressFamily": "ipv6",
+        "mechanism": "6to4",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3056",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3056.html#section-2"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        }
+      ],
+      "rationale": "A 6to4 literal embedding 198.51.100.2 lowercases its hexadecimal fields."
+    },
+    {
+      "id": "ADDR-030",
+      "category": "teredo",
+      "inputURL": "https://[2001:0000:C000:0201:0000:F227:39CC:9BFD]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2001:0:c000:201:0:f227:39cc:9bfd",
+        "addressFamily": "ipv6",
+        "mechanism": "teredo",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4380",
+          "section": "4",
+          "url": "https://www.rfc-editor.org/rfc/rfc4380.html#section-4"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        }
+      ],
+      "rationale": "Teredo structure uses only TEST-NET server and client components and normalizes as IPv6."
+    },
+    {
+      "id": "ADDR-031",
+      "category": "teredo",
+      "inputURL": "https://[2001:0:CB00:7105:0:F227:39CC:9BFD]/oracle",
+      "expected": {
+        "outcome": "accepted",
+        "normalizedHost": "2001:0:cb00:7105:0:f227:39cc:9bfd",
+        "addressFamily": "ipv6",
+        "mechanism": "teredo",
+        "normalizationBasis": "rfc5952-ipv6",
+        "isIPLiteral": true
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4380",
+          "section": "4",
+          "url": "https://www.rfc-editor.org/rfc/rfc4380.html#section-4"
+        },
+        {
+          "document": "RFC 5737",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+        }
+      ],
+      "rationale": "A second Teredo structure uses TEST-NET-3 server bytes and TEST-NET-2 client bytes."
+    },
+    {
+      "id": "ADDR-032",
+      "category": "malformed-ipv6-rejection",
+      "inputURL": "https://[2001:db8:::1]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "malformed-ipv6"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.2"
+        }
+      ],
+      "rationale": "A triple colon is not a permitted IPv6 compression marker."
+    },
+    {
+      "id": "ADDR-033",
+      "category": "malformed-ipv6-rejection",
+      "inputURL": "https://[2001:db8::1::1]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "malformed-ipv6"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.2"
+        }
+      ],
+      "rationale": "Only one double-colon compression marker is permitted in an address."
+    },
+    {
+      "id": "ADDR-034",
+      "category": "malformed-ipv6-rejection",
+      "inputURL": "https://[2001:db8:0:0:0:0:1]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "malformed-ipv6"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.2"
+        }
+      ],
+      "rationale": "Seven explicit fields without a compression marker are incomplete."
+    },
+    {
+      "id": "ADDR-035",
+      "category": "malformed-ipv6-rejection",
+      "inputURL": "https://[2001:db8:0:0:0:0:0:1:2]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "malformed-ipv6"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.2"
+        }
+      ],
+      "rationale": "Nine explicit 16-bit fields exceed the IPv6 address width."
+    },
+    {
+      "id": "ADDR-036",
+      "category": "malformed-ipv6-rejection",
+      "inputURL": "https://[2001:db8::g]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "malformed-ipv6"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.2"
+        }
+      ],
+      "rationale": "A non-hexadecimal field character is rejected."
+    },
+    {
+      "id": "ADDR-037",
+      "category": "malformed-ipv6-rejection",
+      "inputURL": "https://[2001:db8::00000]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "malformed-ipv6"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.2"
+        }
+      ],
+      "rationale": "A hexadecimal field wider than four digits is rejected."
+    },
+    {
+      "id": "ADDR-038",
+      "category": "malformed-ipv6-rejection",
+      "inputURL": "https://[]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "malformed-ipv6"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        }
+      ],
+      "rationale": "An empty bracketed IP literal is rejected."
+    },
+    {
+      "id": "ADDR-039",
+      "category": "malformed-ipv6-rejection",
+      "inputURL": "https://[2001:db8::192.0.2.256]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "malformed-ipv4"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 4291",
+          "section": "2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.2"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        }
+      ],
+      "rationale": "An overflowing dotted-decimal tail cannot become a valid IPv6 literal."
+    },
+    {
+      "id": "ADDR-040",
+      "category": "zone-identifier-rejection",
+      "inputURL": "https://[2001:db8::1%en0]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "zone-identifier-forbidden"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 9844",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc9844.html#section-3"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        }
+      ],
+      "rationale": "The project profile forbids an unescaped zone identifier even on documentation space."
+    },
+    {
+      "id": "ADDR-041",
+      "category": "zone-identifier-rejection",
+      "inputURL": "https://[2001:db8::1%25en0]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "zone-identifier-forbidden"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 9844",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc9844.html#section-3"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        }
+      ],
+      "rationale": "The project profile also forbids a percent-encoded named zone identifier."
+    },
+    {
+      "id": "ADDR-042",
+      "category": "zone-identifier-rejection",
+      "inputURL": "https://[2001:db8::1%251]/oracle",
+      "expected": {
+        "outcome": "rejected",
+        "reason": "zone-identifier-forbidden"
+      },
+      "rfcReferences": [
+        {
+          "document": "RFC 9844",
+          "section": "3",
+          "url": "https://www.rfc-editor.org/rfc/rfc9844.html#section-3"
+        },
+        {
+          "document": "RFC 3986",
+          "section": "3.2.2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+        },
+        {
+          "document": "RFC 3849",
+          "section": "2",
+          "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+        }
+      ],
+      "rationale": "The project profile forbids a percent-encoded numeric zone identifier."
+    }
+  ]
+}
