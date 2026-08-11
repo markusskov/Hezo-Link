@@ -104,7 +104,7 @@ The control extension's `Info.plist` extension point is:
 </dict>
 ~~~
 
-The main app bundle identifier is the identifier registered for the NEURLFilter PIR/OHTTP use case. The control extension bundle identifier is passed separately as `controlProviderBundleIdentifier` when configuring `NEURLFilterManager`.
+Keep the main-app, control-extension, and PIR use-case identifiers distinct. `controlProviderBundleIdentifier` receives the control-extension identifier when configuring `NEURLFilterManager`; the project-specific registration/use-case mapping must match the exact portal/onboarding/runtime configuration Apple accepts. Current Apple sources disagree about whether the PIR use case is derived from the application or extension identifier, so neither mapping is universalized here.
 
 Primary sources: [Network Extension entitlement](https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.networking.networkextension), [Apple's URL Filter sample](https://developer.apple.com/documentation/networkextension/filtering-traffic-by-url), and [Apple DTS entitlement clarification](https://developer.apple.com/forums/thread/821619).
 
@@ -189,7 +189,7 @@ Primary sources: [`NEURLFilterManager`](https://developer.apple.com/documentatio
 - On the first call, where the existing tag is absent, the extension must return a valid non-null Bloom prefilter.
 - On later calls, it may return `nil` to state that the installed prefilter remains current. The system retains the current filter.
 
-Apple specifies 32-bit FNV-1a and 32-bit MurmurHash3 with double hashing for the Bloom artifact. All input URLs must already be Punycode-normalized. Use the exact Apple formula and seed behavior; a merely similar Bloom implementation is incompatible. Prefer Apple's tool to produce fixtures, and require byte-for-byte conformance before accepting another generator.
+Apple specifies 32-bit FNV-1a and 32-bit MurmurHash3 with double hashing for the Bloom artifact. All input URLs must already be Punycode-normalized. Use the exact Apple formula and seed behavior; a merely similar Bloom implementation is incompatible. Apple's current stock `BloomFilterTool` chooses `murmurSeed` randomly and exposes no seed input, so capture one tool artifact and its generated seed as the oracle rather than requiring separate stock-tool runs to be byte-identical. Require a selected deterministic generator or adapter to reproduce that captured oracle byte for byte when supplied the exact seed.
 
 For UTF-8 input `x`, the required index family is:
 
@@ -201,13 +201,13 @@ for i in 0 ..< hashCount:
     index[i] = (h1 + i * h2) mod bitCount
 ~~~
 
-The implementation uses the same 32-bit wrapping arithmetic, byte order, seed, `bitCount`, and `hashCount` as the Apple artifact. Cross-language tests must compare both the calculated indices and final bytes with Apple's `BloomFilterTool`; matching only an observed allow/deny case is insufficient.
+The implementation uses the same 32-bit wrapping arithmetic, byte order, captured seed, `bitCount`, and `hashCount` as the Apple artifact. The generation manifest also records `falsePositiveTolerance` explicitly: Apple's current stock-tool default is `0.001`, so Hezo must set the reviewed value rather than inherit the default when targeting `0.00001`. Cross-language tests must compare both the calculated indices and final bytes with the captured Apple oracle; matching only an observed allow/deny case is insufficient.
 
 Use a content digest tied to the signed generation, such as SHA-256, as the prefilter tag. For large bitsets, return a verified temporary file using the framework's file-backed path rather than duplicating the full artifact in memory. The file contains only the opaque bitset, never URL source lists. Apple's public API does not state exactly when ownership or copying completes, so do not delete the file immediately after returning it; copy the official sample's lifecycle first, then prove a bounded stale-file cleanup policy on physical devices before changing that behavior.
 
 The extension must authenticate the artifact manifest, verify digest, size, format version, declared bit count, hash count, and safe resource bounds before returning a new prefilter. On a later corrupt or unavailable update, keep the last-known-good filter by returning no replacement. An invalid first artifact is a startup failure and must surface as degraded rather than installing unverified data.
 
-Primary source: [`fetchPrefilter(existingPrefilterTag:)`](https://developer.apple.com/documentation/networkextension/neurlfiltercontrolprovider/fetchprefilter(existingprefiltertag:)).
+Primary sources: [`fetchPrefilter(existingPrefilterTag:)`](https://developer.apple.com/documentation/networkextension/neurlfiltercontrolprovider/fetchprefilter(existingprefiltertag:)), [Apple's URL Filter sample](https://developer.apple.com/documentation/networkextension/filtering-traffic-by-url), and [using Apple's Bloom filter tool](https://developer.apple.com/documentation/networkextension/using-the-bloom-filter-tool).
 
 ### 3.4 Fetch freshness
 
@@ -310,21 +310,21 @@ Primary source: [Apple OHTTP onboarding guide](https://github.com/apple/pir-serv
 |---|---:|---|
 | Direct install from Xcode | No; Apple documents a development bypass | App/extension structure, local service protocol, Bloom/PIR logic |
 | Ad hoc distribution | Yes | Distribution signing and relay provisioning |
-| TestFlight | Yes | Production App Attest environment and Apple OHTTP relay path |
+| TestFlight | Yes | Production App Attest environment; URL Filter relay/origin behavior remains a distribution hypothesis that the physical proof must observe |
 | App Store | Yes | Release path |
 | Enterprise distribution | Yes | Distribution path if ever used |
 | Developer ID on macOS | Yes | Out of V1 scope, but covered by Apple's current distribution guidance |
 
 Moving from development to distribution does not use a different URL Filter entitlement. It does require a separate OHTTP relay onboarding and approval process. Register the Network Extension URL Filter configuration in **CloudKit Console → Identity & Trust**. Apple does not currently publish a reliable approval SLA or portal status contract; an Apple DTS engineer reported seeing forum timelines measured in weeks rather than days. Treat that only as planning evidence, not a guarantee.
 
-Primary sources: [WWDC25 NetworkExtension session](https://developer.apple.com/videos/play/wwdc2025/234/), [Apple OHTTP onboarding](https://github.com/apple/pir-service-example/blob/main/Sources/PIRService/PIRService.docc/Onboarding.md), [CloudKit Identity & Trust](https://icloud.developer.apple.com/dashboard/identity), and [Apple DTS distribution clarification](https://developer.apple.com/forums/thread/821619).
+Primary sources: [WWDC25 NetworkExtension session](https://developer.apple.com/videos/play/wwdc2025/234/), [Apple OHTTP onboarding](https://github.com/apple/pir-service-example/blob/main/Sources/PIRService/PIRService.docc/Onboarding.md), [setting up a PIR server for URL filtering](https://developer.apple.com/documentation/networkextension/setting-up-a-pir-server-for-url-filtering), [Apple's current NEURLFilter testing instructions](https://github.com/apple/pir-service-example/blob/main/Sources/PIRService/PIRService.docc/TestingInstructionsNEURLFilter.md), [CloudKit Identity & Trust](https://icloud.developer.apple.com/dashboard/identity), and [Apple DTS distribution clarification](https://developer.apple.com/forums/thread/821619).
 
 ### 4.4 Current Apple onboarding checklist
 
 Before registration, Hezo must have a live validation environment and provide:
 
-- the main Hezo Link application bundle identifier for NEURLFilter;
-- the PIR use-case identifier `<main-app-bundle-id>.url.filtering` where required by the PIR service configuration;
+- the exact Hezo Link application or extension bundle identifier requested by the current project-specific Apple onboarding flow;
+- the exact PIR use-case identifier accepted by the portal, onboarding validation, and runtime configuration;
 - expected request and response sizes;
 - peak requests per second and total requests per day, by continent;
 - a PIR test record `www.apple.com/url-filter-test` with integer value `1`;
@@ -337,7 +337,7 @@ Before registration, Hezo must have a live validation environment and provide:
 - a DNS TXT record on the service domain: `apple-url-filter=<main-app-bundle-id>`;
 - all gateway, issuer, and PIR components running while Apple validates them.
 
-Use the main application bundle identifier for the current NEURLFilter onboarding form and DNS proof. Some older Apple sample text has referred to an extension identifier when describing PIR setup; current onboarding, API guidance, WWDC material, and Apple DTS guidance distinguish the main app identifier from the control extension identifier. Record the exact submitted values and escalate any portal disagreement to Apple rather than guessing.
+Apple's current sources conflict about identifier mapping: the OHTTP onboarding guide and DNS proof use the application bundle identifier, while the current PIR setup documentation describes deriving the use case from the extension bundle identifier and current testing material contains a main-app-style value. Treat the application identifier as a working onboarding/DNS hypothesis, not a resolved universal contract. Keep the application, control-extension, and PIR use-case identifiers distinct; record the exact portal/onboarding/runtime mapping accepted for this project; and escalate any disagreement to Apple rather than guessing. A submitted value or successful development bypass is not resolution.
 
 ### 4.5 Apple sample code is not a production service
 
@@ -640,7 +640,7 @@ Passive URL protection is not release ready until every applicable item is check
 ### URL Filter correctness and privacy
 
 - [ ] Initial non-null Bloom, later unchanged return, corrupt update, resource bounds, freshness, and last-known-good behavior pass.
-- [ ] Bloom and PIR are reproducible from one signed canonical manifest and official-tool fixtures.
+- [ ] Bloom and PIR share one signed canonical manifest; one captured Apple-tool oracle records its random seed and parameters; and the selected deterministic generator or adapter reproduces that oracle byte for byte.
 - [ ] PIR `N` is live before Bloom `N`; compatible prior data survives rollout and rollback.
 - [ ] Addition, removal, `resetPIRCache()`, parameter-shape change, `refreshPIRParameters()`, rollback, and kill-switch drills pass.
 - [ ] Fail-open is explicitly configured and exercised for every dependency outage.
@@ -650,10 +650,10 @@ Passive URL protection is not release ready until every applicable item is check
 
 ### Distribution service
 
-- [ ] CloudKit Identity & Trust onboarding is approved for the main app bundle ID.
+- [ ] CloudKit Identity & Trust onboarding is approved for the exact project-specific application/extension/use-case mapping accepted by Apple; the application-ID DNS value remains a distinct field.
 - [ ] Production origins satisfy iOS 26.4 HTTPS/subdomain/port/path rules and gateway negotiates HTTP/2.
 - [ ] DNS TXT proof, Apple test record, gateway resource, issuer, service, token, and traffic estimates validate.
-- [ ] A physical TestFlight build completes allow and deny through the Apple relay.
+- [ ] A physical TestFlight build completes allow and deny and provides evidence that the URL Filter path uses the Apple-approved relay/origin configuration; TestFlight alone is not treated as that evidence.
 - [ ] Service and observability review proves the OHTTP/PIR/Privacy Pass privacy boundary.
 - [ ] Accountless bearer-token lifecycle and fallback are accepted and evidenced.
 - [ ] Apple sample code is not deployed unmodified; production hardening and license notices are complete.
@@ -684,7 +684,7 @@ These items require explicit revalidation; Codex must not silently choose an int
 |---|---|---|
 | OHTTP approval timing/status | Separate distribution approval exists; no published SLA or reliable status contract | Apply in Stage 0, record evidence, and escalate delays to Apple |
 | URL Filter capability wording | Same entitlement for development/distribution; separate OHTTP approval | Verify signed profiles and the current Identity & Trust workflow |
-| NEURLFilter onboarding bundle ID | Current guide says main application ID; older material has caused confusion with extension ID | Use main app ID, record both IDs, and obtain Apple confirmation if portal copy differs |
+| NEURLFilter onboarding/use-case identifiers | Current Apple sources conflict between application-identifier onboarding/DNS guidance and extension-derived PIR setup text | Keep all identifiers distinct and require the exact portal/onboarding/runtime mapping accepted for this project; never guess from one source |
 | Production origin enforcement | Current onboarding says iOS/macOS 26.4 removes custom paths and requires production-style origins | Test the exact minimum iOS 26.x and TestFlight configuration |
 | Accountless PIR bearer token | Proposed App-Attest-authorized bootstrap, not yet an Apple-approved Hezo contract | Complete section 7 spike before Stage 0 exit |
 | PIR evaluation-key session lifetime | Apple requires correlatable protocol state but Hezo has not approved inactivity/absolute TTLs | Decide O-018 from physical distribution and service-capacity evidence before Stage 0 exit |
@@ -693,7 +693,7 @@ These items require explicit revalidation; Codex must not silently choose an int
 | Consumer block reporting | None in iOS 26; iOS 27 beta reporting is supervised-only | Exclude from V1 and re-review after non-beta release |
 | URL parsing/regex | iOS 27 beta customization, not iOS 26 | Keep out of V1 code path and blockset contract |
 | Development App Attest AAGUID | Apple pages have shown both `appattestdevelop` and `appattestsandbox` wording | Accept only Apple-documented development values in sandbox fixtures, log OS/SDK out of general telemetry, file DTS/Feedback; production accepts only production AAGUID |
-| App Attest extension support list | Current API reference says watchOS extensions only; WWDC26 also names Action and SSO extensions | Treat URL Filter as unsupported in all cases; ask Apple before enabling App Attest in any future extension type |
+| App Attest extension support list | Current API reference says watchOS extensions only; WWDC26 also names Action and SSO extensions; neither lists a URL Filter Network Extension | Hezo must not invoke App Attest or pass its material through the URL Filter extension; treat this as the reviewed project boundary, not a universal claim about every extension type |
 | App Attest extension fields | 2026 guidance adds category/bundle-version fields with incomplete compatibility detail | Parse if present; keep iOS 26 absence valid; verify before making mandatory |
 | App Attest key persistence | Installation scoped; local protected-storage survival can differ | Treat stale IDs as recoverable, never as cross-install identity |
 | App Attest attestation limits | Current `<100/s` and 10M-users/day guidance is dynamic | Use controlled ramp, backoff, kill switch, and current-doc check |

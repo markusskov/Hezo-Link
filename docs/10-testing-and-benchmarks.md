@@ -346,13 +346,14 @@ The first `fetchPrefilter(existingPrefilterTag: nil)` returns a valid, nonempty 
 
 Verify:
 
-- 32-bit FNV-1a and 32-bit MurmurHash3 double hashing match Apple's tool;
+- 32-bit FNV-1a and 32-bit MurmurHash3 double hashing match one captured Apple-tool oracle, including its generated Murmur seed; separate stock-tool runs are not expected to be byte-identical because the current tool chooses that seed randomly;
+- the generation manifest sets `falsePositiveTolerance` explicitly to the reviewed target rather than inheriting Apple's current `0.001` stock default;
 - every input URL is Punycode where required;
 - Apple sub-URL generation/matching semantics using golden vectors for host, `www`, port, path segment, query, fragment, and encoding variants;
 - shared-host exact paths do not create host-wide blocks;
 - measured Bloom false positives go to PIR and return allow;
 - a Bloom miss never becomes a block;
-- Bloom and PIR are generated reproducibly from the same canonical blockset manifest;
+- Bloom and PIR are generated from the same canonical blockset manifest; the selected deterministic generator or adapter reproduces the captured Apple oracle byte for byte when supplied its exact seed and parameters;
 - rollout stages PIR generation `N` before Bloom `N` and retains rollback-compatible prior data;
 - PIR cache reset occurs when dataset content changes;
 - PIR parameter refresh occurs only when the parameter shape, shards, or cryptographic processing changes;

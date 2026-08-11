@@ -7,5 +7,6 @@ Use the [proof-plan template](../proof-plan-template.md) and follow the [reposit
 | Proof | Work package | Plan status | Proof location | Evidence bundle | Gate decision |
 |---|---|---|---|---|---|
 | [S0-A decision and proof harness](s0-a-decision-and-proof-harness.md) | S0-A | Draft | Not authorized | Not authorized | Not decided |
+| [S0-B URL Filter, PIR, and distribution](s0-b-url-filter-pir-distribution.md) | S0-B | Draft | Not authorized | Not authorized | Not decided |
 
 Only an accountable human role may approve a plan to run, complete a review, or make a gate decision. Missing plans and Draft plans leave their work packages open.
