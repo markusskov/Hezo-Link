@@ -600,6 +600,7 @@ Stage 0 uses reserved example domains and a synthetic 1,000-entry dataset. It mu
 
 - Complete Apple OHTTP onboarding with live HTTPS origins, HTTP/2 gateway, DNS proof, bearer token, test record, and capacity estimates.
 - Install a distribution path—TestFlight at minimum—on a physical iOS 26.4-or-later iPhone.
+- Keep the Stage 0 TestFlight path restricted to an internal proof group unless O-010 is closed and every other external-testing prerequisite is satisfied. Obtain the required privacy-counsel review before TestFlight and use approved proof-scoped consent and disclosure artifacts; this evidence does not authorize external testing or close the final O-010 launch package.
 - Prove the device uses the Apple OHTTP relay path and does not depend on direct-Xcode relaxations.
 - Prove the Apple system-to-gateway/PIR/issuer path uses OHTTP and does not disclose the client's IP to those Hezo services. Separately prove an ordinary app-to-Hezo token-bootstrap edge does not retain or forward source IP into application logs or stores. No service or ordinary log may receive a clear URL or PIR result, an app-generated stable installation identifier, or the bearer token outside the issuer/auth boundary. Prove Apple's protocol-required pseudorandom `User-Identifier` and evaluation key stay confined to ephemeral PIR state and are never logged or joined.
 - Exercise relay provisioning missing/incorrect and verify `serverSetupIncomplete` recovery.

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:hezo-link:stage-0:source-rights:manifest:v1",
+  "$id": "urn:hezo-link:stage-0:source-rights:manifest:v2",
   "title": "Hezo Link S0-F public synthetic provider-policy manifest",
   "description": "Type-specific manifest for the data-only S0-F public synthetic registry and provider-policy vectors.",
   "type": "object",
@@ -22,16 +22,16 @@
   ],
   "properties": {
     "schema_version": {
-      "const": 1
+      "const": 2
     },
     "manifest_id": {
-      "const": "s0-f-public-synthetic-provider-policy-vectors-1-manifest"
+      "const": "s0-f-public-synthetic-provider-policy-vectors-2-manifest"
     },
     "fixture_type": {
       "const": "source_rights_provider_policy_vector_set"
     },
     "fixture_id": {
-      "const": "s0-f-public-synthetic-provider-policy-vectors-1"
+      "const": "s0-f-public-synthetic-provider-policy-vectors-2"
     },
     "artifact": {
       "$ref": "#/$defs/artifact"
@@ -124,8 +124,8 @@
         },
         "schema_id": {
           "enum": [
-            "urn:hezo-link:stage-0:source-rights:registry:v1",
-            "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v1"
+            "urn:hezo-link:stage-0:source-rights:registry:v2",
+            "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v2"
           ]
         },
         "dialect": {
@@ -164,7 +164,7 @@
                   "const": "fixtures/stage-0/source-rights/source-rights-registry.schema.json"
                 },
                 "schema_id": {
-                  "const": "urn:hezo-link:stage-0:source-rights:registry:v1"
+                  "const": "urn:hezo-link:stage-0:source-rights:registry:v2"
                 }
               }
             }
@@ -182,7 +182,7 @@
                   "const": "fixtures/stage-0/source-rights/provider-policy-vectors.schema.json"
                 },
                 "schema_id": {
-                  "const": "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v1"
+                  "const": "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v2"
                 }
               }
             }
@@ -208,7 +208,7 @@
           "const": "s0-f-fictional-source-rights-policy-matrix"
         },
         "construction_method_version": {
-          "const": 1
+          "const": 2
         },
         "redistribution_basis": {
           "const": "project_authored_public_test_data"

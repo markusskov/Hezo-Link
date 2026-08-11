@@ -167,7 +167,7 @@ Written Cisco/Talos confirmation must cover:
 - retention, backups, deletion, and rights after termination;
 - a TLS-protected download path and integrity mechanism.
 
-Until then, `production_use_allowed`, `consumer_display_allowed`, and `derived_output_allowed` are false. Do not commit a feed sample as a test fixture.
+Until then, a prospective catalog entry remains `selection_state = candidate`, `legal_state = blocked`, `proof_state = not_started`, and `runtime_state = disabled`; every right in the canonical rights matrix remains false. Do not commit a feed sample as a test fixture.
 
 Primary sources:
 

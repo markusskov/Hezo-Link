@@ -106,7 +106,7 @@ Phase 0 is a set of kill-risk validations, not product construction:
 - Prove App Attest registration, assertion verification, replay protection, and key reset behavior.
 - Prove the crawler cannot reach private, link-local, metadata, or internal destinations through direct requests, redirects, DNS rebinding, or IPv6 encodings.
 - Confirm commercial rights for every production threat source.
-- Approve the privacy data-flow inventory and public MPD wording.
+- Approve the Stage 0 privacy data-flow inventory and canonical MPD definition and limitations, without accepting P-009 or closing the final O-010/O-011 launch decisions.
 - Record stack and hosting decisions in an ADR.
 
 Do not build the complete app before these risks are understood. The exact build sequence and stop gates are in the [implementation plan](docs/11-implementation-plan.md).

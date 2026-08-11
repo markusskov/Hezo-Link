@@ -128,8 +128,8 @@ Deliver:
 - month-token generation and reset prototype;
 - edge/log configuration that demonstrably drops IP, URL, token, and User-Agent where required;
 - opt-out plus one-at-a-time withdrawal for every locally derivable open or provisional month;
-- preliminary App Store privacy-label mapping and privacy-manifest plan;
-- approved public MPD definition and limitations.
+- preliminary App Store privacy-label mapping and privacy-manifest plan sufficient for the restricted Stage 0 distribution proof;
+- privacy-owner approval of the canonical Stage 0 MPD definition and limitations, without treating the proposed production retention schedule, final marketing copy, or display location as accepted.
 
 ### 0.6 Source-rights proof
 
@@ -149,16 +149,18 @@ The Stage 0 portion of O-008 is the viability, rights, and bounded proof-spend o
 
 Proceed only if:
 
+- every required S0-A through S0-F package has an accountable, reviewed Pass outcome; checked-in governance or data-only contract artifacts do not substitute for an executed proof;
 - manual app development is viable independently;
 - Apple URL Filter has a credible development and approval path;
 - accountless private-verification authentication has a credible design;
 - O-018 sets validated inactivity and absolute expiry for PIR evaluation-key protocol state;
 - the sandbox has zero boundary-canary contacts;
 - at least one commercially permitted qualified exact-threat source is selected and proof-passed as suitable for the Stage 2 manual-check slice, with the Stage 0 portion of O-008 resolved; infrastructure, context, benchmark, CISA advisory, and CISA `.gov` enrichment sources do not satisfy this gate;
-- the privacy owner approves the data inventory and MPD wording;
+- the privacy owner approves the Stage 0 data inventory and canonical MPD definition and limitations, without accepting P-009 or closing the final O-010/O-011 launch decisions;
+- O-020 has an owner-approved outcome; until then, the conservative document-12 rule treats O-001 through O-007 as unresolved Stage 0 blockers regardless of their later table deadlines;
 - no critical open decision in document 12 remains ownerless.
 
-If URL Filter approval appears infeasible, decide explicitly whether the manual-only product remains commercially worthwhile before continuing.
+If URL Filter approval appears infeasible, decide explicitly whether the manual-only product remains commercially worthwhile before continuing. O-014 does not waive a failed URL Filter exit criterion by itself: continuing as a manual-only product requires an Accepted rescope ADR that updates the product promise, Stage 0 exit criteria, build order, tests, and affected documents before Stage 1 begins.
 
 ## Stage 1 — contracts, policy core, and storage
 

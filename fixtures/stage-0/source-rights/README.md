@@ -6,6 +6,11 @@ deterministic policy-decision vectors, and a type-specific manifest. It
 contains no connector, executable validator, provider call, or production
 configuration.
 
+The current published contract is fixture and construction version 2. Version
+2 supersedes the first published byte contract by requiring UTC-month resource
+resets at the exact month boundary. Git history retains version 1 for audit,
+but the two fixture identities are not interchangeable.
+
 Every provider and product identity ends in the IANA-reserved `.invalid`
 top-level domain. All instants are permanently historical values in January
 or February 2000. Thresholds use the ISO testing currency code `XTS` and
