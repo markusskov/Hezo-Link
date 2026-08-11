@@ -34,6 +34,96 @@ public enum ManualURLInputValidation: Equatable, Sendable, CustomStringConvertib
   }
 }
 
+/// A finite, content-free state for the offline manual-entry prototype.
+public enum ManualURLInputStatus: CaseIterable, Equatable, Sendable {
+  /// The current submission passed the syntax profile on a supported effective port.
+  case syntaxAccepted
+
+  /// The current submission passed syntax validation but uses an unsupported effective port.
+  case unsupportedPort
+
+  /// The current submission is not an accepted absolute HTTP(S) URL.
+  case invalidURL
+
+  /// The current submission has a syntactically present non-HTTP(S) scheme.
+  case unsupportedScheme
+
+  /// The attempted submission exceeded the pre-parse UTF-8 byte limit.
+  case urlTooLong
+}
+
+/// Transient, bounded state for one offline manual-entry interaction.
+///
+/// This value performs no I/O and is not a history or persistence model. Its ordinary rendering
+/// is constant because `submittedValue` may contain sensitive URL components.
+public struct ManualURLInputSession: Equatable, Sendable, CustomStringConvertible,
+  CustomDebugStringConvertible, CustomReflectable
+{
+  /// The exact currently edited value, bounded before it is retained.
+  public private(set) var submittedValue = ""
+
+  /// The finite result for the current value, or `nil` before validation or after an edit.
+  public private(set) var status: ManualURLInputStatus?
+
+  /// Creates an empty, unvalidated session.
+  public init() {}
+
+  /// Replaces the transient input, invalidating any prior result.
+  ///
+  /// An over-limit value is never retained or truncated. The previous value is cleared and the
+  /// finite `urlTooLong` result is recorded instead.
+  public mutating func updateSubmission(_ candidate: String) {
+    guard candidate.utf8.count <= SubmittedURL.maximumUTF8ByteCount else {
+      submittedValue = ""
+      status = .urlTooLong
+      return
+    }
+    submittedValue = candidate
+    status = nil
+  }
+
+  /// Runs the production syntax profile synchronously and stores only its finite projection.
+  public mutating func validate() {
+    validate(using: ManualURLInputValidator())
+  }
+
+  /// Runs an injected syntax profile for deterministic offline state tests.
+  mutating func validate(using validator: ManualURLInputValidator) {
+    guard status != .urlTooLong else { return }
+    switch validator.validate(submittedValue) {
+    case .accepted(let validatedURL):
+      status = validatedURL.portDisposition == .supported ? .syntaxAccepted : .unsupportedPort
+    case .rejected(.invalidURL):
+      status = .invalidURL
+    case .rejected(.unsupportedScheme):
+      status = .unsupportedScheme
+    case .rejected(.urlTooLong):
+      status = .urlTooLong
+    }
+  }
+
+  /// Removes the transient submission and its result.
+  public mutating func clear() {
+    submittedValue = ""
+    status = nil
+  }
+
+  /// A constant summary that never includes submitted content or parsed components.
+  public var description: String {
+    "Manual URL input session."
+  }
+
+  /// A constant debug summary identical to `description`.
+  public var debugDescription: String {
+    description
+  }
+
+  /// A reflection surface containing only the constant summary.
+  public var customMirror: Mirror {
+    Mirror(self, children: ["summary": description])
+  }
+}
+
 /// A pure, offline validator for one deliberately submitted manual URL.
 ///
 /// This is a conservative syntax preflight. It is not a provider canonicalizer, DNS or address
