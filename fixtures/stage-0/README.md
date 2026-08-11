@@ -76,6 +76,16 @@ The vector set freezes the documented HKDF/HMAC inputs, canonical unpadded base6
 
 No generator or runner is included. Before any proof gate consumes these vectors, the later S0-A semantic validator must recompute every intermediate, validate real UTC instants, resolve references, enforce unique case IDs/counts and required scenario coverage, compare reference months, couple operations to required fields/results, enforce lifecycle ordering and month/outcome/row-count relationships, prove retry payload minimization, and compare the committed bytes with the manifest. Runnable harness work still waits for an Accepted repository/execution ADR.
 
+## Source-rights and provider-policy synthetic vectors
+
+The [source-rights fixture package](source-rights/README.md) is the deterministic, stack-neutral contract input for the data-only portion of S0-F. It models fictional provider products, synthetic rights decisions, operational policies, and expected policy outcomes. Its strict payload and manifest schemas do not apply to any other fixture class.
+
+This package may contain only project-generated, snapshot-shaped metadata with reserved fictional names and opaque synthetic references. It contains no copied terms, terms URL, terms digest captured from a provider, contract, order form, legal advice, real rights decision, provider response, feed row, indicator, endpoint, credential, account, exact real budget, or deployed configuration. A synthetic approved/selected/production state is a test input only and cannot evidence or authorize a real source.
+
+The vectors freeze default-deny rights, independent legal/selection/proof/runtime gates, half-open expiry, notice requirements, scope intersection, freshness, quota and cost boundaries, fail-closed outage handling, and deterministic source withdrawal/replay expectations. They encode expected decisions only. They do not validate a policy implementation, exercise a provider, satisfy a restricted rights review, approve P-010 or P-011, prove S0-F, or pass the Stage 0 exit gate.
+
+No generator or runner is included. Before a proof gate consumes the package, the later S0-A semantic validator must validate real UTC instants and coherent chronology, prove identifier uniqueness and same-source reference resolution, enforce rights and scope intersection, check threshold ordering and exact boundary outcomes, require complete scenario coverage, verify withdrawal/replay invariants, and compare committed bytes with the manifest. Runnable harness work still waits for an Accepted repository/execution ADR.
+
 ## Change checklist
 
 When adding or changing a fixture:

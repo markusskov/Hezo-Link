@@ -4,7 +4,7 @@
 
 Hezo Link needs external intelligence to bootstrap coverage, but an accessible feed is not necessarily a feed Hezo may use in a commercial consumer product.
 
-This document records the source decision as reviewed on **2026-08-11**. Terms, prices, interfaces, and provider policies can change. A source must pass the production enablement gate below again before first use and after any material terms change.
+This document records a public-source eligibility assessment reviewed on **2026-08-11**. Terms, prices, interfaces, and provider policies can change. Its labels describe what may be worth taking through owner review; they are not provider selection, a legal decision, an S0-F proof result, or runtime approval. A source must pass the production enablement gate below before first use and again after any material terms change.
 
 This is an implementation policy, not legal advice. Unclear rights are a release blocker that the owner must resolve with counsel or the provider; they are not permission for Codex to guess.
 
@@ -32,9 +32,9 @@ V1 distinguishes four source classes:
 
 An integration must declare exactly one primary class. It may declare additional scopes only after review.
 
-## Decision matrix
+## Public eligibility matrix
 
-| Source | V1 state | Approved V1 role | Commercial and output position | Refresh and cost |
+| Source | Public eligibility assessment | Potential V1 role | Commercial and output position | Refresh and cost |
 |---|---|---|---|---|
 | Google Safe Browsing API | Blocked | None | Google expressly limits the API to non-commercial use | Free, quota limited; irrelevant because use is blocked |
 | Google Web Risk Lookup API | Conditionally approved | Current exact malware and social-engineering lookup | Commercial service; consumer warnings require freshness, attribution, and advisory text; no raw-list redistribution right is assumed | Per URL; positive result expires at `expireTime`; first 100,000 calls/month free, then published usage pricing |
@@ -53,11 +53,13 @@ An integration must declare exactly one primary class. It may declare additional
 | FBI IC3 public reports and PSAs | Approved for context and dated observations | US scam taxonomy, tactics, trends, and specifically published indicators | Use public products only; preserve source, alert date, and disclaimers; no raw complaint feed | Annual report plus ad hoc PSAs; free |
 | CISA TLP:CLEAR advisories | Conditionally approved | Dated public IOCs and campaign techniques | Sharing is unrestricted under TLP:CLEAR, subject to standard copyright and third-party rights | Ad hoc; free |
 
-`Conditionally approved` means the source still needs connector-specific privacy, security, quality, and output-scope sign-off. It does not authorize enabling a production credential by itself.
+Every label in this matrix is a public eligibility assessment, not a value to copy into `legal_state`, `selection_state`, `proof_state`, or `runtime_state`. In particular, `Approved` and `Conditionally approved` here do not record counsel approval, select a provider, pass S0-F, authorize spend, create an account, or enable a credential. `Conditionally approved` means only that public information did not rule out the stated candidate role before connector-specific privacy, security, quality, rights, cost, and output-scope review.
 
-## Recommended V1 seed stack
+P-010 (Web Risk Lookup as the initial commercial exact-source integration) and P-011 (CISA `.gov` enrichment) remain **Proposed** in [document 12](12-risks-decisions-and-open-questions.md). Nothing in this matrix accepts either proposal.
 
-The defensible initial combination is:
+## Candidate V1 seed stack for proof planning
+
+The following combination is suitable for evaluation; it is not a provider-selection record:
 
 - Google Web Risk Lookup for a current qualified exact external signal;
 - CISA `.gov` data for verified US government-domain relationships;
@@ -66,7 +68,7 @@ The defensible initial combination is:
 - public FTC, IC3, and CISA material for US scam taxonomy and dated public observations;
 - Hezo analyst-confirmed observations and deliberately submitted reports under the Trust Graph policy.
 
-PhishTank, OpenPhish, URLhaus, and any Tranco fixture must remain disabled until their specific gate is satisfied. Connector interfaces may be defined behind feature flags, but credentials, scheduled ingestion, feed samples, and production dependencies must not be added speculatively.
+PhishTank, OpenPhish, URLhaus, and any Tranco fixture must remain disabled until their specific gate is satisfied. All other external connectors also remain disabled until their separate selection, legal, proof, and runtime gates pass. Connector interfaces may be defined behind feature flags, but credentials, scheduled ingestion, feed samples, and production dependencies must not be added speculatively.
 
 ## Google Safe Browsing and Web Risk
 
@@ -85,7 +87,7 @@ Primary sources:
 
 Web Risk is Google's commercial malicious-URL service. The Lookup API accepts one URL per request and can check multiple threat types in that request. A matching response contains the threat types and an `expireTime`; an empty response means only that the URL was not present in the requested lists at that evaluation time.
 
-Allowed V1 use, subject to the Google Cloud agreement:
+Candidate V1 use, only if P-010 is accepted and the applicable Google Cloud agreement, selection, legal, proof, cost, and runtime gates pass:
 
 - backend lookup of a deliberately submitted URL or approved enrichment target;
 - an expiring source observation recording the exact requested threat types and returned match types;
@@ -234,7 +236,7 @@ Primary sources:
 
 ### IANA bootstrap data
 
-IANA's RDAP bootstrap registries map namespaces to authoritative RDAP services. IANA and the IETF dedicate their applicable protocol-registry rights to the public domain under CC0 1.0. Bootstrap data is approved for production service discovery.
+IANA's RDAP bootstrap registries map namespaces to authoritative RDAP services. IANA and the IETF dedicate their applicable protocol-registry rights to the public domain under CC0 1.0. The public assessment finds the bootstrap data potentially eligible for production service discovery; selection, legal approval, proof, and runtime authorization remain separate.
 
 Refresh the bootstrap JSON at least daily with conditional HTTP requests. Retain the version hash and fetch time. A refresh failure uses the last-known-good registry and raises a freshness alert; it does not erase the prior mapping.
 
@@ -248,7 +250,7 @@ Primary sources:
 
 IANA's CC0 dedication does not license the registration data returned by every registry or registrar. RDAP responses may include a `rel="terms-of-service"` link and provider notices. Provider terms commonly prohibit high-volume automated querying, bulk compilation, repackaging, or dissemination. Responses may still contain public contact or organization data after privacy redaction.
 
-Approved bounded enrichment fields are:
+Candidate bounded enrichment fields after per-provider approval are:
 
 - domain registration, expiration, last-change, and RDAP-database-update times;
 - registrar identifier and display name;
@@ -352,7 +354,7 @@ Primary sources:
 
 The CISA-operated `.gov` registry publishes the authoritative full list of registered `.gov` second-level domains, a federal subset, and the `.gov` zone file. The repository uses the CC0-1.0 license and updates its principal files daily when there is activity.
 
-Approved ingestion fields:
+Candidate bounded ingestion fields if P-011 is accepted:
 
 - domain name;
 - registrant organization;
@@ -363,7 +365,7 @@ Approved ingestion fields:
 
 Do not ingest the published security-contact email. Do not infer that the dataset lists every government hostname or every legitimate US government service; it lists registered second-level `.gov` domains, and some registered domains offer no online service.
 
-An exact registry-backed `.gov` relationship creates positive official-domain evidence for government impersonation policy. It suppresses a conflicting government-impersonation signal only. It does not suppress malware, compromise, malicious redirects, or other exact behavior evidence.
+If P-011 is accepted and the source passes its separate gates, an exact registry-backed `.gov` relationship creates positive official-domain evidence for government impersonation policy. It suppresses a conflicting government-impersonation signal only. It does not suppress malware, compromise, malicious redirects, or other exact behavior evidence.
 
 Primary sources:
 
@@ -375,7 +377,7 @@ Primary sources:
 
 The FTC's website policy says most FTC website material is US government work in the public domain. It asks that use, duplication, or redistribution carry appropriate attribution where feasible. Hezo must not imply FTC endorsement, misuse the FTC seal, or assume that third-party materials embedded in an FTC page are public domain.
 
-Approved uses:
+Candidate context uses after the separate gates pass:
 
 - current US scam taxonomy and consumer vocabulary;
 - common impersonation, contact-channel, and payment-method patterns;
@@ -402,7 +404,7 @@ Primary sources:
 
 IC3 publishes annual Internet Crime Reports and ad hoc Public Service Announcements. These are useful for US scam categories, channels, tactics, loss context, and current campaign narratives. Some PSAs publish specific indicators.
 
-Approved use requires:
+Candidate use under the public assessment would require:
 
 - public reports and PSAs only, never complaint records or victim information;
 - source product, alert number, publication/revision date, and source URL on every observation;
@@ -452,7 +454,7 @@ No US government source reviewed here provides a public, continuously updated ra
 - CISA advisories occasionally provide dated IOCs rather than a comprehensive consumer scam feed.
 - CISA `.gov` data supplies authoritative official-domain relationships rather than malicious URLs.
 
-Do not present these sources as coverage substitutes for current exact threat intelligence and Hezo's own evidence pipeline.
+Do not present these sources as coverage substitutes for current exact threat intelligence and Hezo's own evidence pipeline. P-011 and CISA `.gov` data concern official-domain enrichment only: even if P-011 is later accepted, that source cannot satisfy the Stage 0 requirement for a commercially permitted qualified exact-threat source suitable for the Stage 2 manual-check slice.
 
 ## Licensing-aware schema direction
 
@@ -467,16 +469,19 @@ Required fields:
 - stable source ID, provider, product name, and source class;
 - homepage, documentation, API/feed, pricing, terms, privacy, and correction URLs;
 - credential owner and secret reference, never the credential value;
-- production state: proposed, trial, conditionally approved, approved, paused, blocked, or retired;
-- commercial internal-use, consumer-verdict, consumer-display, client-enforcement, B2B-output, raw-redistribution, and model-use booleans;
+- selection state, independently `unassessed`, `candidate`, `selected`, or `not_selected`;
+- legal state, independently `proposed`, `trial`, `conditionally_approved`, `approved`, `paused`, `blocked`, or `retired`;
+- proof state, independently `not_started`, `in_progress`, `passed`, `failed`, or `expired`;
+- runtime state, independently `disabled`, `shadow`, or `production`;
+- `commercial_internal_use_allowed`, `consumer_verdict_allowed`, `consumer_explanation_allowed`, `client_enforcement_allowed`, `benchmark_output_allowed`, `derived_b2b_allowed`, `raw_redistribution_allowed`, `model_training_allowed`, and `model_validation_allowed` booleans;
 - allowed indicator types, categories, match types, and enforcement scopes;
 - attribution and advisory templates;
 - personal-data possibility and approved field allowlist;
 - minimum poll interval, default freshness, hard expiry, and maximum raw retention;
 - quota and cost model with alert and hard-stop thresholds;
-- contract reference, owner, review date, and next review date.
+- opaque selection-decision, proof, contract, and credential-configuration references plus generic accountable roles, review date, and next review date.
 
-An absent right is false. Do not use nullable booleans to mean “probably allowed.”
+An absent right is false. Do not use nullable booleans to mean “probably allowed.” Selection, legal review, proof, and runtime are separate state machines: production requires `selected`, `approved`, `passed`, and `production` respectively, plus a current approved terms snapshot and operational policy. No state or opaque reference may imply another.
 
 ### Source terms snapshot
 
@@ -489,10 +494,13 @@ Required fields:
 - cryptographic content hash;
 - reviewer and decision;
 - rights matrix and structured obligations;
+- source-approved indicator, category, match-semantic, and enforcement-scope ceilings that an operational policy may only narrow;
 - material-change summary;
 - superseded snapshot reference.
 
 Terms snapshots are immutable. A changed page creates a new snapshot and review task; it does not mutate the prior basis for old observations.
+
+Authoritative normalized terms, archived documents, order forms, contracts, negotiated budgets, credentials, owner identities, and proof evidence are restricted and human-controlled. They do not belong in Git. Public schemas and offline fixtures use synthetic records, generic roles, sanitized decisions, and opaque references only; those references do not prove any real selection, right, contract, spend authorization, or provider behavior.
 
 ### Ingestion run
 
@@ -533,7 +541,10 @@ At minimum it answers:
 - may this support an internal verdict;
 - may it appear in a consumer explanation;
 - may the exact value enter an on-device blockset;
+- may a permitted value enter a benchmark artifact;
 - may a sanitized derived indicator appear in a B2B product;
+- may any raw value be redistributed;
+- may it be used for model training or validation;
 - what attribution, advisory, freshness, and deletion obligations apply;
 - which support must be removed or recomputed if the license expires.
 
@@ -561,9 +572,11 @@ Every source connector must implement:
 
 Feed downloads, API responses, terms pages, archives, and compressed files are untrusted inputs. They must not share a parser process or credential with the crawler and must not be able to reach another data plane.
 
+Public, synthetic schemas and vectors define the fail-closed contract and can be reviewed before a provider is selected. Adding or validating those artifacts cannot by itself pass S0-F. The proof requires separately controlled human decisions and restricted evidence for a real candidate without placing terms archives, contracts, private budgets, credentials, provider responses, or proof output in the repository.
+
 ## Production enablement checklist
 
-A production source remains disabled until all required answers are documented.
+A production source remains disabled until all required answers are documented, `selection_state = 'selected'`, `legal_state = 'approved'`, `proof_state = 'passed'`, and an authorized runtime change sets `runtime_state = 'production'`. Public-source eligibility labels satisfy none of those states.
 
 ### Rights and contract
 
@@ -573,6 +586,7 @@ A production source remains disabled until all required answers are documented.
 - [ ] Consumer verdict use is expressly permitted.
 - [ ] The exact consumer evidence/display format is permitted.
 - [ ] Client blockset or enforcement use is permitted, if proposed.
+- [ ] Benchmark output is separately permitted or explicitly disabled.
 - [ ] Derived B2B output is separately permitted or explicitly disabled.
 - [ ] Raw redistribution is separately permitted or explicitly disabled.
 - [ ] Model training and validation are separately permitted or explicitly disabled.
@@ -626,6 +640,7 @@ An unavailable source must not silently remain influential beyond its approved f
 
 The intelligence-source baseline is ready for implementation when:
 
+- public eligibility labels cannot be interpreted as source selection, legal approval, S0-F proof, spend authorization, or runtime enablement;
 - Safe Browsing, OpenPhish Community, URLhaus Community, default Tranco production use, and uncleared PhishTank use are encoded as blocked;
 - Web Risk Lookup cannot produce a current warning without its expiry, attribution, and advisory obligations;
 - no third-party raw feed can be returned by a Hezo API or committed to the repository;
@@ -635,8 +650,10 @@ The intelligence-source baseline is ready for implementation when:
 - a source can be disabled and affected verdicts and blocksets can be replayed without it;
 - RDAP retains only approved fields and honors provider-specific terms and rate limits;
 - CT monitoring cannot become non-Chrome certificate enforcement;
-- CISA `.gov` data suppresses only government-impersonation evidence and never grants immunity;
+- CISA `.gov` data suppresses only government-impersonation evidence, never grants immunity, and cannot satisfy the qualified exact-threat source gate;
 - FTC and IC3 aggregates cannot become URL-level evidence;
 - TLP markings and third-party authorship survive CISA advisory ingestion;
 - source credentials, raw data, logs, queues, and retention remain confined to the security-intelligence plane;
 - every enabled source has a cost ceiling, freshness alarm, correction path, recurring terms review, and tested kill switch.
+
+These criteria define an implementation baseline, not an S0-F pass. S0-F remains open until the owner-controlled selection, rights, proof-spend, provider-behavior, and evidence requirements in [document 11](11-implementation-plan.md) are satisfied.

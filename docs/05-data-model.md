@@ -61,35 +61,42 @@ Apple's PIR service additionally needs a small `hezo_filter_runtime` protocol-st
 | `slug` | Stable text, unique |
 | `provider_name`, `product_name` | Display and audit fields |
 | `source_class` | `qualified_threat`, `infrastructure`, `public_context`, or `benchmark_only` |
+| `selection_state` | Independently `unassessed`, `candidate`, `selected`, or `not_selected` |
 | `legal_state` | `proposed`, `trial`, `conditionally_approved`, `approved`, `paused`, `blocked`, or `retired` |
 | `runtime_state` | Independently `disabled`, `shadow`, or `production` |
+| `proof_state` | Independently `not_started`, `in_progress`, `passed`, `failed`, or `expired` |
 | `default_confidence_bp` | `0..10000` |
 | `current_terms_snapshot_id` | Nullable until terms are approved |
-| `contract_reference`, `legal_owner`, `credential_owner` | Non-secret ownership and approval references |
+| `selection_decision_reference`, `proof_reference` | Opaque references to owner-controlled decision and proof records; never an invented outcome or evidence payload |
+| `contract_reference`, `legal_owner`, `credential_owner` | Non-secret ownership and opaque approval references |
 | `credential_config_reference` | Opaque deployment/secrets-manager reference, never credential material |
 | `next_terms_review_at` | Mandatory review deadline for any non-retired source |
 | `created_at`, `updated_at` | Audit instants |
 
-Legal approval and runtime enablement are independent. Database constraints and the connector policy layer must prevent `runtime_state = 'production'` unless `legal_state = 'approved'`, the current terms snapshot is approved and unexpired, and a current operational policy exists. Pausing, blocking, retiring, or expiring the legal basis automatically disables new production ingestion and schedules affected-output replay; changing a feature flag must never manufacture legal approval.
+Selection, legal approval, proof completion, and runtime enablement are independent. Database constraints and the connector policy layer must prevent `runtime_state = 'production'` unless `selection_state = 'selected'`, `legal_state = 'approved'`, `proof_state = 'passed'`, the current terms snapshot is approved and unexpired, and a current operational policy exists. A proof result does not select a source or grant a right, and a selection decision does not pass a proof or enable runtime. Pausing, blocking, retiring, expiring the legal basis, or expiring the proof automatically disables new production ingestion and schedules affected-output replay; changing a feature flag must never manufacture selection, legal approval, or proof.
 
 `catalog.source_terms_snapshots` is immutable and records the rights in [document 09](09-intelligence-sources.md):
 
 - source and terms version;
 - terms URL and captured content digest;
 - captured/effective/expiry times;
-- `internal_use_allowed`;
+- `commercial_internal_use_allowed`;
 - `consumer_verdict_allowed`;
 - `consumer_explanation_allowed`;
 - `client_enforcement_allowed`;
+- `benchmark_output_allowed`;
 - `derived_b2b_allowed`;
 - `raw_redistribution_allowed`;
 - `model_training_allowed` and `model_validation_allowed`;
+- source-approved indicator types, categories, match semantics, and enforcement-scope ceilings;
 - attribution/advisory requirements and approved template reference;
 - geography and customer restrictions;
 - refresh, deletion, termination, and backup requirements;
 - reviewer, decision time, and review expiry.
 
 Rights default to false when omitted. Primary key may be an internal ID with unique `(source_id, terms_version)`. `catalog.sources.current_terms_snapshot_id` uses `ON DELETE RESTRICT`.
+
+The authoritative terms archive, contracts, negotiated prices, proof output, named approvals, and credentials are restricted, human-controlled records outside the public repository. Public schemas and fixtures may contain only synthetic values, generic role names, sanitized outcomes, and opaque references whose targets cannot be resolved from Git. An opaque reference is provenance direction, not evidence that a source has been selected, approved, contracted, funded, or proven.
 
 `catalog.source_operational_policies` is versioned and executable rather than free-form notes. It records:
 
@@ -709,7 +716,7 @@ The general backup maximum never extends a shorter data-class deadline. Raw subm
 ## Data-model build order
 
 1. Create separate local databases and runtime/migration roles; prove cross-database denial.
-2. Add source catalog, separate legal/runtime states, immutable terms snapshots, executable source operational policies, retention policies, and import runs.
+2. Add source catalog, separate selection/legal/proof/runtime states, immutable terms snapshots, executable source operational policies, retention policies, and import runs.
 3. Add entities, typed identities, domains/URLs, and deterministic canonicalization fixtures.
 4. Add immutable observations, observation-entity roles, global semantic dedupe, and outbox.
 5. Add relationship/evidence, signal/evidence, policy versions, verdict snapshots/reasons/heads, and replay fixtures.
@@ -737,7 +744,7 @@ The general backup maximum never extends a shorter data-class deadline. Raw subm
 - A raw submitted URL, query value, fragment, credential, or attacker-controlled page value cannot enter a normal graph, log, job, or error table.
 - Restricted report content, replay state, deletion capability, derived support, per-record key, and backups follow the approved O-017 lifecycle and deletion tests.
 - Source-rights withdrawal can identify affected observations and deterministically recompute or remove every derived output.
-- A source cannot enter production unless legal approval, terms snapshot, operational policy, scope, freshness, and cost gates are all current and executable.
+- A source cannot enter production unless it is selected and proof-passed and its legal approval, terms snapshot, operational policy, scope, freshness, and cost gates are all current and executable.
 - Retention sweeps and backup-restore rehearsals delete rows and objects after `delete_after` without changing finalized aggregate counts.
 - Repeated MPD presence for one month token counts once, and the token cannot be linked to an App Attest or analytics record from retained data.
 - Apple PIR `User-Identifier` maps only to an expiring evaluation key in the filter-runtime store and cannot be queried from any product data-plane role.

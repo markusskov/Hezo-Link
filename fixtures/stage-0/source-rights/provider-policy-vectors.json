@@ -1,0 +1,2665 @@
+{
+  "schema_version": 1,
+  "fixture_type": "source_rights_provider_policy_vector_set",
+  "fixture_id": "s0-f-public-synthetic-provider-policy-vectors-1",
+  "evaluation_reference_time": "2000-02-15T12:00:00Z",
+  "safety": {
+    "classification": "public_synthetic",
+    "test_only": true,
+    "offline_only": true,
+    "historical_instants_only": true,
+    "reserved_identities_only": true,
+    "fictional_thresholds_only": true,
+    "contains_provider_response": false,
+    "contains_feed_row_or_indicator": false,
+    "contains_terms_text_or_snapshot": false,
+    "contains_contract_or_legal_advice": false,
+    "contains_endpoint_or_credential": false,
+    "contains_real_account_or_budget": false,
+    "application_code_included": false,
+    "provider_called": false,
+    "real_source_selected": false,
+    "real_rights_approval_claimed": false,
+    "real_provider_proof_claimed": false,
+    "s0_f_pass_claimed": false,
+    "operational_use_forbidden": true
+  },
+  "registry": {
+    "schema_version": 1,
+    "registry_type": "source_rights_registry",
+    "registry_id": "s0-f-public-synthetic-source-rights-registry-1",
+    "evaluation_reference_time": "2000-02-15T12:00:00Z",
+    "safety": {
+      "classification": "public_synthetic",
+      "test_only": true,
+      "offline_only": true,
+      "historical_instants_only": true,
+      "reserved_identities_only": true,
+      "fictional_thresholds_only": true,
+      "contains_provider_response": false,
+      "contains_feed_row_or_indicator": false,
+      "contains_terms_text_or_snapshot": false,
+      "contains_contract_or_legal_advice": false,
+      "contains_endpoint_or_credential": false,
+      "contains_real_account_or_budget": false,
+      "application_code_included": false,
+      "provider_called": false,
+      "real_source_selected": false,
+      "real_rights_approval_claimed": false,
+      "real_provider_proof_claimed": false,
+      "s0_f_pass_claimed": false,
+      "operational_use_forbidden": true
+    },
+    "sources": [
+      {
+        "source_id": "source-qualified-alpha",
+        "provider_identity": "provider-alpha.invalid",
+        "product_identity": "qualified-exact-alpha.invalid",
+        "source_class": "qualified_threat",
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "current_terms_decision_ref": "fixture-ref:terms-alpha-v1",
+        "current_policy_ref": "fixture-ref:policy-alpha-v1",
+        "next_review_at": "2000-02-28T00:00:00Z",
+        "selection_decision_ref": "fixture-ref:selection-alpha",
+        "proof_evidence_ref": "fixture-ref:proof-alpha",
+        "owner_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "credential_owner"
+        ]
+      },
+      {
+        "source_id": "source-qualified-beta",
+        "provider_identity": "provider-beta.invalid",
+        "product_identity": "qualified-exact-beta.invalid",
+        "source_class": "qualified_threat",
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "current_terms_decision_ref": "fixture-ref:terms-beta-v1",
+        "current_policy_ref": "fixture-ref:policy-beta-v1",
+        "next_review_at": "2000-02-28T00:00:00Z",
+        "selection_decision_ref": "fixture-ref:selection-beta",
+        "proof_evidence_ref": "fixture-ref:proof-beta",
+        "owner_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "credential_owner"
+        ]
+      },
+      {
+        "source_id": "source-infrastructure-gamma",
+        "provider_identity": "provider-gamma.invalid",
+        "product_identity": "infrastructure-gamma.invalid",
+        "source_class": "infrastructure",
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "current_terms_decision_ref": "fixture-ref:terms-gamma-v1",
+        "current_policy_ref": "fixture-ref:policy-gamma-v1",
+        "next_review_at": "2000-02-28T00:00:00Z",
+        "selection_decision_ref": "fixture-ref:selection-gamma",
+        "proof_evidence_ref": "fixture-ref:proof-gamma",
+        "owner_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "credential_owner"
+        ]
+      },
+      {
+        "source_id": "source-public-context-delta",
+        "provider_identity": "provider-delta.invalid",
+        "product_identity": "public-context-delta.invalid",
+        "source_class": "public_context",
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "current_terms_decision_ref": "fixture-ref:terms-delta-v1",
+        "current_policy_ref": "fixture-ref:policy-delta-v1",
+        "next_review_at": "2000-02-28T00:00:00Z",
+        "selection_decision_ref": "fixture-ref:selection-delta",
+        "proof_evidence_ref": "fixture-ref:proof-delta",
+        "owner_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "credential_owner"
+        ]
+      },
+      {
+        "source_id": "source-benchmark-epsilon",
+        "provider_identity": "provider-epsilon.invalid",
+        "product_identity": "benchmark-epsilon.invalid",
+        "source_class": "benchmark_only",
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "shadow",
+        "current_terms_decision_ref": "fixture-ref:terms-epsilon-v1",
+        "current_policy_ref": "fixture-ref:policy-epsilon-v1",
+        "next_review_at": "2000-02-28T00:00:00Z",
+        "selection_decision_ref": "fixture-ref:selection-epsilon",
+        "proof_evidence_ref": "fixture-ref:proof-epsilon",
+        "owner_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "credential_owner"
+        ]
+      }
+    ],
+    "terms_decisions": [
+      {
+        "terms_decision_ref": "fixture-ref:terms-alpha-v1",
+        "terms_snapshot_ref": "fixture-ref:snapshot-alpha-v1",
+        "source_id": "source-qualified-alpha",
+        "terms_version": "version-one",
+        "decision": "approved",
+        "reviewed_at": "2000-01-01T00:00:00Z",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": true,
+          "client_enforcement_allowed": true,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "scope_constraints": {
+          "allowed_indicator_types": [
+            "exact_url",
+            "host"
+          ],
+          "allowed_categories": [
+            "synthetic_phishing",
+            "synthetic_malware"
+          ],
+          "allowed_match_semantics": [
+            "exact",
+            "host"
+          ],
+          "allowed_enforcement_scopes": [
+            "internal_verdict",
+            "consumer_warning",
+            "consumer_explanation",
+            "automatic_block",
+            "benchmark_only"
+          ]
+        },
+        "obligations": {
+          "allowed_geographies": [
+            "US"
+          ],
+          "processor_use_allowed": true,
+          "contractor_use_allowed": false,
+          "backup_storage_allowed": true,
+          "max_raw_retention_seconds": 7200,
+          "max_backup_retention_seconds": 14400,
+          "termination_action": "delete_raw_and_prohibited_derived",
+          "attribution": {
+            "status": "required",
+            "template_ref": "fixture-ref:attribution-alpha"
+          },
+          "advisory": {
+            "status": "required",
+            "template_ref": "fixture-ref:advisory-alpha"
+          },
+          "correction_workflow": {
+            "required": true,
+            "workflow_ref": "fixture-ref:correction-alpha"
+          }
+        },
+        "reviewer_roles": [
+          "legal_reviewer",
+          "privacy_reviewer",
+          "security_reviewer"
+        ]
+      },
+      {
+        "terms_decision_ref": "fixture-ref:terms-beta-v1",
+        "terms_snapshot_ref": "fixture-ref:snapshot-beta-v1",
+        "source_id": "source-qualified-beta",
+        "terms_version": "version-one",
+        "decision": "approved",
+        "reviewed_at": "2000-01-01T00:00:00Z",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "scope_constraints": {
+          "allowed_indicator_types": [
+            "exact_url"
+          ],
+          "allowed_categories": [
+            "synthetic_phishing"
+          ],
+          "allowed_match_semantics": [
+            "exact"
+          ],
+          "allowed_enforcement_scopes": [
+            "internal_verdict",
+            "consumer_warning",
+            "benchmark_only"
+          ]
+        },
+        "obligations": {
+          "allowed_geographies": [
+            "US"
+          ],
+          "processor_use_allowed": true,
+          "contractor_use_allowed": false,
+          "backup_storage_allowed": true,
+          "max_raw_retention_seconds": 7200,
+          "max_backup_retention_seconds": 14400,
+          "termination_action": "delete_raw_and_prohibited_derived",
+          "attribution": {
+            "status": "not_required"
+          },
+          "advisory": {
+            "status": "not_required"
+          },
+          "correction_workflow": {
+            "required": true,
+            "workflow_ref": "fixture-ref:correction-beta"
+          }
+        },
+        "reviewer_roles": [
+          "legal_reviewer",
+          "privacy_reviewer",
+          "security_reviewer"
+        ]
+      },
+      {
+        "terms_decision_ref": "fixture-ref:terms-gamma-v1",
+        "terms_snapshot_ref": "fixture-ref:snapshot-gamma-v1",
+        "source_id": "source-infrastructure-gamma",
+        "terms_version": "version-one",
+        "decision": "approved",
+        "reviewed_at": "2000-01-01T00:00:00Z",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": false,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "scope_constraints": {
+          "allowed_indicator_types": [
+            "domain",
+            "ip_address",
+            "certificate_fingerprint"
+          ],
+          "allowed_categories": [
+            "synthetic_infrastructure"
+          ],
+          "allowed_match_semantics": [
+            "exact",
+            "host",
+            "registrable_domain"
+          ],
+          "allowed_enforcement_scopes": [
+            "internal_verdict",
+            "benchmark_only"
+          ]
+        },
+        "obligations": {
+          "allowed_geographies": [
+            "US"
+          ],
+          "processor_use_allowed": true,
+          "contractor_use_allowed": false,
+          "backup_storage_allowed": true,
+          "max_raw_retention_seconds": 7200,
+          "max_backup_retention_seconds": 14400,
+          "termination_action": "delete_raw_and_prohibited_derived",
+          "attribution": {
+            "status": "not_required"
+          },
+          "advisory": {
+            "status": "not_required"
+          },
+          "correction_workflow": {
+            "required": true,
+            "workflow_ref": "fixture-ref:correction-gamma"
+          }
+        },
+        "reviewer_roles": [
+          "legal_reviewer",
+          "privacy_reviewer",
+          "security_reviewer"
+        ]
+      },
+      {
+        "terms_decision_ref": "fixture-ref:terms-delta-v1",
+        "terms_snapshot_ref": "fixture-ref:snapshot-delta-v1",
+        "source_id": "source-public-context-delta",
+        "terms_version": "version-one",
+        "decision": "approved",
+        "reviewed_at": "2000-01-01T00:00:00Z",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": true,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "scope_constraints": {
+          "allowed_indicator_types": [
+            "domain"
+          ],
+          "allowed_categories": [
+            "synthetic_public_context"
+          ],
+          "allowed_match_semantics": [
+            "exact",
+            "registrable_domain"
+          ],
+          "allowed_enforcement_scopes": [
+            "internal_verdict",
+            "consumer_warning",
+            "consumer_explanation",
+            "benchmark_only"
+          ]
+        },
+        "obligations": {
+          "allowed_geographies": [
+            "US"
+          ],
+          "processor_use_allowed": true,
+          "contractor_use_allowed": false,
+          "backup_storage_allowed": true,
+          "max_raw_retention_seconds": 7200,
+          "max_backup_retention_seconds": 14400,
+          "termination_action": "delete_raw_and_prohibited_derived",
+          "attribution": {
+            "status": "required",
+            "template_ref": "fixture-ref:attribution-delta"
+          },
+          "advisory": {
+            "status": "not_required"
+          },
+          "correction_workflow": {
+            "required": true,
+            "workflow_ref": "fixture-ref:correction-delta"
+          }
+        },
+        "reviewer_roles": [
+          "legal_reviewer",
+          "privacy_reviewer",
+          "security_reviewer"
+        ]
+      },
+      {
+        "terms_decision_ref": "fixture-ref:terms-epsilon-v1",
+        "terms_snapshot_ref": "fixture-ref:snapshot-epsilon-v1",
+        "source_id": "source-benchmark-epsilon",
+        "terms_version": "version-one",
+        "decision": "approved",
+        "reviewed_at": "2000-01-01T00:00:00Z",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": false,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "scope_constraints": {
+          "allowed_indicator_types": [
+            "exact_url"
+          ],
+          "allowed_categories": [
+            "synthetic_phishing"
+          ],
+          "allowed_match_semantics": [
+            "exact"
+          ],
+          "allowed_enforcement_scopes": [
+            "benchmark_only"
+          ]
+        },
+        "obligations": {
+          "allowed_geographies": [
+            "US"
+          ],
+          "processor_use_allowed": true,
+          "contractor_use_allowed": false,
+          "backup_storage_allowed": true,
+          "max_raw_retention_seconds": 7200,
+          "max_backup_retention_seconds": 14400,
+          "termination_action": "delete_raw_and_prohibited_derived",
+          "attribution": {
+            "status": "not_required"
+          },
+          "advisory": {
+            "status": "not_required"
+          },
+          "correction_workflow": {
+            "required": true,
+            "workflow_ref": "fixture-ref:correction-epsilon"
+          }
+        },
+        "reviewer_roles": [
+          "legal_reviewer",
+          "privacy_reviewer",
+          "security_reviewer"
+        ]
+      }
+    ],
+    "operational_policies": [
+      {
+        "policy_ref": "fixture-ref:policy-alpha-v1",
+        "source_id": "source-qualified-alpha",
+        "terms_decision_ref": "fixture-ref:terms-alpha-v1",
+        "policy_version": "version-one",
+        "policy_state": "approved",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "effective_rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": true,
+          "client_enforcement_allowed": true,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "allowed_indicator_types": [
+          "exact_url",
+          "host"
+        ],
+        "allowed_categories": [
+          "synthetic_phishing",
+          "synthetic_malware"
+        ],
+        "allowed_match_semantics": [
+          "exact",
+          "host"
+        ],
+        "allowed_enforcement_scopes": [
+          "internal_verdict",
+          "consumer_warning",
+          "consumer_explanation",
+          "automatic_block",
+          "benchmark_only"
+        ],
+        "approved_field_allowlist": [
+          "indicator_value",
+          "indicator_type",
+          "category",
+          "match_semantics",
+          "observed_at",
+          "expires_at",
+          "confidence_basis_points"
+        ],
+        "minimum_poll_interval_seconds": 300,
+        "normal_freshness_seconds": 3600,
+        "hard_expiry_seconds": 7200,
+        "maximum_raw_retention_seconds": 3600,
+        "maximum_backup_retention_seconds": 7200,
+        "quota": {
+          "unit": "fictional_request_unit",
+          "period": "utc_month",
+          "warning_threshold": 80,
+          "hard_stop_threshold": 100,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "cost": {
+          "currency_code": "XTS",
+          "integer_unit": "fictional_micro_unit",
+          "period": "utc_month",
+          "warning_threshold": 8000,
+          "hard_stop_threshold": 10000,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "notices": {
+          "attribution": {
+            "status": "required",
+            "template_ref": "fixture-ref:attribution-alpha"
+          },
+          "advisory": {
+            "status": "required",
+            "template_ref": "fixture-ref:advisory-alpha"
+          }
+        },
+        "outage": {
+          "fail_closed": true,
+          "unavailable_is_clean": false,
+          "timeout_result": "incomplete_without_source_support",
+          "no_match_result": "no_source_support",
+          "last_known_good_before_hard_expiry": "use_with_stale_disclosure",
+          "at_hard_expiry": "exclude_support_and_schedule_recompute"
+        },
+        "feature_flag_ref": "fixture-ref:feature-alpha",
+        "kill_switch_ref": "fixture-ref:kill-alpha",
+        "correction_workflow_ref": "fixture-ref:correction-alpha",
+        "material_terms_change_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "mark_prior_support_pending_review",
+          "schedule_affected_output_recompute"
+        ],
+        "withdrawal_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ],
+        "approver_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "security_reviewer"
+        ]
+      },
+      {
+        "policy_ref": "fixture-ref:policy-beta-v1",
+        "source_id": "source-qualified-beta",
+        "terms_decision_ref": "fixture-ref:terms-beta-v1",
+        "policy_version": "version-one",
+        "policy_state": "approved",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "effective_rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "allowed_indicator_types": [
+          "exact_url"
+        ],
+        "allowed_categories": [
+          "synthetic_phishing"
+        ],
+        "allowed_match_semantics": [
+          "exact"
+        ],
+        "allowed_enforcement_scopes": [
+          "internal_verdict",
+          "consumer_warning",
+          "benchmark_only"
+        ],
+        "approved_field_allowlist": [
+          "indicator_value",
+          "indicator_type",
+          "category",
+          "observed_at",
+          "expires_at"
+        ],
+        "minimum_poll_interval_seconds": 300,
+        "normal_freshness_seconds": 3600,
+        "hard_expiry_seconds": 7200,
+        "maximum_raw_retention_seconds": 3600,
+        "maximum_backup_retention_seconds": 7200,
+        "quota": {
+          "unit": "fictional_request_unit",
+          "period": "utc_month",
+          "warning_threshold": 80,
+          "hard_stop_threshold": 100,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "cost": {
+          "currency_code": "XTS",
+          "integer_unit": "fictional_micro_unit",
+          "period": "utc_month",
+          "warning_threshold": 8000,
+          "hard_stop_threshold": 10000,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "notices": {
+          "attribution": {
+            "status": "not_required"
+          },
+          "advisory": {
+            "status": "not_required"
+          }
+        },
+        "outage": {
+          "fail_closed": true,
+          "unavailable_is_clean": false,
+          "timeout_result": "incomplete_without_source_support",
+          "no_match_result": "no_source_support",
+          "last_known_good_before_hard_expiry": "use_with_stale_disclosure",
+          "at_hard_expiry": "exclude_support_and_schedule_recompute"
+        },
+        "feature_flag_ref": "fixture-ref:feature-beta",
+        "kill_switch_ref": "fixture-ref:kill-beta",
+        "correction_workflow_ref": "fixture-ref:correction-beta",
+        "material_terms_change_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "mark_prior_support_pending_review",
+          "schedule_affected_output_recompute"
+        ],
+        "withdrawal_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ],
+        "approver_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "security_reviewer"
+        ]
+      },
+      {
+        "policy_ref": "fixture-ref:policy-gamma-v1",
+        "source_id": "source-infrastructure-gamma",
+        "terms_decision_ref": "fixture-ref:terms-gamma-v1",
+        "policy_version": "version-one",
+        "policy_state": "approved",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "effective_rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": false,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "allowed_indicator_types": [
+          "domain",
+          "ip_address",
+          "certificate_fingerprint"
+        ],
+        "allowed_categories": [
+          "synthetic_infrastructure"
+        ],
+        "allowed_match_semantics": [
+          "exact",
+          "host",
+          "registrable_domain"
+        ],
+        "allowed_enforcement_scopes": [
+          "internal_verdict",
+          "benchmark_only"
+        ],
+        "approved_field_allowlist": [
+          "indicator_value",
+          "indicator_type",
+          "category",
+          "match_semantics",
+          "observed_at",
+          "expires_at"
+        ],
+        "minimum_poll_interval_seconds": 300,
+        "normal_freshness_seconds": 3600,
+        "hard_expiry_seconds": 7200,
+        "maximum_raw_retention_seconds": 3600,
+        "maximum_backup_retention_seconds": 7200,
+        "quota": {
+          "unit": "fictional_request_unit",
+          "period": "utc_month",
+          "warning_threshold": 80,
+          "hard_stop_threshold": 100,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "cost": {
+          "currency_code": "XTS",
+          "integer_unit": "fictional_micro_unit",
+          "period": "utc_month",
+          "warning_threshold": 8000,
+          "hard_stop_threshold": 10000,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "notices": {
+          "attribution": {
+            "status": "not_required"
+          },
+          "advisory": {
+            "status": "not_required"
+          }
+        },
+        "outage": {
+          "fail_closed": true,
+          "unavailable_is_clean": false,
+          "timeout_result": "incomplete_without_source_support",
+          "no_match_result": "no_source_support",
+          "last_known_good_before_hard_expiry": "use_with_stale_disclosure",
+          "at_hard_expiry": "exclude_support_and_schedule_recompute"
+        },
+        "feature_flag_ref": "fixture-ref:feature-gamma",
+        "kill_switch_ref": "fixture-ref:kill-gamma",
+        "correction_workflow_ref": "fixture-ref:correction-gamma",
+        "material_terms_change_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "mark_prior_support_pending_review",
+          "schedule_affected_output_recompute"
+        ],
+        "withdrawal_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ],
+        "approver_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "security_reviewer"
+        ]
+      },
+      {
+        "policy_ref": "fixture-ref:policy-delta-v1",
+        "source_id": "source-public-context-delta",
+        "terms_decision_ref": "fixture-ref:terms-delta-v1",
+        "policy_version": "version-one",
+        "policy_state": "approved",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "effective_rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": true,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "allowed_indicator_types": [
+          "domain"
+        ],
+        "allowed_categories": [
+          "synthetic_public_context"
+        ],
+        "allowed_match_semantics": [
+          "exact",
+          "registrable_domain"
+        ],
+        "allowed_enforcement_scopes": [
+          "internal_verdict",
+          "consumer_warning",
+          "consumer_explanation",
+          "benchmark_only"
+        ],
+        "approved_field_allowlist": [
+          "indicator_value",
+          "indicator_type",
+          "category",
+          "match_semantics",
+          "observed_at",
+          "expires_at"
+        ],
+        "minimum_poll_interval_seconds": 300,
+        "normal_freshness_seconds": 3600,
+        "hard_expiry_seconds": 7200,
+        "maximum_raw_retention_seconds": 3600,
+        "maximum_backup_retention_seconds": 7200,
+        "quota": {
+          "unit": "fictional_request_unit",
+          "period": "utc_month",
+          "warning_threshold": 80,
+          "hard_stop_threshold": 100,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "cost": {
+          "currency_code": "XTS",
+          "integer_unit": "fictional_micro_unit",
+          "period": "utc_month",
+          "warning_threshold": 8000,
+          "hard_stop_threshold": 10000,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "notices": {
+          "attribution": {
+            "status": "required",
+            "template_ref": "fixture-ref:attribution-delta"
+          },
+          "advisory": {
+            "status": "not_required"
+          }
+        },
+        "outage": {
+          "fail_closed": true,
+          "unavailable_is_clean": false,
+          "timeout_result": "incomplete_without_source_support",
+          "no_match_result": "no_source_support",
+          "last_known_good_before_hard_expiry": "use_with_stale_disclosure",
+          "at_hard_expiry": "exclude_support_and_schedule_recompute"
+        },
+        "feature_flag_ref": "fixture-ref:feature-delta",
+        "kill_switch_ref": "fixture-ref:kill-delta",
+        "correction_workflow_ref": "fixture-ref:correction-delta",
+        "material_terms_change_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "mark_prior_support_pending_review",
+          "schedule_affected_output_recompute"
+        ],
+        "withdrawal_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ],
+        "approver_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "security_reviewer"
+        ]
+      },
+      {
+        "policy_ref": "fixture-ref:policy-epsilon-v1",
+        "source_id": "source-benchmark-epsilon",
+        "terms_decision_ref": "fixture-ref:terms-epsilon-v1",
+        "policy_version": "version-one",
+        "policy_state": "approved",
+        "effective_at": "2000-01-02T00:00:00Z",
+        "expires_at": "2000-02-29T00:00:00Z",
+        "review_expires_at": "2000-02-28T00:00:00Z",
+        "effective_rights": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": false,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": true
+        },
+        "allowed_indicator_types": [
+          "exact_url"
+        ],
+        "allowed_categories": [
+          "synthetic_phishing"
+        ],
+        "allowed_match_semantics": [
+          "exact"
+        ],
+        "allowed_enforcement_scopes": [
+          "benchmark_only"
+        ],
+        "approved_field_allowlist": [
+          "indicator_value",
+          "indicator_type",
+          "category",
+          "observed_at",
+          "expires_at"
+        ],
+        "minimum_poll_interval_seconds": 300,
+        "normal_freshness_seconds": 3600,
+        "hard_expiry_seconds": 7200,
+        "maximum_raw_retention_seconds": 3600,
+        "maximum_backup_retention_seconds": 7200,
+        "quota": {
+          "unit": "fictional_request_unit",
+          "period": "utc_month",
+          "warning_threshold": 80,
+          "hard_stop_threshold": 100,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "cost": {
+          "currency_code": "XTS",
+          "integer_unit": "fictional_micro_unit",
+          "period": "utc_month",
+          "warning_threshold": 8000,
+          "hard_stop_threshold": 10000,
+          "at_warning_action": "allow_and_alert",
+          "at_or_above_hard_stop_action": "deny",
+          "unknown_usage_action": "deny"
+        },
+        "notices": {
+          "attribution": {
+            "status": "not_required"
+          },
+          "advisory": {
+            "status": "not_required"
+          }
+        },
+        "outage": {
+          "fail_closed": true,
+          "unavailable_is_clean": false,
+          "timeout_result": "incomplete_without_source_support",
+          "no_match_result": "no_source_support",
+          "last_known_good_before_hard_expiry": "use_with_stale_disclosure",
+          "at_hard_expiry": "exclude_support_and_schedule_recompute"
+        },
+        "feature_flag_ref": "fixture-ref:feature-epsilon",
+        "kill_switch_ref": "fixture-ref:kill-epsilon",
+        "correction_workflow_ref": "fixture-ref:correction-epsilon",
+        "material_terms_change_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "mark_prior_support_pending_review",
+          "schedule_affected_output_recompute"
+        ],
+        "withdrawal_actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ],
+        "approver_roles": [
+          "intelligence_owner",
+          "legal_reviewer",
+          "operations_owner",
+          "security_reviewer"
+        ]
+      }
+    ],
+    "semantic_validator_requirements": {
+      "ids_are_unique": true,
+      "references_resolve": true,
+      "references_remain_within_source": true,
+      "production_gate_requires_selected_passed_approved_current": true,
+      "terms_and_policy_intervals_are_half_open": true,
+      "policy_rights_are_subset_of_terms_rights": true,
+      "policy_scope_does_not_widen_indicator_or_match_semantics": true,
+      "absent_right_is_false": true,
+      "effective_expiry_is_earliest_applicable_expiry": true,
+      "warning_threshold_is_below_hard_stop": true,
+      "projected_total_at_hard_stop_is_denied": true,
+      "unknown_usage_is_denied": true,
+      "policy_notices_match_terms_obligations": true,
+      "policy_raw_and_backup_retention_do_not_exceed_terms": true,
+      "source_class_limits_are_enforced": true,
+      "contextual_consumer_warning_requires_independent_qualified_support": true,
+      "unavailable_timeout_and_no_match_are_not_clean": true,
+      "rate_limit_retry_after_is_bounded_and_not_clean": true,
+      "hard_expiry_excludes_support_and_schedules_recompute": true,
+      "withdrawal_disables_purges_tombstones_and_recomputes": true,
+      "withdrawal_is_idempotent": true,
+      "independent_hezo_support_is_preserved": true,
+      "artifact_digests_sizes_counts_and_case_ids_are_verified": true,
+      "expected_outcomes_are_coupled_to_case_inputs": true
+    }
+  },
+  "enablement_cases": [
+    {
+      "case_id": "enable-all-gates",
+      "input": {
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "terms_decision": "approved",
+        "terms_current": true,
+        "policy_state": "approved",
+        "policy_current": true,
+        "kill_switch_engaged": false,
+        "material_terms_change_detected": false
+      },
+      "expected": {
+        "production_request_allowed": true,
+        "production_ingestion_allowed": true,
+        "source_support_allowed": true,
+        "reason": "all_gates_satisfied"
+      }
+    },
+    {
+      "case_id": "enable-not-selected",
+      "input": {
+        "selection_state": "candidate",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "terms_decision": "approved",
+        "terms_current": true,
+        "policy_state": "approved",
+        "policy_current": true,
+        "kill_switch_engaged": false,
+        "material_terms_change_detected": false
+      },
+      "expected": {
+        "production_request_allowed": false,
+        "production_ingestion_allowed": false,
+        "source_support_allowed": false,
+        "reason": "source_not_selected"
+      }
+    },
+    {
+      "case_id": "enable-proof-failed",
+      "input": {
+        "selection_state": "selected",
+        "proof_state": "failed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "terms_decision": "approved",
+        "terms_current": true,
+        "policy_state": "approved",
+        "policy_current": true,
+        "kill_switch_engaged": false,
+        "material_terms_change_detected": false
+      },
+      "expected": {
+        "production_request_allowed": false,
+        "production_ingestion_allowed": false,
+        "source_support_allowed": false,
+        "reason": "provider_proof_not_passed"
+      }
+    },
+    {
+      "case_id": "enable-legal-conditional",
+      "input": {
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "conditionally_approved",
+        "runtime_state": "production",
+        "terms_decision": "conditional",
+        "terms_current": true,
+        "policy_state": "approved",
+        "policy_current": true,
+        "kill_switch_engaged": false,
+        "material_terms_change_detected": false
+      },
+      "expected": {
+        "production_request_allowed": false,
+        "production_ingestion_allowed": false,
+        "source_support_allowed": false,
+        "reason": "legal_state_not_approved"
+      }
+    },
+    {
+      "case_id": "enable-runtime-disabled",
+      "input": {
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "disabled",
+        "terms_decision": "approved",
+        "terms_current": true,
+        "policy_state": "approved",
+        "policy_current": true,
+        "kill_switch_engaged": false,
+        "material_terms_change_detected": false
+      },
+      "expected": {
+        "production_request_allowed": false,
+        "production_ingestion_allowed": false,
+        "source_support_allowed": false,
+        "reason": "runtime_not_production"
+      }
+    },
+    {
+      "case_id": "enable-governance-expired",
+      "input": {
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "terms_decision": "approved",
+        "terms_current": false,
+        "policy_state": "approved",
+        "policy_current": false,
+        "kill_switch_engaged": false,
+        "material_terms_change_detected": false
+      },
+      "expected": {
+        "production_request_allowed": false,
+        "production_ingestion_allowed": false,
+        "source_support_allowed": false,
+        "reason": "governance_record_not_current"
+      }
+    },
+    {
+      "case_id": "enable-kill-switch",
+      "input": {
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "terms_decision": "approved",
+        "terms_current": true,
+        "policy_state": "approved",
+        "policy_current": true,
+        "kill_switch_engaged": true,
+        "material_terms_change_detected": false
+      },
+      "expected": {
+        "production_request_allowed": false,
+        "production_ingestion_allowed": false,
+        "source_support_allowed": false,
+        "reason": "kill_switch_engaged"
+      }
+    },
+    {
+      "case_id": "enable-material-terms-change",
+      "input": {
+        "selection_state": "selected",
+        "proof_state": "passed",
+        "legal_state": "approved",
+        "runtime_state": "production",
+        "terms_decision": "approved",
+        "terms_current": true,
+        "policy_state": "approved",
+        "policy_current": true,
+        "kill_switch_engaged": false,
+        "material_terms_change_detected": true
+      },
+      "expected": {
+        "production_request_allowed": false,
+        "production_ingestion_allowed": false,
+        "source_support_allowed": false,
+        "reason": "material_terms_change_detected"
+      }
+    }
+  ],
+  "rights_cases": [
+    {
+      "case_id": "right-false-commercial-internal-use",
+      "requested_right": "commercial_internal_use_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": false,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": false,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "allowed": false,
+        "reason": "independent_right_false"
+      }
+    },
+    {
+      "case_id": "right-false-consumer-verdict",
+      "requested_right": "consumer_verdict_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": false,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": false,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "allowed": false,
+        "reason": "independent_right_false"
+      }
+    },
+    {
+      "case_id": "right-false-consumer-explanation",
+      "requested_right": "consumer_explanation_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": false,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": false,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "allowed": false,
+        "reason": "independent_right_false"
+      }
+    },
+    {
+      "case_id": "right-false-client-enforcement",
+      "requested_right": "client_enforcement_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": false,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": false,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "allowed": false,
+        "reason": "independent_right_false"
+      }
+    },
+    {
+      "case_id": "right-false-benchmark-output",
+      "requested_right": "benchmark_output_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": false,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": false,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "allowed": false,
+        "reason": "independent_right_false"
+      }
+    },
+    {
+      "case_id": "right-false-derived-b2b",
+      "requested_right": "derived_b2b_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": false,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": false,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "allowed": false,
+        "reason": "independent_right_false"
+      }
+    },
+    {
+      "case_id": "right-false-raw-redistribution",
+      "requested_right": "raw_redistribution_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": false,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": false,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "allowed": false,
+        "reason": "independent_right_false"
+      }
+    },
+    {
+      "case_id": "right-false-model-training",
+      "requested_right": "model_training_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": false,
+        "model_validation_allowed": true
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": false,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "allowed": false,
+        "reason": "independent_right_false"
+      }
+    },
+    {
+      "case_id": "right-false-model-validation",
+      "requested_right": "model_validation_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": false
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": false
+      },
+      "expected": {
+        "allowed": false,
+        "reason": "independent_right_false"
+      }
+    },
+    {
+      "case_id": "right-positive-consumer-verdict-intersection",
+      "requested_right": "consumer_verdict_allowed",
+      "terms_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "policy_rights": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "allowed": true,
+        "reason": "both_terms_and_policy_allow"
+      }
+    }
+  ],
+  "notice_cases": [
+    {
+      "case_id": "notice-required-satisfied",
+      "input": {
+        "terms_attribution": {
+          "status": "required",
+          "template_ref": "fixture-ref:attribution-alpha"
+        },
+        "terms_advisory": {
+          "status": "required",
+          "template_ref": "fixture-ref:advisory-alpha"
+        },
+        "policy_attribution": {
+          "status": "required",
+          "template_ref": "fixture-ref:attribution-alpha"
+        },
+        "policy_advisory": {
+          "status": "required",
+          "template_ref": "fixture-ref:advisory-alpha"
+        },
+        "rendered_attribution": true,
+        "rendered_advisory": true
+      },
+      "expected": {
+        "consumer_explanation_allowed": true,
+        "reason": "required_notices_satisfied"
+      }
+    },
+    {
+      "case_id": "notice-attribution-missing",
+      "input": {
+        "terms_attribution": {
+          "status": "required",
+          "template_ref": "fixture-ref:attribution-alpha"
+        },
+        "terms_advisory": {
+          "status": "required",
+          "template_ref": "fixture-ref:advisory-alpha"
+        },
+        "policy_attribution": {
+          "status": "required",
+          "template_ref": "fixture-ref:attribution-alpha"
+        },
+        "policy_advisory": {
+          "status": "required",
+          "template_ref": "fixture-ref:advisory-alpha"
+        },
+        "rendered_attribution": false,
+        "rendered_advisory": true
+      },
+      "expected": {
+        "consumer_explanation_allowed": false,
+        "reason": "required_attribution_missing"
+      }
+    },
+    {
+      "case_id": "notice-advisory-missing",
+      "input": {
+        "terms_attribution": {
+          "status": "required",
+          "template_ref": "fixture-ref:attribution-alpha"
+        },
+        "terms_advisory": {
+          "status": "required",
+          "template_ref": "fixture-ref:advisory-alpha"
+        },
+        "policy_attribution": {
+          "status": "required",
+          "template_ref": "fixture-ref:attribution-alpha"
+        },
+        "policy_advisory": {
+          "status": "required",
+          "template_ref": "fixture-ref:advisory-alpha"
+        },
+        "rendered_attribution": true,
+        "rendered_advisory": false
+      },
+      "expected": {
+        "consumer_explanation_allowed": false,
+        "reason": "required_advisory_missing"
+      }
+    }
+  ],
+  "freshness_cases": [
+    {
+      "case_id": "fresh-before-normal-boundary",
+      "input": {
+        "last_confirmed_at": "2000-02-15T10:00:00Z",
+        "normal_freshness_ends_at": "2000-02-15T11:00:00Z",
+        "provider_expires_at": "2000-02-15T14:00:00Z",
+        "policy_hard_expiry_at": "2000-02-15T12:00:00Z",
+        "effective_expiry_at": "2000-02-15T12:00:00Z",
+        "evaluated_at": "2000-02-15T10:59:59Z",
+        "availability": "available",
+        "lookup_result": "match",
+        "last_known_good_exists": true
+      },
+      "expected": {
+        "status": "current_support",
+        "contributes_source_support": true,
+        "clean_claim_allowed": false,
+        "recompute_scheduled": false
+      }
+    },
+    {
+      "case_id": "fresh-at-normal-boundary-lkg",
+      "input": {
+        "last_confirmed_at": "2000-02-15T10:00:00Z",
+        "normal_freshness_ends_at": "2000-02-15T11:00:00Z",
+        "provider_expires_at": "2000-02-15T14:00:00Z",
+        "policy_hard_expiry_at": "2000-02-15T12:00:00Z",
+        "effective_expiry_at": "2000-02-15T12:00:00Z",
+        "evaluated_at": "2000-02-15T11:00:00Z",
+        "availability": "unavailable",
+        "lookup_result": "not_attempted",
+        "last_known_good_exists": true
+      },
+      "expected": {
+        "status": "stale_last_known_good_support",
+        "contributes_source_support": true,
+        "clean_claim_allowed": false,
+        "recompute_scheduled": false
+      }
+    },
+    {
+      "case_id": "fresh-no-match-not-clean",
+      "input": {
+        "last_confirmed_at": "2000-02-15T10:00:00Z",
+        "normal_freshness_ends_at": "2000-02-15T11:00:00Z",
+        "provider_expires_at": "2000-02-15T14:00:00Z",
+        "policy_hard_expiry_at": "2000-02-15T12:00:00Z",
+        "effective_expiry_at": "2000-02-15T12:00:00Z",
+        "evaluated_at": "2000-02-15T10:30:00Z",
+        "availability": "available",
+        "lookup_result": "no_match",
+        "last_known_good_exists": false
+      },
+      "expected": {
+        "status": "no_source_support",
+        "contributes_source_support": false,
+        "clean_claim_allowed": false,
+        "recompute_scheduled": false
+      }
+    },
+    {
+      "case_id": "fresh-timeout-incomplete",
+      "input": {
+        "last_confirmed_at": "2000-02-15T10:00:00Z",
+        "normal_freshness_ends_at": "2000-02-15T11:00:00Z",
+        "provider_expires_at": "2000-02-15T14:00:00Z",
+        "policy_hard_expiry_at": "2000-02-15T12:00:00Z",
+        "effective_expiry_at": "2000-02-15T12:00:00Z",
+        "evaluated_at": "2000-02-15T10:30:00Z",
+        "availability": "available",
+        "lookup_result": "timeout",
+        "last_known_good_exists": false
+      },
+      "expected": {
+        "status": "incomplete_without_source_support",
+        "contributes_source_support": false,
+        "clean_claim_allowed": false,
+        "recompute_scheduled": false
+      }
+    },
+    {
+      "case_id": "fresh-outage-lkg-before-hard",
+      "input": {
+        "last_confirmed_at": "2000-02-15T10:00:00Z",
+        "normal_freshness_ends_at": "2000-02-15T11:00:00Z",
+        "provider_expires_at": "2000-02-15T14:00:00Z",
+        "policy_hard_expiry_at": "2000-02-15T12:00:00Z",
+        "effective_expiry_at": "2000-02-15T12:00:00Z",
+        "evaluated_at": "2000-02-15T11:59:59Z",
+        "availability": "unavailable",
+        "lookup_result": "not_attempted",
+        "last_known_good_exists": true
+      },
+      "expected": {
+        "status": "stale_last_known_good_support",
+        "contributes_source_support": true,
+        "clean_claim_allowed": false,
+        "recompute_scheduled": false
+      }
+    },
+    {
+      "case_id": "fresh-at-hard-expiry",
+      "input": {
+        "last_confirmed_at": "2000-02-15T10:00:00Z",
+        "normal_freshness_ends_at": "2000-02-15T11:00:00Z",
+        "provider_expires_at": "2000-02-15T14:00:00Z",
+        "policy_hard_expiry_at": "2000-02-15T12:00:00Z",
+        "effective_expiry_at": "2000-02-15T12:00:00Z",
+        "evaluated_at": "2000-02-15T12:00:00Z",
+        "availability": "unavailable",
+        "lookup_result": "not_attempted",
+        "last_known_good_exists": true
+      },
+      "expected": {
+        "status": "excluded_expired",
+        "contributes_source_support": false,
+        "clean_claim_allowed": false,
+        "recompute_scheduled": true
+      }
+    },
+    {
+      "case_id": "fresh-provider-rate-limited",
+      "input": {
+        "last_confirmed_at": "2000-02-15T10:00:00Z",
+        "normal_freshness_ends_at": "2000-02-15T11:00:00Z",
+        "provider_expires_at": "2000-02-15T14:00:00Z",
+        "policy_hard_expiry_at": "2000-02-15T12:00:00Z",
+        "effective_expiry_at": "2000-02-15T12:00:00Z",
+        "evaluated_at": "2000-02-15T10:30:00Z",
+        "availability": "rate_limited",
+        "lookup_result": "not_attempted",
+        "last_known_good_exists": false,
+        "retry_after_seconds": 300
+      },
+      "expected": {
+        "status": "incomplete_without_source_support",
+        "contributes_source_support": false,
+        "clean_claim_allowed": false,
+        "recompute_scheduled": false,
+        "retry_deferred_seconds": 300
+      }
+    },
+    {
+      "case_id": "fresh-provider-expiry-earlier-exact-boundary",
+      "input": {
+        "last_confirmed_at": "2000-02-15T10:00:00Z",
+        "normal_freshness_ends_at": "2000-02-15T11:00:00Z",
+        "provider_expires_at": "2000-02-15T11:30:00Z",
+        "policy_hard_expiry_at": "2000-02-15T12:00:00Z",
+        "effective_expiry_at": "2000-02-15T11:30:00Z",
+        "evaluated_at": "2000-02-15T11:30:00Z",
+        "availability": "unavailable",
+        "lookup_result": "not_attempted",
+        "last_known_good_exists": true
+      },
+      "expected": {
+        "status": "excluded_expired",
+        "contributes_source_support": false,
+        "clean_claim_allowed": false,
+        "recompute_scheduled": true
+      }
+    }
+  ],
+  "resource_control_cases": [
+    {
+      "case_id": "resource-quota-below-warning",
+      "input": {
+        "resource": "quota_fictional_request_unit",
+        "period": "utc_month",
+        "evaluated_at": "2000-02-15T12:00:00Z",
+        "period_started_at": "2000-02-01T00:00:00Z",
+        "usage": {
+          "status": "known",
+          "current_total": 70
+        },
+        "projected_increment": 5,
+        "warning_threshold": 80,
+        "hard_stop_threshold": 100,
+        "period_reset_applied": false
+      },
+      "expected": {
+        "allowed": true,
+        "alert": false,
+        "reason": "below_warning"
+      }
+    },
+    {
+      "case_id": "resource-quota-at-warning",
+      "input": {
+        "resource": "quota_fictional_request_unit",
+        "period": "utc_month",
+        "evaluated_at": "2000-02-15T12:00:00Z",
+        "period_started_at": "2000-02-01T00:00:00Z",
+        "usage": {
+          "status": "known",
+          "current_total": 79
+        },
+        "projected_increment": 1,
+        "warning_threshold": 80,
+        "hard_stop_threshold": 100,
+        "period_reset_applied": false
+      },
+      "expected": {
+        "allowed": true,
+        "alert": true,
+        "reason": "at_warning_allow_and_alert"
+      }
+    },
+    {
+      "case_id": "resource-cost-at-warning",
+      "input": {
+        "resource": "cost_fictional_micro_xts",
+        "period": "utc_month",
+        "evaluated_at": "2000-02-15T12:00:00Z",
+        "period_started_at": "2000-02-01T00:00:00Z",
+        "usage": {
+          "status": "known",
+          "current_total": 7900
+        },
+        "projected_increment": 100,
+        "warning_threshold": 8000,
+        "hard_stop_threshold": 10000,
+        "period_reset_applied": false
+      },
+      "expected": {
+        "allowed": true,
+        "alert": true,
+        "reason": "at_warning_allow_and_alert"
+      }
+    },
+    {
+      "case_id": "resource-quota-at-hard-stop",
+      "input": {
+        "resource": "quota_fictional_request_unit",
+        "period": "utc_month",
+        "evaluated_at": "2000-02-15T12:00:00Z",
+        "period_started_at": "2000-02-01T00:00:00Z",
+        "usage": {
+          "status": "known",
+          "current_total": 99
+        },
+        "projected_increment": 1,
+        "warning_threshold": 80,
+        "hard_stop_threshold": 100,
+        "period_reset_applied": false
+      },
+      "expected": {
+        "allowed": false,
+        "alert": true,
+        "reason": "projected_total_at_hard_stop"
+      }
+    },
+    {
+      "case_id": "resource-cost-at-hard-stop",
+      "input": {
+        "resource": "cost_fictional_micro_xts",
+        "period": "utc_month",
+        "evaluated_at": "2000-02-15T12:00:00Z",
+        "period_started_at": "2000-02-01T00:00:00Z",
+        "usage": {
+          "status": "known",
+          "current_total": 9999
+        },
+        "projected_increment": 1,
+        "warning_threshold": 8000,
+        "hard_stop_threshold": 10000,
+        "period_reset_applied": false
+      },
+      "expected": {
+        "allowed": false,
+        "alert": true,
+        "reason": "projected_total_at_hard_stop"
+      }
+    },
+    {
+      "case_id": "resource-new-utc-period",
+      "input": {
+        "resource": "quota_fictional_request_unit",
+        "period": "utc_month",
+        "evaluated_at": "2000-02-15T12:00:00Z",
+        "period_started_at": "2000-02-15T00:00:00Z",
+        "usage": {
+          "status": "known",
+          "current_total": 0
+        },
+        "projected_increment": 1,
+        "warning_threshold": 80,
+        "hard_stop_threshold": 100,
+        "period_reset_applied": true
+      },
+      "expected": {
+        "allowed": true,
+        "alert": false,
+        "reason": "new_utc_period"
+      }
+    },
+    {
+      "case_id": "resource-usage-unknown",
+      "input": {
+        "resource": "quota_fictional_request_unit",
+        "period": "utc_month",
+        "evaluated_at": "2000-02-15T12:00:00Z",
+        "period_started_at": "2000-02-01T00:00:00Z",
+        "usage": {
+          "status": "unknown"
+        },
+        "projected_increment": 1,
+        "warning_threshold": 80,
+        "hard_stop_threshold": 100,
+        "period_reset_applied": false
+      },
+      "expected": {
+        "allowed": false,
+        "alert": true,
+        "reason": "usage_unknown"
+      }
+    }
+  ],
+  "source_class_cases": [
+    {
+      "case_id": "class-qualified-dangerous",
+      "source_class": "qualified_threat",
+      "requested_use": "sole_support_dangerous",
+      "has_independent_qualified_support": false,
+      "expected": {
+        "allowed": true,
+        "reason": "qualified_threat_support_allowed"
+      }
+    },
+    {
+      "case_id": "class-infrastructure-sole-denied",
+      "source_class": "infrastructure",
+      "requested_use": "sole_support_dangerous",
+      "has_independent_qualified_support": false,
+      "expected": {
+        "allowed": false,
+        "reason": "infrastructure_not_sufficient"
+      }
+    },
+    {
+      "case_id": "class-public-context-enforcement-denied",
+      "source_class": "public_context",
+      "requested_use": "client_enforcement",
+      "has_independent_qualified_support": false,
+      "expected": {
+        "allowed": false,
+        "reason": "public_context_not_enforcement"
+      }
+    },
+    {
+      "case_id": "class-benchmark-production-denied",
+      "source_class": "benchmark_only",
+      "requested_use": "sole_support_dangerous",
+      "has_independent_qualified_support": false,
+      "expected": {
+        "allowed": false,
+        "reason": "benchmark_not_production_support"
+      }
+    },
+    {
+      "case_id": "class-public-context-sole-danger-denied",
+      "source_class": "public_context",
+      "requested_use": "sole_support_dangerous",
+      "has_independent_qualified_support": false,
+      "expected": {
+        "allowed": false,
+        "reason": "public_context_not_danger_support"
+      }
+    },
+    {
+      "case_id": "class-infrastructure-enforcement-denied",
+      "source_class": "infrastructure",
+      "requested_use": "client_enforcement",
+      "has_independent_qualified_support": false,
+      "expected": {
+        "allowed": false,
+        "reason": "infrastructure_not_sufficient"
+      }
+    }
+  ],
+  "withdrawal_cases": [
+    {
+      "case_id": "withdraw-source-retirement",
+      "trigger": "source_retired",
+      "run_number": 1,
+      "support_composition": "source_only",
+      "state_before": {
+        "requests_enabled": true,
+        "ingestion_enabled": true,
+        "source_observation_count": 4,
+        "raw_artifact_count": 2,
+        "backup_artifact_count": 2,
+        "prohibited_derived_output_count": 2,
+        "enforcement_entry_count": 3,
+        "recompute_job_count": 0,
+        "withdrawal_receipt_count": 0,
+        "independent_hezo_support_count": 0
+      },
+      "effective_rights_before": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "state_after": {
+          "requests_enabled": false,
+          "ingestion_enabled": false,
+          "source_observation_count": 0,
+          "raw_artifact_count": 0,
+          "backup_artifact_count": 0,
+          "prohibited_derived_output_count": 0,
+          "enforcement_entry_count": 0,
+          "recompute_job_count": 1,
+          "withdrawal_receipt_count": 1,
+          "independent_hezo_support_count": 0
+        },
+        "effective_rights_after": {
+          "commercial_internal_use_allowed": false,
+          "consumer_verdict_allowed": false,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": false,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": false
+        },
+        "withdrawal_applied": true,
+        "duplicate_effect": false,
+        "independent_hezo_support_preserved": true,
+        "actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ]
+      }
+    },
+    {
+      "case_id": "withdraw-provider-retraction",
+      "trigger": "provider_retraction",
+      "run_number": 1,
+      "support_composition": "source_only",
+      "state_before": {
+        "requests_enabled": true,
+        "ingestion_enabled": true,
+        "source_observation_count": 4,
+        "raw_artifact_count": 2,
+        "backup_artifact_count": 2,
+        "prohibited_derived_output_count": 2,
+        "enforcement_entry_count": 3,
+        "recompute_job_count": 0,
+        "withdrawal_receipt_count": 0,
+        "independent_hezo_support_count": 0
+      },
+      "effective_rights_before": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "state_after": {
+          "requests_enabled": true,
+          "ingestion_enabled": true,
+          "source_observation_count": 3,
+          "raw_artifact_count": 1,
+          "backup_artifact_count": 1,
+          "prohibited_derived_output_count": 1,
+          "enforcement_entry_count": 2,
+          "recompute_job_count": 1,
+          "withdrawal_receipt_count": 1,
+          "independent_hezo_support_count": 0
+        },
+        "effective_rights_after": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": true,
+          "client_enforcement_allowed": true,
+          "benchmark_output_allowed": true,
+          "derived_b2b_allowed": true,
+          "raw_redistribution_allowed": true,
+          "model_training_allowed": true,
+          "model_validation_allowed": true
+        },
+        "withdrawal_applied": true,
+        "duplicate_effect": false,
+        "independent_hezo_support_preserved": true,
+        "actions": [
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ]
+      }
+    },
+    {
+      "case_id": "withdraw-rights-narrowed",
+      "trigger": "rights_narrowed",
+      "run_number": 1,
+      "support_composition": "source_only",
+      "state_before": {
+        "requests_enabled": true,
+        "ingestion_enabled": true,
+        "source_observation_count": 4,
+        "raw_artifact_count": 2,
+        "backup_artifact_count": 2,
+        "prohibited_derived_output_count": 2,
+        "enforcement_entry_count": 3,
+        "recompute_job_count": 0,
+        "withdrawal_receipt_count": 0,
+        "independent_hezo_support_count": 0
+      },
+      "effective_rights_before": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "state_after": {
+          "requests_enabled": false,
+          "ingestion_enabled": false,
+          "source_observation_count": 4,
+          "raw_artifact_count": 0,
+          "backup_artifact_count": 0,
+          "prohibited_derived_output_count": 0,
+          "enforcement_entry_count": 0,
+          "recompute_job_count": 1,
+          "withdrawal_receipt_count": 1,
+          "independent_hezo_support_count": 0
+        },
+        "effective_rights_after": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": false,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": false
+        },
+        "withdrawal_applied": true,
+        "duplicate_effect": false,
+        "independent_hezo_support_preserved": true,
+        "actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ]
+      }
+    },
+    {
+      "case_id": "withdraw-multi-source-intersection",
+      "trigger": "terms_revoked",
+      "run_number": 1,
+      "support_composition": "multiple_external_sources_intersection",
+      "state_before": {
+        "requests_enabled": true,
+        "ingestion_enabled": true,
+        "source_observation_count": 8,
+        "raw_artifact_count": 2,
+        "backup_artifact_count": 2,
+        "prohibited_derived_output_count": 2,
+        "enforcement_entry_count": 3,
+        "recompute_job_count": 0,
+        "withdrawal_receipt_count": 0,
+        "independent_hezo_support_count": 0
+      },
+      "effective_rights_before": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "state_after": {
+          "requests_enabled": false,
+          "ingestion_enabled": false,
+          "source_observation_count": 4,
+          "raw_artifact_count": 0,
+          "backup_artifact_count": 0,
+          "prohibited_derived_output_count": 0,
+          "enforcement_entry_count": 0,
+          "recompute_job_count": 1,
+          "withdrawal_receipt_count": 1,
+          "independent_hezo_support_count": 0
+        },
+        "effective_rights_after": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": false,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": false
+        },
+        "withdrawal_applied": true,
+        "duplicate_effect": false,
+        "independent_hezo_support_preserved": true,
+        "actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ]
+      }
+    },
+    {
+      "case_id": "withdraw-prohibited-support-not-hidden",
+      "trigger": "terms_revoked",
+      "run_number": 1,
+      "support_composition": "multiple_external_sources_intersection",
+      "state_before": {
+        "requests_enabled": true,
+        "ingestion_enabled": true,
+        "source_observation_count": 4,
+        "raw_artifact_count": 2,
+        "backup_artifact_count": 2,
+        "prohibited_derived_output_count": 4,
+        "enforcement_entry_count": 4,
+        "recompute_job_count": 0,
+        "withdrawal_receipt_count": 0,
+        "independent_hezo_support_count": 0
+      },
+      "effective_rights_before": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "state_after": {
+          "requests_enabled": false,
+          "ingestion_enabled": false,
+          "source_observation_count": 0,
+          "raw_artifact_count": 0,
+          "backup_artifact_count": 0,
+          "prohibited_derived_output_count": 0,
+          "enforcement_entry_count": 0,
+          "recompute_job_count": 1,
+          "withdrawal_receipt_count": 1,
+          "independent_hezo_support_count": 0
+        },
+        "effective_rights_after": {
+          "commercial_internal_use_allowed": false,
+          "consumer_verdict_allowed": false,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": false,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": false
+        },
+        "withdrawal_applied": true,
+        "duplicate_effect": false,
+        "independent_hezo_support_preserved": true,
+        "actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ]
+      }
+    },
+    {
+      "case_id": "withdraw-backup-purge",
+      "trigger": "source_retired",
+      "run_number": 1,
+      "support_composition": "source_only",
+      "state_before": {
+        "requests_enabled": true,
+        "ingestion_enabled": true,
+        "source_observation_count": 4,
+        "raw_artifact_count": 2,
+        "backup_artifact_count": 5,
+        "prohibited_derived_output_count": 2,
+        "enforcement_entry_count": 3,
+        "recompute_job_count": 0,
+        "withdrawal_receipt_count": 0,
+        "independent_hezo_support_count": 0
+      },
+      "effective_rights_before": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "state_after": {
+          "requests_enabled": false,
+          "ingestion_enabled": false,
+          "source_observation_count": 0,
+          "raw_artifact_count": 0,
+          "backup_artifact_count": 0,
+          "prohibited_derived_output_count": 0,
+          "enforcement_entry_count": 0,
+          "recompute_job_count": 1,
+          "withdrawal_receipt_count": 1,
+          "independent_hezo_support_count": 0
+        },
+        "effective_rights_after": {
+          "commercial_internal_use_allowed": false,
+          "consumer_verdict_allowed": false,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": false,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": false
+        },
+        "withdrawal_applied": true,
+        "duplicate_effect": false,
+        "independent_hezo_support_preserved": true,
+        "actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ]
+      }
+    },
+    {
+      "case_id": "withdraw-repeat-idempotent",
+      "trigger": "repeat_withdrawal",
+      "run_number": 2,
+      "support_composition": "source_only",
+      "state_before": {
+        "requests_enabled": false,
+        "ingestion_enabled": false,
+        "source_observation_count": 0,
+        "raw_artifact_count": 0,
+        "backup_artifact_count": 0,
+        "prohibited_derived_output_count": 0,
+        "enforcement_entry_count": 0,
+        "recompute_job_count": 1,
+        "withdrawal_receipt_count": 1,
+        "independent_hezo_support_count": 0
+      },
+      "effective_rights_before": {
+        "commercial_internal_use_allowed": false,
+        "consumer_verdict_allowed": false,
+        "consumer_explanation_allowed": false,
+        "client_enforcement_allowed": false,
+        "benchmark_output_allowed": false,
+        "derived_b2b_allowed": false,
+        "raw_redistribution_allowed": false,
+        "model_training_allowed": false,
+        "model_validation_allowed": false
+      },
+      "expected": {
+        "state_after": {
+          "requests_enabled": false,
+          "ingestion_enabled": false,
+          "source_observation_count": 0,
+          "raw_artifact_count": 0,
+          "backup_artifact_count": 0,
+          "prohibited_derived_output_count": 0,
+          "enforcement_entry_count": 0,
+          "recompute_job_count": 1,
+          "withdrawal_receipt_count": 1,
+          "independent_hezo_support_count": 0
+        },
+        "effective_rights_after": {
+          "commercial_internal_use_allowed": false,
+          "consumer_verdict_allowed": false,
+          "consumer_explanation_allowed": false,
+          "client_enforcement_allowed": false,
+          "benchmark_output_allowed": false,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": false
+        },
+        "withdrawal_applied": false,
+        "duplicate_effect": false,
+        "independent_hezo_support_preserved": true,
+        "actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ]
+      }
+    },
+    {
+      "case_id": "withdraw-independent-hezo-preserved",
+      "trigger": "terms_revoked",
+      "run_number": 1,
+      "support_composition": "source_plus_independent_hezo",
+      "state_before": {
+        "requests_enabled": true,
+        "ingestion_enabled": true,
+        "source_observation_count": 4,
+        "raw_artifact_count": 2,
+        "backup_artifact_count": 2,
+        "prohibited_derived_output_count": 2,
+        "enforcement_entry_count": 4,
+        "recompute_job_count": 0,
+        "withdrawal_receipt_count": 0,
+        "independent_hezo_support_count": 2
+      },
+      "effective_rights_before": {
+        "commercial_internal_use_allowed": true,
+        "consumer_verdict_allowed": true,
+        "consumer_explanation_allowed": true,
+        "client_enforcement_allowed": true,
+        "benchmark_output_allowed": true,
+        "derived_b2b_allowed": true,
+        "raw_redistribution_allowed": true,
+        "model_training_allowed": true,
+        "model_validation_allowed": true
+      },
+      "expected": {
+        "state_after": {
+          "requests_enabled": false,
+          "ingestion_enabled": false,
+          "source_observation_count": 0,
+          "raw_artifact_count": 0,
+          "backup_artifact_count": 0,
+          "prohibited_derived_output_count": 0,
+          "enforcement_entry_count": 1,
+          "recompute_job_count": 1,
+          "withdrawal_receipt_count": 1,
+          "independent_hezo_support_count": 2
+        },
+        "effective_rights_after": {
+          "commercial_internal_use_allowed": true,
+          "consumer_verdict_allowed": true,
+          "consumer_explanation_allowed": true,
+          "client_enforcement_allowed": true,
+          "benchmark_output_allowed": false,
+          "derived_b2b_allowed": false,
+          "raw_redistribution_allowed": false,
+          "model_training_allowed": false,
+          "model_validation_allowed": false
+        },
+        "withdrawal_applied": true,
+        "duplicate_effect": false,
+        "independent_hezo_support_preserved": true,
+        "actions": [
+          "disable_new_requests",
+          "disable_new_ingestion",
+          "locate_supported_observations",
+          "purge_raw_and_prohibited_derived_material",
+          "purge_backup_material",
+          "tombstone_disallowed_enforcement",
+          "schedule_affected_output_recompute",
+          "preserve_independent_hezo_support"
+        ]
+      }
+    }
+  ],
+  "negative_contract_cases": [
+    {
+      "case_id": "reject-each-absent-right",
+      "validation_layer": "json_schema",
+      "mutation": "remove_each_required_field",
+      "affected_json_pointers": [
+        "/registry/terms_decisions/0/rights/commercial_internal_use_allowed",
+        "/registry/terms_decisions/0/rights/consumer_verdict_allowed",
+        "/registry/terms_decisions/0/rights/consumer_explanation_allowed",
+        "/registry/terms_decisions/0/rights/client_enforcement_allowed",
+        "/registry/terms_decisions/0/rights/benchmark_output_allowed",
+        "/registry/terms_decisions/0/rights/derived_b2b_allowed",
+        "/registry/terms_decisions/0/rights/raw_redistribution_allowed",
+        "/registry/terms_decisions/0/rights/model_training_allowed",
+        "/registry/terms_decisions/0/rights/model_validation_allowed"
+      ],
+      "expected": "schema_rejected"
+    },
+    {
+      "case_id": "reject-unknown-property",
+      "validation_layer": "json_schema",
+      "mutation": "add_unknown_property",
+      "affected_json_pointers": [
+        "/registry/sources/0/raw_response"
+      ],
+      "expected": "schema_rejected"
+    },
+    {
+      "case_id": "reject-url-shaped-reference",
+      "validation_layer": "json_schema",
+      "mutation": "replace_with_url_shaped_reference",
+      "affected_json_pointers": [
+        "/registry/terms_decisions/0/terms_snapshot_ref"
+      ],
+      "expected": "schema_rejected"
+    },
+    {
+      "case_id": "reject-path-shaped-reference",
+      "validation_layer": "json_schema",
+      "mutation": "replace_with_path_shaped_reference",
+      "affected_json_pointers": [
+        "/registry/sources/0/proof_evidence_ref"
+      ],
+      "expected": "schema_rejected"
+    },
+    {
+      "case_id": "reject-inconsistent-production-gate",
+      "validation_layer": "json_schema",
+      "mutation": "make_production_gate_inconsistent",
+      "affected_json_pointers": [
+        "/registry/sources/0/selection_state",
+        "/registry/sources/0/proof_state",
+        "/registry/sources/0/legal_state"
+      ],
+      "expected": "schema_rejected"
+    },
+    {
+      "case_id": "reject-dangling-or-cross-source-reference",
+      "validation_layer": "semantic_validator",
+      "mutation": "make_reference_dangling_or_cross_source",
+      "affected_json_pointers": [
+        "/registry/sources/0/current_terms_decision_ref",
+        "/registry/operational_policies/0/terms_decision_ref"
+      ],
+      "expected": "semantic_rejected"
+    },
+    {
+      "case_id": "reject-policy-right-or-scope-broadened",
+      "validation_layer": "semantic_validator",
+      "mutation": "broaden_policy_beyond_terms",
+      "affected_json_pointers": [
+        "/registry/operational_policies/1/effective_rights/client_enforcement_allowed",
+        "/registry/terms_decisions/1/scope_constraints/allowed_match_semantics",
+        "/registry/operational_policies/1/allowed_match_semantics",
+        "/registry/operational_policies/1/allowed_enforcement_scopes"
+      ],
+      "expected": "semantic_rejected"
+    },
+    {
+      "case_id": "reject-unordered-thresholds",
+      "validation_layer": "semantic_validator",
+      "mutation": "make_thresholds_unordered",
+      "affected_json_pointers": [
+        "/registry/operational_policies/0/quota/warning_threshold",
+        "/registry/operational_policies/0/quota/hard_stop_threshold"
+      ],
+      "expected": "semantic_rejected"
+    },
+    {
+      "case_id": "reject-unordered-freshness",
+      "validation_layer": "semantic_validator",
+      "mutation": "make_freshness_unordered",
+      "affected_json_pointers": [
+        "/registry/operational_policies/0/normal_freshness_seconds",
+        "/registry/operational_policies/0/hard_expiry_seconds"
+      ],
+      "expected": "semantic_rejected"
+    },
+    {
+      "case_id": "reject-retention-or-notice-mismatch",
+      "validation_layer": "semantic_validator",
+      "mutation": "exceed_terms_retention_or_mismatch_notice",
+      "affected_json_pointers": [
+        "/registry/operational_policies/0/maximum_backup_retention_seconds",
+        "/registry/operational_policies/0/notices/attribution"
+      ],
+      "expected": "semantic_rejected"
+    }
+  ],
+  "limitations": {
+    "data_only_contract": true,
+    "runnable_validator_included": false,
+    "provider_connector_included": false,
+    "provider_network_call_made": false,
+    "production_registry_instance_included": false,
+    "real_terms_or_contract_included": false,
+    "real_quota_or_cost_included": false,
+    "real_rights_approval_proven": false,
+    "real_provider_proof_passed": false,
+    "s0_f_passed": false
+  }
+}

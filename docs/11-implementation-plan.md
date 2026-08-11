@@ -135,11 +135,15 @@ Deliver:
 
 Deliver:
 
-- source-rights registry schema;
-- terms snapshots for every candidate source;
-- written production-use decision for each;
-- Google Web Risk project, quota, cost ceiling, attribution, advisory, cache-expiry, and outage plan if selected;
+- a public-safe source-rights registry contract and synthetic offline vectors; these artifacts define expected behavior but cannot pass S0-F;
+- current terms snapshots for each real candidate in the restricted, human-controlled evidence store, not Git;
+- separate owner-controlled selection, legal, proof, and runtime state records with opaque public references only; runtime remains disabled during proof;
+- a Stage 0 viability, rights, and proof-spend outcome for at least one commercially permitted qualified exact-threat source suitable for the Stage 2 manual-check slice;
+- reserved-input proof of quota/cost, notices, freshness/expiry, no-match/outage, kill-switch, terms-change, withdrawal, and replay behavior for that source, with no production ingestion;
+- a Google Web Risk project, proof-stage cost ceiling, attribution, advisory, cache-expiry, and outage plan only if P-010 is accepted and that product is selected;
 - explicit feature flags off for legally unresolved feeds.
+
+The Stage 0 portion of O-008 is the viability, rights, and bounded proof-spend outcome needed to decide whether the exact-threat path is credible. Production procurement, provider account readiness, and the annual source budget may follow during Stage 1, but must be approved before Stage 2 integrates or calls a production source. Neither P-010 nor P-011 is accepted by this plan.
 
 ### Stage 0 exit gate
 
@@ -150,7 +154,7 @@ Proceed only if:
 - accountless private-verification authentication has a credible design;
 - O-018 sets validated inactivity and absolute expiry for PIR evaluation-key protocol state;
 - the sandbox has zero boundary-canary contacts;
-- at least one commercially permitted, useful seed source is available;
+- at least one commercially permitted qualified exact-threat source is selected and proof-passed as suitable for the Stage 2 manual-check slice, with the Stage 0 portion of O-008 resolved; infrastructure, context, benchmark, CISA advisory, and CISA `.gov` enrichment sources do not satisfy this gate;
 - the privacy owner approves the data inventory and MPD wording;
 - no critical open decision in document 12 remains ownerless.
 
@@ -190,10 +194,12 @@ Create deterministic foundations without a user-facing product.
 
 Ship an end-to-end manual check using only qualified, precisely scoped known intelligence.
 
+Before Stage 2 begins, the production portion of O-008 must approve the applicable procurement/contract, provider account, production cost controls, and annual source budget. A Stage 0 proof-spend decision is not production purchasing authority.
+
 ### Backend
 
 1. Implement the check endpoint, request caps, cache, pending result capability, and typed errors.
-2. Integrate one approved exact-lookup source behind a provider interface.
+2. Integrate one selected, legally approved, proof-passed exact-lookup source behind a provider interface; authorize production runtime separately.
 3. Apply provider expiry, quota, attribution, advisory text, and cost controls.
 4. Store an immutable source observation and derived verdict.
 5. Return bounded structured reason codes.
@@ -411,7 +417,7 @@ All cross-document acceptance criteria must pass. Specifically:
 - zero SSRF boundary contacts or sandbox escapes;
 - zero confirmed automatic false blocks in the required frozen benign corpus;
 - signed, reproducible, reversible blockset publication;
-- source-rights approval for every active connector;
+- selected, legally approved, current proof-passed, runtime-authorized state for every active connector;
 - privacy labels/policy/consent match observed traffic;
 - live kill switches and on-call runbooks;
 - support and false-positive escalation ownership;
@@ -429,10 +435,10 @@ The stage rule applies to stages, not to independent proofs inside Stage 0. Star
 | S0-C | App Attest proof | iOS owner plus backend security owner | Minimal containing-app client and isolated verifier; prove environment separation, full attestation/assertion validation, body binding, replay/counter behavior, reset, reduced-trust fallback, and subjectless capability output. |
 | S0-D | Sandbox boundary proof | Security/infrastructure owner | Disposable runner, controlled DNS/egress, synthetic adversarial destinations, and boundary canaries only; prove zero private/internal contact and no secret/production route. This is not the production crawler. |
 | S0-E | Privacy and measurement proof | Privacy owner plus iOS/backend owners | Data-flow inventory, consent-state prototype, monthly-token/withdrawal vectors, plane-deny schemas, processor/log canaries, and deletion/backup evidence. No public metric claim. |
-| S0-F | Source-rights and provider proof | Founder/legal plus intelligence/backend owner | Populate the rights decision registry, obtain required commercial approvals, and exercise one approved provider with reserved fixtures, quota/cost/freshness behavior, and no production ingestion. |
+| S0-F | Source-rights and provider proof | Founder/legal plus intelligence/backend owner | Define the public synthetic rights contract, then keep real terms, selection/legal decisions, proof-spend outcome, provider exercise, and evidence in the restricted human-controlled store. Exercise one commercially permitted qualified exact-threat source with reserved inputs across rights, quota/cost, notices, freshness/expiry, no-match/outage, kill-switch, terms change, withdrawal, and replay, with no production ingestion. A new schema or data-only vector set cannot pass S0-F. |
 | S1-A | First product-foundation PR | Backend/iOS leads | Only after Stage 0 passes: contract/error envelope, minimal check schemas, URL-policy parsing/IDNA/redaction, official parser/IP fixtures, property tests, and CI. No production API, database, UI, crawler, vendor connector, or cloud deployment yet. |
 
-The Apple capability/OHTTP requests, provider contracts, privacy approvals, and owner choices are human-controlled external work. Codex may prepare evidence and forms but must not invent an approval or treat a submitted request as success. If a work package cannot meet its proof, record the result and invoke the Stage 0 exit decision instead of compensating with broader scaffolding.
+The Apple capability/OHTTP requests, provider selection and contracts, real terms archives, proof and production budgets, provider accounts and credentials, restricted evidence, privacy approvals, and owner choices are human-controlled external work. Codex may prepare public-safe contracts, synthetic vectors, evidence templates, and forms but must not invent an approval, budget, account, credential, or proof result, and must not treat a submitted request as success. If a work package cannot meet its proof, record the result and invoke the Stage 0 exit decision instead of compensating with broader scaffolding.
 
 ## Feature-flag defaults
 
@@ -450,7 +456,7 @@ The Apple capability/OHTTP requests, provider contracts, privacy approvals, and 
 | URL Filter | Off until Apple and device-matrix gates |
 | MPD measurement | Off until consent/privacy gates |
 | Product analytics | Off until separately approved |
-| External source connector | Off until source-rights approval |
+| External source connector | Off until separately selected, legally approved, proof-passed, and runtime-authorized |
 
 ## What “done” means
 
