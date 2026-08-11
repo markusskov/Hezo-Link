@@ -1055,6 +1055,7 @@
       "warning_threshold_is_below_hard_stop": true,
       "projected_total_at_hard_stop_is_denied": true,
       "unknown_usage_is_denied": true,
+      "resource_period_reset_uses_utc_boundary": true,
       "policy_notices_match_terms_obligations": true,
       "policy_raw_and_backup_retention_do_not_exceed_terms": true,
       "source_class_limits_are_enforced": true,
@@ -1904,8 +1905,8 @@
       "input": {
         "resource": "quota_fictional_request_unit",
         "period": "utc_month",
-        "evaluated_at": "2000-02-15T12:00:00Z",
-        "period_started_at": "2000-02-15T00:00:00Z",
+        "evaluated_at": "2000-02-01T00:00:00Z",
+        "period_started_at": "2000-02-01T00:00:00Z",
         "usage": {
           "status": "known",
           "current_total": 0
