@@ -54,6 +54,11 @@ jobs:
         run: |
           set -euo pipefail
 
+          if git ls-files --error-unmatch Config/Signing.local.xcconfig >/dev/null 2>&1; then
+            echo '::error::The ignored owner-local signing config is tracked.'
+            exit 1
+          fi
+
           if grep -Eq 'DEVELOPMENT_TEAM[[:space:]]*=' HezoLink.xcodeproj/project.pbxproj; then
             echo '::error::The tracked Xcode project contains a development Team assignment.'
             exit 1
@@ -65,13 +70,17 @@ jobs:
             exit 1
           fi
 
-          if ! grep -Fxq 'HEZOLINK_DEVELOPMENT_TEAM =' Config/HezoLink.xcconfig; then
-            echo '::error::The tracked signing config contains a development Team value.'
+          team_assignment_count="$(awk '/^[[:space:]]*HEZOLINK_DEVELOPMENT_TEAM[[:space:]]*=/ { count += 1 } END { print count + 0 }' Config/HezoLink.xcconfig)"
+          if [[ "$team_assignment_count" -ne 1 ]] \
+            || ! grep -Eq '^HEZOLINK_DEVELOPMENT_TEAM[[:space:]]*=[[:space:]]*$' Config/HezoLink.xcconfig; then
+            echo '::error::The tracked signing config must contain exactly one empty development Team assignment.'
             exit 1
           fi
 
-          if ! grep -Fxq 'HEZOLINK_BUNDLE_IDENTIFIER = com.hezo.link.local' Config/HezoLink.xcconfig; then
-            echo '::error::The tracked signing config does not use the public local bundle identifier.'
+          bundle_assignment_count="$(awk '/^[[:space:]]*HEZOLINK_BUNDLE_IDENTIFIER[[:space:]]*=/ { count += 1 } END { print count + 0 }' Config/HezoLink.xcconfig)"
+          if [[ "$bundle_assignment_count" -ne 1 ]] \
+            || ! grep -Eq '^HEZOLINK_BUNDLE_IDENTIFIER[[:space:]]*=[[:space:]]*com[.]hezo[.]link[.]local[[:space:]]*$' Config/HezoLink.xcconfig; then
+            echo '::error::The tracked signing config must contain exactly one public local bundle identifier.'
             exit 1
           fi
 
