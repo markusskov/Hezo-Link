@@ -134,6 +134,8 @@ public struct RegistrableDomainClassifier: Sendable {
 
   private static let resourceBaseName = "hezolink-public-suffix-list-e1b8015c"
   private static let resourceExtension = "dat"
+  private static let licenseResourceBaseName = "LICENSE-MPL-2.0"
+  private static let licenseResourceExtension = "txt"
   private static let resourceSubdirectory = "PublicSuffix"
   private static let expectedSnapshotByteCount = 332_855
   private static let expectedSnapshotSHA256 =
@@ -184,6 +186,23 @@ public struct RegistrableDomainClassifier: Sendable {
     try bundledSnapshotData()
   }
 
+  /// Returns the bundled license bytes distributed beside the snapshot.
+  static func bundledLicenseDataForTesting() throws -> Data {
+    guard
+      let resourceURL = bundledResourceURL(
+        baseName: licenseResourceBaseName,
+        extension: licenseResourceExtension
+      )
+    else {
+      throw RegistrableDomainClassifierError.resourceUnavailable
+    }
+    do {
+      return try Data(contentsOf: resourceURL, options: .mappedIfSafe)
+    } catch {
+      throw RegistrableDomainClassifierError.resourceUnavailable
+    }
+  }
+
   /// Exercises the real matcher for an already canonical lowercase ASCII domain host.
   func classifyASCIIHostForTesting(_ asciiHost: String) -> RegistrableDomainClassification {
     classifyCanonicalASCIIHost(asciiHost)
@@ -229,6 +248,10 @@ public struct RegistrableDomainClassifier: Sendable {
   }
 
   private static func bundledSnapshotURL() -> URL? {
+    bundledResourceURL(baseName: resourceBaseName, extension: resourceExtension)
+  }
+
+  private static func bundledResourceURL(baseName: String, extension: String) -> URL? {
     #if SWIFT_PACKAGE
       let bundles = [Bundle.module]
     #else
@@ -237,15 +260,15 @@ public struct RegistrableDomainClassifier: Sendable {
 
     for bundle in bundles {
       if let nested = bundle.url(
-        forResource: resourceBaseName,
-        withExtension: resourceExtension,
+        forResource: baseName,
+        withExtension: `extension`,
         subdirectory: resourceSubdirectory
       ) {
         return nested
       }
       if let flat = bundle.url(
-        forResource: resourceBaseName,
-        withExtension: resourceExtension
+        forResource: baseName,
+        withExtension: `extension`
       ) {
         return flat
       }

@@ -63,8 +63,10 @@ struct PublicSuffixListAssetTests {
     #expect(pslBytesAreEqual(sourceSnapshot, bundledSnapshot))
     expectPinnedArtifact(bundledSnapshot, expected: expectedSnapshotArtifact, id: "bundle")
 
-    let runtimeLicense = try pslData(at: pslLicensePath)
-    expectPinnedArtifact(runtimeLicense, expected: expectedLicenseArtifact, id: "license")
+    let sourceLicense = try pslData(at: pslLicensePath)
+    let bundledLicense = try RegistrableDomainClassifier.bundledLicenseDataForTesting()
+    #expect(pslBytesAreEqual(sourceLicense, bundledLicense))
+    expectPinnedArtifact(bundledLicense, expected: expectedLicenseArtifact, id: "license")
   }
 
   @Test func officialCorpusMatchesTheRuntimeClassifier() throws {
