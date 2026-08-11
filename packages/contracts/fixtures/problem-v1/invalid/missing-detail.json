@@ -1,0 +1,8 @@
+{
+  "type": "https://errors.example.test/invalid-url",
+  "title": "Invalid URL",
+  "status": 422,
+  "code": "invalid_url",
+  "request_id": "fixture-request-missing",
+  "retryable": false
+}

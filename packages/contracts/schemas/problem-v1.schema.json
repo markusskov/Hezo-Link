@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:problem:v1",
+  "title": "Hezo Link problem V1",
+  "description": "Strict public RFC 9457-style problem shape. Format-aware URI-reference validation and semantic UTF-8 byte validation are required in addition to this schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "title",
+    "status",
+    "code",
+    "detail",
+    "request_id",
+    "retryable"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9._~:/?#\\[\\]@!$&'()*+,;=%-]*$",
+      "format": "uri-reference",
+      "description": "Nonempty ASCII RFC 3986 URI reference. The ASCII constraint makes the code-point maximum equal to the UTF-8 byte maximum. Validators must assert the uri-reference format, including percent-escape syntax."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[^\\p{Cc}\\p{Cf}]*$",
+      "description": "Bounded approved title with no Unicode control or format characters. Semantic validation additionally enforces the 128 UTF-8 byte maximum."
+    },
+    "status": {
+      "type": "integer",
+      "minimum": 400,
+      "maximum": 599
+    },
+    "code": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$",
+      "description": "Forward-compatible lower-snake-case ASCII code. The first character is a lowercase letter; doubled and trailing underscores are rejected."
+    },
+    "detail": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[^\\p{Cc}\\p{Cf}]*$",
+      "description": "Bounded non-sensitive copy with no Unicode control or format characters. Semantic validation additionally enforces the 512 UTF-8 byte maximum."
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]*$",
+      "description": "Plane-local request identifier using ASCII letters, digits, underscore, or hyphen."
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "retry_after_seconds": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 86400,
+      "description": "Optional retry delay. Presence requires retryable to be true."
+    }
+  },
+  "dependentSchemas": {
+    "retry_after_seconds": {
+      "properties": {
+        "retryable": {
+          "const": true
+        }
+      }
+    }
+  }
+}

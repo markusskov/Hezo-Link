@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "contract": "problem-v1",
+  "contract_schema": "../../schemas/problem-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-non-retryable",
+      "path": "valid/non-retryable.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-retryable-with-delay",
+      "path": "valid/retryable-with-delay.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-retryable-without-delay",
+      "path": "valid/retryable-without-delay.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-lower-boundaries",
+      "path": "valid/lower-boundaries.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-upper-numeric-boundaries",
+      "path": "valid/upper-numeric-boundaries.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-unknown-field",
+      "path": "invalid/unknown-field.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-missing-detail",
+      "path": "invalid/missing-detail.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-empty-type",
+      "path": "invalid/empty-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "minLength"
+    },
+    {
+      "id": "reject-malformed-type",
+      "path": "invalid/malformed-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-malformed-structure-type",
+      "path": "invalid/malformed-structure-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-invalid-ip-literal",
+      "path": "invalid/invalid-ip-literal.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-non-ascii-type",
+      "path": "invalid/non-ascii-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "pattern",
+        "format"
+      ]
+    },
+    {
+      "id": "reject-oversized-type",
+      "path": "invalid/oversized-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    },
+    {
+      "id": "reject-empty-title",
+      "path": "invalid/empty-title.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "minLength"
+    },
+    {
+      "id": "reject-title-control",
+      "path": "invalid/title-control.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-oversized-title",
+      "path": "invalid/oversized-title.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    },
+    {
+      "id": "reject-status-below-range",
+      "path": "invalid/status-below-range.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "minimum"
+    },
+    {
+      "id": "reject-status-above-range",
+      "path": "invalid/status-above-range.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maximum"
+    },
+    {
+      "id": "reject-fractional-status",
+      "path": "invalid/fractional-status.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-code-grammar",
+      "path": "invalid/code-grammar.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-oversized-code",
+      "path": "invalid/oversized-code.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    },
+    {
+      "id": "reject-empty-detail",
+      "path": "invalid/empty-detail.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "minLength"
+    },
+    {
+      "id": "reject-detail-control",
+      "path": "invalid/detail-control.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-oversized-detail",
+      "path": "invalid/oversized-detail.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    },
+    {
+      "id": "reject-empty-request-id",
+      "path": "invalid/empty-request-id.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "minLength"
+    },
+    {
+      "id": "reject-request-id-character",
+      "path": "invalid/request-id-character.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-oversized-request-id",
+      "path": "invalid/oversized-request-id.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    },
+    {
+      "id": "reject-retry-delay-on-non-retryable",
+      "path": "invalid/retry-delay-on-non-retryable.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-negative-retry-delay",
+      "path": "invalid/negative-retry-delay.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "minimum"
+    },
+    {
+      "id": "reject-oversized-retry-delay",
+      "path": "invalid/oversized-retry-delay.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maximum"
+    },
+    {
+      "id": "reject-fractional-retry-delay",
+      "path": "invalid/fractional-retry-delay.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-null-retry-delay",
+      "path": "invalid/null-retry-delay.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-retryable-type",
+      "path": "invalid/retryable-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    }
+  ]
+}

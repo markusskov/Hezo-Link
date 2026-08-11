@@ -1,0 +1,10 @@
+{
+  "type": "https://errors.example.test/temporarily-unavailable",
+  "title": "Temporarily unavailable",
+  "status": 503,
+  "code": "temporarily_unavailable",
+  "detail": "Please try again later.",
+  "request_id": "fixture-request-02",
+  "retryable": true,
+  "retry_after_seconds": 30
+}

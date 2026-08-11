@@ -1,0 +1,9 @@
+{
+  "type": "https://errors.example.test/invalid-code",
+  "title": "Invalid code",
+  "status": 422,
+  "code": "double__underscore",
+  "detail": "Synthetic invalid fixture.",
+  "request_id": "fixture-request-code-grammar",
+  "retryable": false
+}

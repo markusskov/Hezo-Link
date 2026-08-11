@@ -122,6 +122,32 @@ struct ProblemTests {
     }
   }
 
+  @Test(
+    "Problem type accepts valid IP literals",
+    arguments: ["https://[::1]/problem", "//[v1.a]/problem"]
+  )
+  func problemTypeAcceptsValidIPLiteral(_ candidate: String) throws {
+    let value = try ProblemType(validating: candidate)
+
+    #expect(value.rawValue == candidate)
+  }
+
+  @Test(
+    "Problem type rejects malformed IP literals",
+    arguments: [
+      "[",
+      "//[a]/",
+      "https://[::1",
+      "https://::1]/problem",
+      "https://[::1]suffix/problem",
+    ]
+  )
+  func problemTypeRejectsMalformedIPLiteral(_ candidate: String) {
+    #expect(throws: ProblemContractError.invalidFieldFormat) {
+      try ProblemType(validating: candidate)
+    }
+  }
+
   @Test func everyProblemContractErrorHasBoundedDescription() {
     let errors: [ProblemContractError] = [
       .emptyField,
@@ -178,9 +204,18 @@ struct ProblemTests {
       retryable: false
     )
 
+    let mirrorChildren = Array(problem.customMirror.children)
+    #expect(mirrorChildren.count == 1)
+
     for sensitiveValue in [sensitiveType, sensitiveTitle, sensitiveRequestID, sensitiveDetail] {
       #expect(problem.description.contains(sensitiveValue) == false)
       #expect(problem.debugDescription.contains(sensitiveValue) == false)
+      #expect(String(reflecting: problem).contains(sensitiveValue) == false)
+      #expect(
+        mirrorChildren.allSatisfy {
+          String(describing: $0.value).contains(sensitiveValue) == false
+        }
+      )
     }
     #expect(problem.description == "Problem(status: 422, code: invalid_url, retryable: false)")
   }
