@@ -119,7 +119,7 @@ For a signed device build, either select the owner-local Team and bundle identif
 
 The current Swift foundation and prototype have no third-party dependencies and perform no network access:
 
-- `packages/contracts/` contains the strict Check Request V1 OpenAPI/JSON Schema component and reserved-domain schema fixtures.
+- `packages/contracts/` contains the strict Check Request V1 and bounded Pending Check Response V1 OpenAPI/JSON Schema components and offline schema fixtures.
 - `packages/url-policy-oracles/` contains pinned, licensed, offline Unicode, URL-parser, and IP-syntax oracle data plus strict provenance manifests.
 - `Sources/HezoLinkCore/` contains bounded contract values plus the local URL-input syntax preflight and constant log redactor used by the prototype and later manual-input surfaces.
 
@@ -149,6 +149,6 @@ Documentation baseline: reviewed and merged.
 
 Stage 0: public governance and deterministic offline fixtures are established. The runnable proof harness remains paused until the repository and isolated-execution decisions are accepted; no proof is claimed complete.
 
-Application code: the bounded local S1-A foundation is authorized by [ADR 0002](docs/adr/0002-local-first-product-foundation.md), and the transient offline manual-entry prototype is authorized by [ADR 0003](docs/adr/0003-offline-manual-entry-prototype.md). The code contains the offline contract core, strict Check Request V1 data contract, URL-input policy primitives with executable tests, and a local syntax-status screen. It contains no connected consumer check, network client, persistence, provider integration, crawler, URL Filter, App Attest, analytics, or measurement behavior. Owner-local automatic signing may create Apple development provisioning state as the sole non-proof exception. Nothing here makes a Stage 0, Stage 1, Stage 2, release, or production-readiness claim.
+Application code: the bounded local S1-A foundation is authorized by [ADR 0002](docs/adr/0002-local-first-product-foundation.md), and the transient offline manual-entry prototype is authorized by [ADR 0003](docs/adr/0003-offline-manual-entry-prototype.md). The code contains the offline contract core, strict Check Request V1 and bounded Pending Check Response V1 data contracts, URL-input policy primitives with executable tests, and a local syntax-status screen. It contains no connected consumer check, network client, persistence, provider integration, crawler, URL Filter, App Attest, analytics, or measurement behavior. Owner-local automatic signing may create Apple development provisioning state as the sole non-proof exception. Nothing here makes a Stage 0, Stage 1, Stage 2, release, or production-readiness claim.
 
 Project license: not yet selected. Public visibility does not imply permission to reuse; O-019 requires the owner/legal decision before external contributions or reuse are promoted.

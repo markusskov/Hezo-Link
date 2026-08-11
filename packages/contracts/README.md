@@ -1,6 +1,6 @@
 # Hezo Link contract components
 
-This directory is the public, offline source of truth for the first check-input, problem, check-response-status, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
+This directory is the public, offline source of truth for the first check-input, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
 
 ## Artifacts
 
@@ -9,6 +9,8 @@ This directory is the public, offline source of truth for the first check-input,
 - `fixtures/check-request-v1/manifest.json` lists deterministic, reserved-domain valid and invalid examples and their expected schema result.
 - `schemas/check-response-status-v1.schema.json` is the strict Draft 2020-12 standalone check-response-status enum schema.
 - `fixtures/check-response-status-v1/manifest.json` lists both valid statuses and deterministic invalid aliases, cross-vocabulary values, types, and spellings with their exact schema failure keyword sets.
+- `schemas/pending-check-response-v1.schema.json` is the strict Draft 2020-12 Pending Check Response V1 object schema.
+- `fixtures/pending-check-response-v1/manifest.json` lists deterministic boundary, canonical-token, missing-member, known-forbidden-member, type, format, and grammar examples with their exact schema failure keyword sets.
 - `schemas/verdict-v1.schema.json` is the strict Draft 2020-12 public Verdict V1 object schema.
 - `fixtures/verdict-v1/manifest.json` lists every allowed and disallowed label/action pair plus deterministic structural and referenced-value failures with their exact schema failure keyword sets.
 - `schemas/problem-v1.schema.json` is the strict Draft 2020-12 RFC 9457-style problem schema.
@@ -47,6 +49,23 @@ The schema's `maxLength: 8192` is a useful coarse upper bound, but Draft 2020-12
 `CheckResponseStatusV1` is a standalone string enum with exactly two values: `complete` and `pending`. It rejects the conceptual state `analyzing`, the verdict label `unknown`, the report-response status `accepted`, HTTP status numbers, aliases, and alternate spellings.
 
 This primitive validates one check-response status value only. It defines no endpoint, response branch, HTTP status, token or capability, retry or polling behavior, completion guarantee, or check-response envelope.
+
+## Pending check response V1
+
+Every pending check response is a JSON object with exactly these required fields:
+
+- `schema_version`: integer constant `1`.
+- `status`: the absolute `CheckResponseStatusV1` reference further constrained to the string constant `pending`.
+- `check_token`: exactly 43 ASCII characters matching canonical unpadded base64url for 32 bytes. The first 42 characters use letters, digits, `_`, or `-`; the last character is one of `AEIMQUYcgkosw048` so unused base64 bits are zero. A producer must start with exactly 32 random bytes and emit their canonical unpadded base64url encoding.
+- `retry_after_ms`: an integer from `1` through `900000` inclusive. The upper bound is a wire-value cap only, not a polling schedule or duration policy.
+- `expires_at`: a real UTC whole-second instant in the exact `YYYY-MM-DDTHH:mm:ssZ` wire shape, with a year from `0001` through `9999`.
+- `request_id`: one through 128 ASCII letters, digits, `_`, or `-`.
+
+Unknown fields are rejected by the strict published schema. A specifically designated Swift Pending Check Response V1 reader may discard genuinely additive unknown response members for forward compatibility, but it must continue to require and validate every known member exactly. It must reject any payload containing the known hybrid-envelope keys `verdict`, `target`, `analysis`, `source_notices`, `versions`, `evaluated_at`, `valid_until`, or `block_eligible`; those members cannot be treated as harmless future additions. This tolerant client boundary does not widen the public schema or make an unknown member meaningful.
+
+The `check_token` rule validates only canonical encoded shape; neither the schema nor decoding proves issuance, randomness, entropy, secrecy, ownership, purpose, digesting, replay resistance, report linkage, authentication, or server-side handling. The timestamp and retry value likewise prove no relationship, schedule, completion behavior, or lifetime policy. This contract defines wire structure only. It defines no endpoint, HTTP behavior or status, polling behavior, token issuance or entropy proof, authentication or transport, App Attest behavior, completion guarantee, TTL, deletion, retention, persistence, storage, network behavior, or deployment.
+
+The `expires_at` pattern rejects fractions, offsets, lowercase `z`, and year `0000`; asserted `date-time` format validation also rejects impossible calendar instants. All bounded string grammars are ASCII, so their schema code-point limits equal their UTF-8 byte limits.
 
 ## Problem V1
 
@@ -109,4 +128,4 @@ This standalone reason primitive does not define or authorize a complete verdict
 
 ## Explicit exclusions
 
-These artifacts contain only request, problem, check-response-status, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, I/O behavior, identity material, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
+These artifacts contain only request, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token issuance or entropy proof, TTL, retention, storage, network or other I/O behavior, identity material, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.

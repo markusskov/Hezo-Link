@@ -26,7 +26,7 @@ struct CheckRequestContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.6.0")
+    #expect(info["version"] as? String == "1.7.0")
     #expect(try requireString(info["description"]).isEmpty == false)
 
     let components = try requireObject(openAPI["components"])
@@ -37,7 +37,8 @@ struct CheckRequestContractAssetTests {
         == [
           "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
-          "VerdictReasonsV1", "CheckResponseStatusV1", "VerdictV1",
+          "VerdictReasonsV1", "CheckResponseStatusV1", "PendingCheckResponseV1",
+          "VerdictV1",
         ]
     )
     let checkRequest = try requireObject(schemas["CheckRequestV1"])
@@ -99,7 +100,7 @@ struct CheckRequestContractAssetTests {
       "verdict-label-v1.schema.json", "recommended-action-v1.schema.json",
       "confidence-category-v1.schema.json", "evaluated-scope-v1.schema.json",
       "verdict-reasons-v1.schema.json", "check-response-status-v1.schema.json",
-      "verdict-v1.schema.json",
+      "pending-check-response-v1.schema.json", "verdict-v1.schema.json",
     ] {
       let referencedPrimitiveSchemaURL = openAPIURL.deletingLastPathComponent()
         .appendingPathComponent("schemas/\(path)")
@@ -533,7 +534,7 @@ struct VerdictReasonContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.6.0")
+    #expect(info["version"] as? String == "1.7.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -545,7 +546,8 @@ struct VerdictReasonContractAssetTests {
         == [
           "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
-          "VerdictReasonsV1", "CheckResponseStatusV1", "VerdictV1",
+          "VerdictReasonsV1", "CheckResponseStatusV1", "PendingCheckResponseV1",
+          "VerdictV1",
         ]
     )
     let verdictReason = try requireObject(schemas["VerdictReasonV1"])
@@ -810,7 +812,7 @@ struct VerdictPrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.6.0")
+    #expect(info["version"] as? String == "1.7.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1062,10 +1064,10 @@ struct CheckResponseStatusContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.6.0")
+    #expect(info["version"] as? String == "1.7.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, problem, check-response-status, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
@@ -1260,6 +1262,428 @@ struct CheckResponseStatusContractAssetTests {
   }
 }
 
+struct PendingCheckResponseContractAssetTests {
+  @Test func pendingCheckResponseBoundariesStayExplicit() throws {
+    let readmeData = try loadData("packages/contracts/README.md")
+    let readme = try #require(String(data: readmeData, encoding: .utf8))
+    #expect(readme.contains(pendingCheckResponseBoundarySentence))
+
+    let schema = try loadObject(pendingCheckResponseSchemaPath)
+    let properties = try requireObject(schema["properties"])
+    for unauthorizedField in [
+      "verdict", "target", "analysis", "source_notices", "versions", "evaluated_at",
+      "valid_until", "block_eligible",
+    ] {
+      #expect(properties[unauthorizedField] == nil)
+    }
+
+    let openAPI = try loadObject("packages/contracts/openapi-components.json")
+    #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
+    #expect(openAPI["servers"] == nil)
+    #expect(openAPI["security"] == nil)
+  }
+
+  @Test func schemaAndOpenAPIKeepTheFrozenPendingResponseSurfaceAndReference() throws {
+    let openAPI = try loadObject("packages/contracts/openapi-components.json")
+    let schema = try loadObject(pendingCheckResponseSchemaPath)
+
+    #expect(
+      Set(openAPI.keys)
+        == ["openapi", "info", "jsonSchemaDialect", "paths", "components"]
+    )
+    #expect(openAPI["openapi"] as? String == "3.1.0")
+    #expect(
+      openAPI["jsonSchemaDialect"] as? String
+        == "https://json-schema.org/draft/2020-12/schema"
+    )
+    #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
+    #expect(openAPI["servers"] == nil)
+    #expect(openAPI["security"] == nil)
+
+    let info = try requireObject(openAPI["info"])
+    #expect(Set(info.keys) == ["title", "version", "description"])
+    #expect(info["title"] as? String == "Hezo Link public contract components")
+    #expect(info["version"] as? String == "1.7.0")
+    #expect(
+      info["description"] as? String
+        == "Reusable offline check-input, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+    )
+
+    let components = try requireObject(openAPI["components"])
+    #expect(Set(components.keys) == ["schemas"])
+    let schemas = try requireObject(components["schemas"])
+    #expect(Set(schemas.keys) == expectedOpenAPIComponentNames)
+    #expect(schemas.count == 11)
+    let component = try requireObject(schemas["PendingCheckResponseV1"])
+    #expect(Set(component.keys) == ["$ref"])
+    #expect(component["$ref"] as? String == pendingCheckResponseOpenAPIReference)
+
+    let openAPIURL = repositoryRoot.appendingPathComponent(
+      "packages/contracts/openapi-components.json"
+    )
+    let referencedSchemaURL = openAPIURL.deletingLastPathComponent()
+      .appendingPathComponent(pendingCheckResponseOpenAPIReference)
+      .standardizedFileURL
+    let schemaURL = repositoryRoot.appendingPathComponent(pendingCheckResponseSchemaPath)
+      .standardizedFileURL
+    #expect(referencedSchemaURL == schemaURL)
+    #expect(FileManager.default.fileExists(atPath: referencedSchemaURL.path))
+
+    #expect(
+      Set(schema.keys)
+        == [
+          "$schema", "$id", "title", "description", "type", "additionalProperties",
+          "required", "properties",
+        ]
+    )
+    #expect(schema["$schema"] as? String == "https://json-schema.org/draft/2020-12/schema")
+    #expect(schema["$id"] as? String == pendingCheckResponseSchemaID)
+    #expect(schema["title"] as? String == "Hezo Link pending check response V1")
+    #expect(try requireString(schema["description"]).isEmpty == false)
+    #expect(schema["type"] as? String == "object")
+    #expect(try requireBool(schema["additionalProperties"]) == false)
+    #expect(try requireStringArray(schema["required"]) == pendingCheckResponseFields)
+
+    let properties = try requireObject(schema["properties"])
+    #expect(Set(properties.keys) == Set(pendingCheckResponseFields))
+    try expectIntegerConstant(properties["schema_version"], constant: 1)
+
+    let status = try requireObject(properties["status"])
+    #expect(Set(status.keys) == ["$ref", "const"])
+    #expect(status["$ref"] as? String == checkResponseStatusSchemaID)
+    #expect(status["const"] as? String == "pending")
+
+    let checkToken = try requireObject(properties["check_token"])
+    #expect(
+      Set(checkToken.keys)
+        == ["type", "minLength", "maxLength", "pattern", "description"]
+    )
+    #expect(checkToken["type"] as? String == "string")
+    #expect(integerValue(checkToken["minLength"]) == 43)
+    #expect(integerValue(checkToken["maxLength"]) == 43)
+    #expect(checkToken["pattern"] as? String == pendingCheckTokenPattern)
+    #expect(try requireString(checkToken["description"]).isEmpty == false)
+
+    let retryAfter = try requireObject(properties["retry_after_ms"])
+    #expect(Set(retryAfter.keys) == ["type", "minimum", "maximum", "description"])
+    #expect(retryAfter["type"] as? String == "integer")
+    #expect(integerValue(retryAfter["minimum"]) == 1)
+    #expect(integerValue(retryAfter["maximum"]) == 900_000)
+    #expect(try requireString(retryAfter["description"]).isEmpty == false)
+
+    let expiresAt = try requireObject(properties["expires_at"])
+    #expect(Set(expiresAt.keys) == ["type", "pattern", "format", "description"])
+    #expect(expiresAt["type"] as? String == "string")
+    #expect(expiresAt["pattern"] as? String == pendingCheckExpiresAtPattern)
+    #expect(expiresAt["format"] as? String == "date-time")
+    #expect(try requireString(expiresAt["description"]).isEmpty == false)
+
+    let requestID = try requireObject(properties["request_id"])
+    #expect(
+      Set(requestID.keys)
+        == ["type", "minLength", "maxLength", "pattern", "description"]
+    )
+    #expect(requestID["type"] as? String == "string")
+    #expect(integerValue(requestID["minLength"]) == 1)
+    #expect(integerValue(requestID["maxLength"]) == 128)
+    #expect(requestID["pattern"] as? String == pendingCheckRequestIDPattern)
+    #expect(try requireString(requestID["description"]).isEmpty == false)
+
+    let registry = try loadPendingCheckResponseSchemaRegistry()
+    let resolved = try resolveFrozenPendingCheckResponseStatusSchema(
+      from: schema,
+      registry: registry
+    )
+    #expect(resolved["$id"] as? String == checkResponseStatusSchemaID)
+    #expect(PendingCheckResponseV1.schemaVersion == 1)
+    #expect(PendingCheckResponseV1.status == .pending)
+    #expect(PendingCheckResponseV1.minimumRetryAfterMilliseconds == 1)
+    #expect(PendingCheckResponseV1.maximumRetryAfterMilliseconds == 900_000)
+    #expect(PendingCheckResponseV1.maximumRequestIDByteCount == 128)
+    #expect(CheckTokenV1.encodedCharacterCount == 43)
+    #expect(CheckTokenV1.decodedByteCount == 32)
+  }
+
+  @Test func manifestPinsTheExactUniqueFortySevenCaseMatrixAndDiskCoverage() throws {
+    let manifest = try loadObject(pendingCheckResponseManifestPath)
+    #expect(Set(manifest.keys) == ["schema_version", "contract", "contract_schema", "cases"])
+    #expect(integerValue(manifest["schema_version"]) == 1)
+    #expect(manifest["contract"] as? String == "pending-check-response-v1")
+    #expect(manifest["contract_schema"] as? String == pendingCheckResponseManifestSchemaReference)
+
+    let cases = try requireObjectArray(manifest["cases"])
+    #expect(cases.count == 47)
+    let pairs = try cases.map { fixtureCase in
+      (try requireString(fixtureCase["id"]), try requireString(fixtureCase["path"]))
+    }
+    let ids = pairs.map(\.0)
+    let paths = pairs.map(\.1)
+    #expect(ids == pendingCheckResponseFixtureIDsInOrder)
+    #expect(Set(ids).count == ids.count)
+    #expect(Set(paths).count == paths.count)
+    #expect(Dictionary(uniqueKeysWithValues: pairs) == pendingCheckResponseFixturePaths)
+    #expect(Set(pendingCheckResponseFixturePaths.keys) == Set(ids))
+    #expect(
+      Set(pendingCheckResponseFailureKeywords.keys)
+        == Set(ids).subtracting(pendingCheckResponseValidFixtureIDs)
+    )
+
+    let fixtureRoot = repositoryRoot.appendingPathComponent(pendingCheckResponseFixtureRoot)
+      .standardizedFileURL
+    #expect(try fixturePathsOnDisk(relativeTo: fixtureRoot) == Set(paths))
+
+    let manifestURL = repositoryRoot.appendingPathComponent(pendingCheckResponseManifestPath)
+    let referencedSchemaURL = manifestURL.deletingLastPathComponent()
+      .appendingPathComponent(pendingCheckResponseManifestSchemaReference)
+      .standardizedFileURL
+    let schemaURL = repositoryRoot.appendingPathComponent(pendingCheckResponseSchemaPath)
+      .standardizedFileURL
+    #expect(referencedSchemaURL == schemaURL)
+  }
+
+  @Test func everyFixtureMatchesItsExactPayloadPurposeAndKeywordSet() throws {
+    let manifest = try loadObject(pendingCheckResponseManifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+    let schema = try loadObject(pendingCheckResponseSchemaPath)
+    let registry = try loadPendingCheckResponseSchemaRegistry()
+    var validCount = 0
+    var invalidCount = 0
+
+    for fixtureCase in cases {
+      let fixtureID = try requireString(fixtureCase["id"])
+      let path = try requireString(fixtureCase["path"])
+      let expectedValid = try requireBool(fixtureCase["expected_schema_valid"])
+      let fixture = try loadJSONValue("\(pendingCheckResponseFixtureRoot)/\(path)")
+      let expectedFixture = try expectedPendingCheckResponseFixture(id: fixtureID)
+      let failures = try pendingCheckResponseSchemaFailures(
+        in: fixture,
+        schema: schema,
+        registry: registry
+      )
+
+      #expect(
+        try jsonValuesAreEqual(fixture, expectedFixture),
+        "Pending Check Response V1 fixture payload drifted from its purpose: \(fixtureID)"
+      )
+
+      if expectedValid {
+        validCount += 1
+        #expect(Set(fixtureCase.keys) == ["id", "path", "expected_schema_valid"])
+        #expect(pendingCheckResponseValidFixtureIDs.contains(fixtureID))
+        #expect(failures.isEmpty)
+      } else {
+        invalidCount += 1
+        let expectedKeywords = try declaredFailureKeywords(in: fixtureCase)
+        #expect(expectedKeywords == pendingCheckResponseFailureKeywords[fixtureID])
+        #expect(failures == expectedKeywords)
+      }
+    }
+
+    #expect(validCount == 5)
+    #expect(invalidCount == 42)
+  }
+
+  @Test func evaluatorRequiresTheExactRegisteredAbsoluteStatusReference() throws {
+    let schema = try loadObject(pendingCheckResponseSchemaPath)
+    let registry = try loadPendingCheckResponseSchemaRegistry()
+    let fixture = try loadJSONValue(
+      "\(pendingCheckResponseFixtureRoot)/valid/standard.json"
+    )
+    #expect(
+      try pendingCheckResponseSchemaFailures(in: fixture, schema: schema, registry: registry)
+        .isEmpty
+    )
+
+    var unresolvedSchema = schema
+    var unresolvedProperties = try requireObject(unresolvedSchema["properties"])
+    unresolvedProperties["status"] = [
+      "$ref": "urn:hezo-link:contract:unregistered:v1", "const": "pending",
+    ]
+    unresolvedSchema["properties"] = unresolvedProperties
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseStatusSchema(
+        from: unresolvedSchema,
+        registry: registry
+      )
+    }
+
+    var relativeSchema = schema
+    var relativeProperties = try requireObject(relativeSchema["properties"])
+    relativeProperties["status"] = [
+      "$ref": "./check-response-status-v1.schema.json", "const": "pending",
+    ]
+    relativeSchema["properties"] = relativeProperties
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseStatusSchema(
+        from: relativeSchema,
+        registry: registry
+      )
+    }
+
+    let statusSchema = try #require(registry[checkResponseStatusSchemaID])
+    var inlinedSchema = schema
+    var inlinedProperties = try requireObject(inlinedSchema["properties"])
+    inlinedProperties["status"] = statusSchema
+    inlinedSchema["properties"] = inlinedProperties
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseStatusSchema(
+        from: inlinedSchema,
+        registry: registry
+      )
+    }
+
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseStatusSchema(from: schema, registry: [:])
+    }
+
+    var mismatchedRegistry = registry
+    var mismatchedStatusSchema = statusSchema
+    mismatchedStatusSchema["$id"] = "urn:hezo-link:contract:mismatched:v1"
+    mismatchedRegistry[checkResponseStatusSchemaID] = mismatchedStatusSchema
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseStatusSchema(
+        from: schema,
+        registry: mismatchedRegistry
+      )
+    }
+  }
+
+  @Test func allFiveValidFixturesDecodeAndReencodeWithoutWireDrift() throws {
+    let manifest = try loadObject(pendingCheckResponseManifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+    var decodedCount = 0
+
+    for fixtureCase in cases where try requireBool(fixtureCase["expected_schema_valid"]) {
+      decodedCount += 1
+      let fixtureID = try requireString(fixtureCase["id"])
+      let path = try requireString(fixtureCase["path"])
+      let relativePath = "\(pendingCheckResponseFixtureRoot)/\(path)"
+      let fixture = try loadJSONValue(relativePath)
+      let decoded = try HezoJSON.makeResponseDecoder().decode(
+        PendingCheckResponseV1.self,
+        from: loadData(relativePath)
+      )
+      let encoded = try HezoJSON.makeEncoder().encode(decoded)
+      let encodedValue = try jsonValue(from: encoded)
+
+      #expect(
+        try jsonValuesAreEqual(encodedValue, fixture),
+        "Pending Check Response V1 reader changed a valid fixture: \(fixtureID)"
+      )
+      #expect(Set(try requireObject(encodedValue).keys) == Set(pendingCheckResponseFields))
+    }
+
+    #expect(decodedCount == 5)
+  }
+
+  @Test func strictUnknownFieldFailsSchemaWhileSwiftReaderDropsIt() throws {
+    let relativePath =
+      "\(pendingCheckResponseFixtureRoot)/invalid/unknown-future-field.json"
+    let schema = try loadObject(pendingCheckResponseSchemaPath)
+    let registry = try loadPendingCheckResponseSchemaRegistry()
+    let fixture = try loadJSONValue(relativePath)
+    #expect(
+      try pendingCheckResponseSchemaFailures(in: fixture, schema: schema, registry: registry)
+        == ["additionalProperties"]
+    )
+
+    let decoded = try HezoJSON.makeResponseDecoder().decode(
+      PendingCheckResponseV1.self,
+      from: loadData(relativePath)
+    )
+    let encoded = try requireObject(jsonValue(from: HezoJSON.makeEncoder().encode(decoded)))
+    var expectedKnownFields = try requireObject(fixture)
+    expectedKnownFields.removeValue(forKey: "future_optional")
+    #expect(encoded["future_optional"] == nil)
+    #expect(try jsonValuesAreEqual(encoded, expectedKnownFields))
+  }
+
+  @Test func allEightKnownHybridAndEnforcementFixturesFailTheSwiftReader() throws {
+    let manifest = try loadObject(pendingCheckResponseManifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+    let selected = try cases.filter {
+      pendingCheckResponseForbiddenFixtureIDs.contains(try requireString($0["id"]))
+    }
+    #expect(selected.count == 8)
+    #expect(
+      Set(try selected.map { try requireString($0["id"]) })
+        == pendingCheckResponseForbiddenFixtureIDs)
+
+    for fixtureCase in selected {
+      let fixtureID = try requireString(fixtureCase["id"])
+      let path = try requireString(fixtureCase["path"])
+      let relativePath = "\(pendingCheckResponseFixtureRoot)/\(path)"
+      try expectPendingCheckResponseDecodeFailure(
+        from: loadData(relativePath),
+        fixtureID: fixtureID,
+        privateCandidates: pendingCheckResponsePrivateCandidates(
+          in: try loadJSONValue(relativePath)
+        )
+      )
+    }
+  }
+
+  @Test func everyOtherInvalidFixtureFailsTheSwiftReaderSafely() throws {
+    let manifest = try loadObject(pendingCheckResponseManifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+    var testedCount = 0
+
+    for fixtureCase in cases {
+      let fixtureID = try requireString(fixtureCase["id"])
+      guard try requireBool(fixtureCase["expected_schema_valid"]) == false,
+        fixtureID != "reject-unknown-future-field",
+        pendingCheckResponseForbiddenFixtureIDs.contains(fixtureID) == false
+      else {
+        continue
+      }
+      testedCount += 1
+      let path = try requireString(fixtureCase["path"])
+      let relativePath = "\(pendingCheckResponseFixtureRoot)/\(path)"
+      let fixture = try loadJSONValue(relativePath)
+      try expectPendingCheckResponseDecodeFailure(
+        from: loadData(relativePath),
+        fixtureID: fixtureID,
+        privateCandidates: pendingCheckResponsePrivateCandidates(in: fixture)
+      )
+    }
+
+    #expect(testedCount == 33)
+  }
+
+  @Test func rejectedPrivacyCanariesNeverAppearInErrors() throws {
+    let base = try requireObject(expectedPendingCheckResponseFixture(id: "valid-standard"))
+    let canaries = [
+      ("check_token", "PRIVATE_SENTINEL_PENDING_CHECK_TOKEN"),
+      ("request_id", "PRIVATE_SENTINEL.PENDING.REQUEST"),
+      ("expires_at", "PRIVATE_SENTINEL_PENDING_EXPIRY"),
+      ("status", "PRIVATE_SENTINEL_PENDING_STATUS"),
+      ("verdict", "PRIVATE_SENTINEL_PENDING_VERDICT"),
+    ]
+
+    for (field, candidate) in canaries {
+      var payload = base
+      payload[field] = candidate
+      let data = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
+      try expectPendingCheckResponseDecodeFailure(
+        from: data,
+        fixtureID: "privacy-canary-\(field)",
+        privateCandidates: [candidate]
+      )
+    }
+
+    let tokenCandidate = "PRIVATE_SENTINEL_DIRECT_TOKEN"
+    do {
+      _ = try CheckTokenV1(validating: tokenCandidate)
+      Issue.record("A direct privacy-canary check token was accepted")
+    } catch let error as CheckTokenContractError {
+      #expect(String(describing: error).contains(tokenCandidate) == false)
+      #expect(String(reflecting: error).contains(tokenCandidate) == false)
+    } catch {
+      Issue.record("Direct check-token validation used an unexpected error category")
+    }
+  }
+}
+
 struct VerdictSupportingStablePrimitiveContractAssetTests {
   @Test(arguments: VerdictSupportingStablePrimitiveContract.allCases)
   func schemaAndOpenAPIKeepEachFrozenStablePrimitiveSurface(
@@ -1270,7 +1694,7 @@ struct VerdictSupportingStablePrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.6.0")
+    #expect(info["version"] as? String == "1.7.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1463,7 +1887,7 @@ struct VerdictReasonsContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.6.0")
+    #expect(info["version"] as? String == "1.7.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1814,10 +2238,10 @@ struct VerdictContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.6.0")
+    #expect(info["version"] as? String == "1.7.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, problem, check-response-status, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
@@ -2261,7 +2685,7 @@ private let repositoryRoot = URL(fileURLWithPath: #filePath)
 private let expectedOpenAPIComponentNames: Set<String> = [
   "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
   "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
-  "VerdictReasonsV1", "CheckResponseStatusV1", "VerdictV1",
+  "VerdictReasonsV1", "CheckResponseStatusV1", "PendingCheckResponseV1", "VerdictV1",
 ]
 
 private let verdictPrimitiveBoundarySentence =
@@ -2317,6 +2741,192 @@ private let checkResponseStatusFailureKeywords: [String: Set<String>] = [
 ]
 private let checkResponseStatusBoundarySentence =
   "This primitive validates one check-response status value only. It defines no endpoint, response branch, HTTP status, token or capability, retry or polling behavior, completion guarantee, or check-response envelope."
+
+private let checkResponseStatusSchemaID =
+  "urn:hezo-link:contract:check-response-status:v1"
+private let pendingCheckResponseSchemaPath =
+  "packages/contracts/schemas/pending-check-response-v1.schema.json"
+private let pendingCheckResponseOpenAPIReference =
+  "./schemas/pending-check-response-v1.schema.json"
+private let pendingCheckResponseSchemaID =
+  "urn:hezo-link:contract:pending-check-response:v1"
+private let pendingCheckResponseFixtureRoot =
+  "packages/contracts/fixtures/pending-check-response-v1"
+private let pendingCheckResponseManifestPath =
+  "\(pendingCheckResponseFixtureRoot)/manifest.json"
+private let pendingCheckResponseManifestSchemaReference =
+  "../../schemas/pending-check-response-v1.schema.json"
+private let pendingCheckResponseFields = [
+  "schema_version", "status", "check_token", "retry_after_ms", "expires_at", "request_id",
+]
+private let pendingCheckTokenPattern = "^[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$"
+private let pendingCheckExpiresAtPattern =
+  "^(?!0000-)[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
+private let pendingCheckRequestIDPattern = "^[A-Za-z0-9_-]+$"
+private let pendingCheckDefaultToken = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+private let pendingCheckDefaultExpiry = "2000-01-01T00:15:00Z"
+private let pendingCheckResponseValidFixtureIDs: Set<String> = [
+  "valid-standard",
+  "valid-retry-after-ms-lower-boundary",
+  "valid-retry-after-ms-upper-boundary",
+  "valid-request-id-upper-boundary",
+  "valid-canonical-token-controls",
+]
+private let pendingCheckResponseForbiddenFixtureIDs: Set<String> = [
+  "reject-forbidden-verdict",
+  "reject-forbidden-target",
+  "reject-forbidden-analysis",
+  "reject-forbidden-source-notices",
+  "reject-forbidden-versions",
+  "reject-forbidden-evaluated-at",
+  "reject-forbidden-valid-until",
+  "reject-forbidden-block-eligible",
+]
+private let pendingCheckResponseFixtureIDsInOrder = [
+  "valid-standard",
+  "valid-retry-after-ms-lower-boundary",
+  "valid-retry-after-ms-upper-boundary",
+  "valid-request-id-upper-boundary",
+  "valid-canonical-token-controls",
+  "reject-missing-schema-version",
+  "reject-missing-status",
+  "reject-missing-check-token",
+  "reject-missing-retry-after-ms",
+  "reject-missing-expires-at",
+  "reject-missing-request-id",
+  "reject-schema-version-mismatch",
+  "reject-status-complete",
+  "reject-status-invalid",
+  "reject-check-token-short",
+  "reject-check-token-long",
+  "reject-check-token-invalid-character",
+  "reject-check-token-noncanonical-final-character",
+  "reject-check-token-null",
+  "reject-check-token-wrong-type",
+  "reject-retry-after-ms-zero",
+  "reject-retry-after-ms-above-maximum",
+  "reject-retry-after-ms-fractional",
+  "reject-retry-after-ms-null",
+  "reject-retry-after-ms-wrong-type",
+  "reject-expires-at-fractional",
+  "reject-expires-at-offset",
+  "reject-expires-at-impossible",
+  "reject-expires-at-lowercase-z",
+  "reject-expires-at-year-zero",
+  "reject-expires-at-null",
+  "reject-expires-at-wrong-type",
+  "reject-request-id-empty",
+  "reject-request-id-invalid-character",
+  "reject-request-id-oversized",
+  "reject-request-id-null",
+  "reject-request-id-wrong-type",
+  "reject-wrong-top-level-type",
+  "reject-unknown-future-field",
+  "reject-forbidden-verdict",
+  "reject-forbidden-target",
+  "reject-forbidden-analysis",
+  "reject-forbidden-source-notices",
+  "reject-forbidden-versions",
+  "reject-forbidden-evaluated-at",
+  "reject-forbidden-valid-until",
+  "reject-forbidden-block-eligible",
+]
+private let pendingCheckResponseFixturePaths: [String: String] = [
+  "valid-standard": "valid/standard.json",
+  "valid-retry-after-ms-lower-boundary": "valid/retry-after-ms-lower-boundary.json",
+  "valid-retry-after-ms-upper-boundary": "valid/retry-after-ms-upper-boundary.json",
+  "valid-request-id-upper-boundary": "valid/request-id-upper-boundary.json",
+  "valid-canonical-token-controls": "valid/canonical-token-controls.json",
+  "reject-missing-schema-version": "invalid/missing-schema-version.json",
+  "reject-missing-status": "invalid/missing-status.json",
+  "reject-missing-check-token": "invalid/missing-check-token.json",
+  "reject-missing-retry-after-ms": "invalid/missing-retry-after-ms.json",
+  "reject-missing-expires-at": "invalid/missing-expires-at.json",
+  "reject-missing-request-id": "invalid/missing-request-id.json",
+  "reject-schema-version-mismatch": "invalid/schema-version-mismatch.json",
+  "reject-status-complete": "invalid/status-complete.json",
+  "reject-status-invalid": "invalid/status-invalid.json",
+  "reject-check-token-short": "invalid/check-token-short.json",
+  "reject-check-token-long": "invalid/check-token-long.json",
+  "reject-check-token-invalid-character": "invalid/check-token-invalid-character.json",
+  "reject-check-token-noncanonical-final-character":
+    "invalid/check-token-noncanonical-final-character.json",
+  "reject-check-token-null": "invalid/check-token-null.json",
+  "reject-check-token-wrong-type": "invalid/check-token-wrong-type.json",
+  "reject-retry-after-ms-zero": "invalid/retry-after-ms-zero.json",
+  "reject-retry-after-ms-above-maximum": "invalid/retry-after-ms-above-maximum.json",
+  "reject-retry-after-ms-fractional": "invalid/retry-after-ms-fractional.json",
+  "reject-retry-after-ms-null": "invalid/retry-after-ms-null.json",
+  "reject-retry-after-ms-wrong-type": "invalid/retry-after-ms-wrong-type.json",
+  "reject-expires-at-fractional": "invalid/expires-at-fractional.json",
+  "reject-expires-at-offset": "invalid/expires-at-offset.json",
+  "reject-expires-at-impossible": "invalid/expires-at-impossible.json",
+  "reject-expires-at-lowercase-z": "invalid/expires-at-lowercase-z.json",
+  "reject-expires-at-year-zero": "invalid/expires-at-year-zero.json",
+  "reject-expires-at-null": "invalid/expires-at-null.json",
+  "reject-expires-at-wrong-type": "invalid/expires-at-wrong-type.json",
+  "reject-request-id-empty": "invalid/request-id-empty.json",
+  "reject-request-id-invalid-character": "invalid/request-id-invalid-character.json",
+  "reject-request-id-oversized": "invalid/request-id-oversized.json",
+  "reject-request-id-null": "invalid/request-id-null.json",
+  "reject-request-id-wrong-type": "invalid/request-id-wrong-type.json",
+  "reject-wrong-top-level-type": "invalid/wrong-top-level-type.json",
+  "reject-unknown-future-field": "invalid/unknown-future-field.json",
+  "reject-forbidden-verdict": "invalid/forbidden-verdict.json",
+  "reject-forbidden-target": "invalid/forbidden-target.json",
+  "reject-forbidden-analysis": "invalid/forbidden-analysis.json",
+  "reject-forbidden-source-notices": "invalid/forbidden-source-notices.json",
+  "reject-forbidden-versions": "invalid/forbidden-versions.json",
+  "reject-forbidden-evaluated-at": "invalid/forbidden-evaluated-at.json",
+  "reject-forbidden-valid-until": "invalid/forbidden-valid-until.json",
+  "reject-forbidden-block-eligible": "invalid/forbidden-block-eligible.json",
+]
+private let pendingCheckResponseFailureKeywords: [String: Set<String>] = [
+  "reject-missing-schema-version": ["required"],
+  "reject-missing-status": ["required"],
+  "reject-missing-check-token": ["required"],
+  "reject-missing-retry-after-ms": ["required"],
+  "reject-missing-expires-at": ["required"],
+  "reject-missing-request-id": ["required"],
+  "reject-schema-version-mismatch": ["const"],
+  "reject-status-complete": ["const"],
+  "reject-status-invalid": ["enum", "const"],
+  "reject-check-token-short": ["minLength", "pattern"],
+  "reject-check-token-long": ["maxLength", "pattern"],
+  "reject-check-token-invalid-character": ["pattern"],
+  "reject-check-token-noncanonical-final-character": ["pattern"],
+  "reject-check-token-null": ["type"],
+  "reject-check-token-wrong-type": ["type"],
+  "reject-retry-after-ms-zero": ["minimum"],
+  "reject-retry-after-ms-above-maximum": ["maximum"],
+  "reject-retry-after-ms-fractional": ["type"],
+  "reject-retry-after-ms-null": ["type"],
+  "reject-retry-after-ms-wrong-type": ["type"],
+  "reject-expires-at-fractional": ["pattern"],
+  "reject-expires-at-offset": ["pattern"],
+  "reject-expires-at-impossible": ["format"],
+  "reject-expires-at-lowercase-z": ["pattern"],
+  "reject-expires-at-year-zero": ["pattern"],
+  "reject-expires-at-null": ["type"],
+  "reject-expires-at-wrong-type": ["type"],
+  "reject-request-id-empty": ["minLength", "pattern"],
+  "reject-request-id-invalid-character": ["pattern"],
+  "reject-request-id-oversized": ["maxLength"],
+  "reject-request-id-null": ["type"],
+  "reject-request-id-wrong-type": ["type"],
+  "reject-wrong-top-level-type": ["type"],
+  "reject-unknown-future-field": ["additionalProperties"],
+  "reject-forbidden-verdict": ["additionalProperties"],
+  "reject-forbidden-target": ["additionalProperties"],
+  "reject-forbidden-analysis": ["additionalProperties"],
+  "reject-forbidden-source-notices": ["additionalProperties"],
+  "reject-forbidden-versions": ["additionalProperties"],
+  "reject-forbidden-evaluated-at": ["additionalProperties"],
+  "reject-forbidden-valid-until": ["additionalProperties"],
+  "reject-forbidden-block-eligible": ["additionalProperties"],
+]
+private let pendingCheckResponseBoundarySentence =
+  "Unknown fields are rejected by the strict published schema. A specifically designated Swift Pending Check Response V1 reader may discard genuinely additive unknown response members for forward compatibility, but it must continue to require and validate every known member exactly. It must reject any payload containing the known hybrid-envelope keys `verdict`, `target`, `analysis`, `source_notices`, `versions`, `evaluated_at`, `valid_until`, or `block_eligible`; those members cannot be treated as harmless future additions. This tolerant client boundary does not widen the public schema or make an unknown member meaningful."
 
 enum PrimitiveFixturePayload: Equatable, Sendable {
   case string(String)
@@ -4377,6 +4987,562 @@ private func checkURL(_ value: Any?, failures: inout Set<String>) {
   }
   if string.range(of: "^[Hh][Tt][Tt][Pp][Ss]?://", options: .regularExpression) == nil {
     failures.insert("pattern")
+  }
+}
+
+private func expectedPendingCheckResponseFixture(id: String) throws -> Any {
+  switch id {
+  case "valid-standard":
+    return expectedPendingCheckResponseObject(requestID: "synthetic-request-001")
+  case "valid-retry-after-ms-lower-boundary":
+    return expectedPendingCheckResponseObject(
+      retryAfterMilliseconds: 1,
+      requestID: "synthetic-retry-lower"
+    )
+  case "valid-retry-after-ms-upper-boundary":
+    return expectedPendingCheckResponseObject(
+      retryAfterMilliseconds: 900_000,
+      requestID: "synthetic-retry-upper"
+    )
+  case "valid-request-id-upper-boundary":
+    return expectedPendingCheckResponseObject(requestID: String(repeating: "R", count: 128))
+  case "valid-canonical-token-controls":
+    return expectedPendingCheckResponseObject(
+      checkToken: "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_8",
+      requestID: "synthetic-token-controls"
+    )
+  case "reject-missing-schema-version":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-missing-schema-version",
+      omittedProperties: ["schema_version"]
+    )
+  case "reject-missing-status":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-missing-status",
+      omittedProperties: ["status"]
+    )
+  case "reject-missing-check-token":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-missing-check-token",
+      omittedProperties: ["check_token"]
+    )
+  case "reject-missing-retry-after-ms":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-missing-retry",
+      omittedProperties: ["retry_after_ms"]
+    )
+  case "reject-missing-expires-at":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-missing-expiry",
+      omittedProperties: ["expires_at"]
+    )
+  case "reject-missing-request-id":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-omitted-request",
+      omittedProperties: ["request_id"]
+    )
+  case "reject-schema-version-mismatch":
+    return expectedPendingCheckResponseObject(
+      schemaVersion: 2,
+      requestID: "synthetic-schema-mismatch"
+    )
+  case "reject-status-complete":
+    return expectedPendingCheckResponseObject(
+      status: "complete",
+      requestID: "synthetic-complete-status"
+    )
+  case "reject-status-invalid":
+    return expectedPendingCheckResponseObject(
+      status: "waiting",
+      requestID: "synthetic-invalid-status"
+    )
+  case "reject-check-token-short":
+    return expectedPendingCheckResponseObject(
+      checkToken: String(repeating: "A", count: 42),
+      requestID: "synthetic-token-short"
+    )
+  case "reject-check-token-long":
+    return expectedPendingCheckResponseObject(
+      checkToken: String(repeating: "A", count: 44),
+      requestID: "synthetic-token-long"
+    )
+  case "reject-check-token-invalid-character":
+    return expectedPendingCheckResponseObject(
+      checkToken: "+" + String(repeating: "A", count: 42),
+      requestID: "synthetic-token-character"
+    )
+  case "reject-check-token-noncanonical-final-character":
+    return expectedPendingCheckResponseObject(
+      checkToken: String(repeating: "A", count: 42) + "B",
+      requestID: "synthetic-token-final"
+    )
+  case "reject-check-token-null":
+    return expectedPendingCheckResponseObject(
+      checkToken: NSNull(),
+      requestID: "synthetic-token-null"
+    )
+  case "reject-check-token-wrong-type":
+    return expectedPendingCheckResponseObject(
+      checkToken: 32,
+      requestID: "synthetic-token-type"
+    )
+  case "reject-retry-after-ms-zero":
+    return expectedPendingCheckResponseObject(
+      retryAfterMilliseconds: 0,
+      requestID: "synthetic-retry-zero"
+    )
+  case "reject-retry-after-ms-above-maximum":
+    return expectedPendingCheckResponseObject(
+      retryAfterMilliseconds: 900_001,
+      requestID: "synthetic-retry-above-max"
+    )
+  case "reject-retry-after-ms-fractional":
+    return expectedPendingCheckResponseObject(
+      retryAfterMilliseconds: 750.5,
+      requestID: "synthetic-retry-fraction"
+    )
+  case "reject-retry-after-ms-null":
+    return expectedPendingCheckResponseObject(
+      retryAfterMilliseconds: NSNull(),
+      requestID: "synthetic-retry-null"
+    )
+  case "reject-retry-after-ms-wrong-type":
+    return expectedPendingCheckResponseObject(
+      retryAfterMilliseconds: "750",
+      requestID: "synthetic-retry-type"
+    )
+  case "reject-expires-at-fractional":
+    return expectedPendingCheckResponseObject(
+      expiresAt: "2000-01-01T00:15:00.000Z",
+      requestID: "synthetic-expiry-fraction"
+    )
+  case "reject-expires-at-offset":
+    return expectedPendingCheckResponseObject(
+      expiresAt: "2000-01-01T01:15:00+01:00",
+      requestID: "synthetic-expiry-offset"
+    )
+  case "reject-expires-at-impossible":
+    return expectedPendingCheckResponseObject(
+      expiresAt: "2000-02-30T00:15:00Z",
+      requestID: "synthetic-expiry-impossible"
+    )
+  case "reject-expires-at-lowercase-z":
+    return expectedPendingCheckResponseObject(
+      expiresAt: "2000-01-01T00:15:00z",
+      requestID: "synthetic-expiry-lowercase"
+    )
+  case "reject-expires-at-year-zero":
+    return expectedPendingCheckResponseObject(
+      expiresAt: "0000-01-01T00:00:00Z",
+      requestID: "synthetic-request-001"
+    )
+  case "reject-expires-at-null":
+    return expectedPendingCheckResponseObject(
+      expiresAt: NSNull(),
+      requestID: "synthetic-expiry-null"
+    )
+  case "reject-expires-at-wrong-type":
+    return expectedPendingCheckResponseObject(
+      expiresAt: 946_685_700,
+      requestID: "synthetic-expiry-type"
+    )
+  case "reject-request-id-empty":
+    return expectedPendingCheckResponseObject(requestID: "")
+  case "reject-request-id-invalid-character":
+    return expectedPendingCheckResponseObject(requestID: "synthetic.request")
+  case "reject-request-id-oversized":
+    return expectedPendingCheckResponseObject(requestID: String(repeating: "R", count: 129))
+  case "reject-request-id-null":
+    return expectedPendingCheckResponseObject(requestID: NSNull())
+  case "reject-request-id-wrong-type":
+    return expectedPendingCheckResponseObject(requestID: true)
+  case "reject-wrong-top-level-type":
+    return [Any]()
+  case "reject-unknown-future-field":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-future-field",
+      additionalProperties: ["future_optional": "synthetic-additive-value"]
+    )
+  case "reject-forbidden-verdict":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-forbidden-verdict",
+      additionalProperties: ["verdict": [String: Any]()]
+    )
+  case "reject-forbidden-target":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-forbidden-target",
+      additionalProperties: ["target": "synthetic-target"]
+    )
+  case "reject-forbidden-analysis":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-forbidden-analysis",
+      additionalProperties: ["analysis": [String: Any]()]
+    )
+  case "reject-forbidden-source-notices":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-forbidden-notices",
+      additionalProperties: ["source_notices": [Any]()]
+    )
+  case "reject-forbidden-versions":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-forbidden-versions",
+      additionalProperties: ["versions": [String: Any]()]
+    )
+  case "reject-forbidden-evaluated-at":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-forbidden-evaluated",
+      additionalProperties: ["evaluated_at": "2000-01-01T00:00:00Z"]
+    )
+  case "reject-forbidden-valid-until":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-forbidden-validity",
+      additionalProperties: ["valid_until": "2000-01-01T01:00:00Z"]
+    )
+  case "reject-forbidden-block-eligible":
+    return expectedPendingCheckResponseObject(
+      requestID: "synthetic-forbidden-block",
+      additionalProperties: ["block_eligible": false]
+    )
+  default:
+    throw ContractAssetTestError.invalidAsset
+  }
+}
+
+private func expectedPendingCheckResponseObject(
+  schemaVersion: Any = 1,
+  status: Any = "pending",
+  checkToken: Any = pendingCheckDefaultToken,
+  retryAfterMilliseconds: Any = 750,
+  expiresAt: Any = pendingCheckDefaultExpiry,
+  requestID: Any,
+  additionalProperties: [String: Any] = [:],
+  omittedProperties: Set<String> = []
+) -> [String: Any] {
+  var object: [String: Any] = [
+    "schema_version": schemaVersion,
+    "status": status,
+    "check_token": checkToken,
+    "retry_after_ms": retryAfterMilliseconds,
+    "expires_at": expiresAt,
+    "request_id": requestID,
+  ]
+  object.merge(additionalProperties) { _, newValue in newValue }
+  for property in omittedProperties {
+    object.removeValue(forKey: property)
+  }
+  return object
+}
+
+private func loadPendingCheckResponseSchemaRegistry() throws -> [String: [String: Any]] {
+  [checkResponseStatusSchemaID: try loadObject(checkResponseStatusSchemaPath)]
+}
+
+private func resolveFrozenPendingCheckResponseStatusSchema(
+  from pendingSchema: [String: Any],
+  registry: [String: [String: Any]]
+) throws -> [String: Any] {
+  let properties = try requireObject(pendingSchema["properties"])
+  let status = try requireObject(properties["status"])
+  guard Set(status.keys) == ["$ref", "const"],
+    let reference = status["$ref"] as? String,
+    reference == checkResponseStatusSchemaID,
+    status["const"] as? String == "pending",
+    let resolved = registry[reference],
+    resolved["$id"] as? String == reference
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+  try requireFrozenPendingCheckResponseStatusEvaluatorSurface(resolved)
+  return resolved
+}
+
+private func requireFrozenPendingCheckResponseStatusEvaluatorSurface(
+  _ schema: [String: Any]
+) throws {
+  guard
+    Set(schema.keys) == ["$schema", "$id", "title", "description", "type", "enum"],
+    schema["$schema"] as? String == "https://json-schema.org/draft/2020-12/schema",
+    schema["$id"] as? String == checkResponseStatusSchemaID,
+    schema["type"] as? String == "string",
+    try requireStringArray(schema["enum"]) == checkResponseStatusWireValues
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+}
+
+private func requireFrozenPendingCheckResponseEvaluatorSurface(
+  _ schema: [String: Any],
+  registry: [String: [String: Any]]
+) throws {
+  guard schema["$id"] as? String == pendingCheckResponseSchemaID,
+    schema["type"] as? String == "object",
+    try requireBool(schema["additionalProperties"]) == false,
+    try requireStringArray(schema["required"]) == pendingCheckResponseFields
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+  let properties = try requireObject(schema["properties"])
+  guard Set(properties.keys) == Set(pendingCheckResponseFields) else {
+    throw ContractAssetTestError.invalidAsset
+  }
+
+  let schemaVersion = try requireObject(properties["schema_version"])
+  guard Set(schemaVersion.keys) == ["type", "const"],
+    schemaVersion["type"] as? String == "integer",
+    integerValue(schemaVersion["const"]) == 1
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+  _ = try resolveFrozenPendingCheckResponseStatusSchema(from: schema, registry: registry)
+
+  let checkToken = try requireObject(properties["check_token"])
+  guard checkToken["type"] as? String == "string",
+    integerValue(checkToken["minLength"]) == 43,
+    integerValue(checkToken["maxLength"]) == 43,
+    checkToken["pattern"] as? String == pendingCheckTokenPattern
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+
+  let retryAfter = try requireObject(properties["retry_after_ms"])
+  guard retryAfter["type"] as? String == "integer",
+    integerValue(retryAfter["minimum"]) == 1,
+    integerValue(retryAfter["maximum"]) == 900_000
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+
+  let expiresAt = try requireObject(properties["expires_at"])
+  guard expiresAt["type"] as? String == "string",
+    expiresAt["pattern"] as? String == pendingCheckExpiresAtPattern,
+    expiresAt["format"] as? String == "date-time"
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+
+  let requestID = try requireObject(properties["request_id"])
+  guard requestID["type"] as? String == "string",
+    integerValue(requestID["minLength"]) == 1,
+    integerValue(requestID["maxLength"]) == 128,
+    requestID["pattern"] as? String == pendingCheckRequestIDPattern
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+}
+
+// This independently evaluates only the frozen Pending Check Response V1 subset after resolving
+// its absolute status-schema reference from the supplied registry. It is not a general JSON Schema
+// Draft 2020-12 or RFC 3339 implementation.
+private func pendingCheckResponseSchemaFailures(
+  in value: Any,
+  schema: [String: Any],
+  registry: [String: [String: Any]]
+) throws -> Set<String> {
+  try requireFrozenPendingCheckResponseEvaluatorSurface(schema, registry: registry)
+  return pendingCheckResponseSchemaFailures(in: value)
+}
+
+// This independently evaluates only the frozen Pending Check Response V1 structure; it is not a
+// general JSON Schema Draft 2020-12 or RFC 3339 implementation.
+private func pendingCheckResponseSchemaFailures(in value: Any) -> Set<String> {
+  guard let object = value as? [String: Any] else {
+    return ["type"]
+  }
+
+  let requiredKeys: Set<String> = [
+    "schema_version", "status", "check_token", "retry_after_ms", "expires_at",
+    "request_id",
+  ]
+  var failures = Set<String>()
+
+  if Set(object.keys).subtracting(requiredKeys).isEmpty == false {
+    failures.insert("additionalProperties")
+  }
+  if requiredKeys.subtracting(object.keys).isEmpty == false {
+    failures.insert("required")
+  }
+
+  checkIntegerConstant(object["schema_version"], constant: 1, failures: &failures)
+  checkPendingCheckResponseStatus(object["status"], failures: &failures)
+  checkPendingCheckToken(object["check_token"], failures: &failures)
+  checkPendingRetryAfterMilliseconds(object["retry_after_ms"], failures: &failures)
+  checkPendingExpiresAt(object["expires_at"], failures: &failures)
+  checkPendingRequestID(object["request_id"], failures: &failures)
+  return failures
+}
+
+private func checkPendingCheckResponseStatus(
+  _ value: Any?,
+  failures: inout Set<String>
+) {
+  guard let string = value as? String else {
+    if value != nil {
+      failures.insert("type")
+    }
+    return
+  }
+  if checkResponseStatusWireValues.contains(string) == false {
+    failures.insert("enum")
+  }
+  if string != CheckResponseStatus.pending.rawValue {
+    failures.insert("const")
+  }
+}
+
+private func checkPendingCheckToken(_ value: Any?, failures: inout Set<String>) {
+  guard let string = value as? String else {
+    if value != nil {
+      failures.insert("type")
+    }
+    return
+  }
+  if string.unicodeScalars.count < CheckTokenV1.encodedCharacterCount {
+    failures.insert("minLength")
+  }
+  if string.unicodeScalars.count > CheckTokenV1.encodedCharacterCount {
+    failures.insert("maxLength")
+  }
+  if isValidPendingCheckToken(string) == false {
+    failures.insert("pattern")
+  }
+}
+
+private func isValidPendingCheckToken(_ value: String) -> Bool {
+  let bytes = Array(value.utf8)
+  guard bytes.count == CheckTokenV1.encodedCharacterCount else {
+    return false
+  }
+  guard bytes.dropLast().allSatisfy(isAllowedPendingCheckTokenByte) else {
+    return false
+  }
+  guard let finalByte = bytes.last else {
+    return false
+  }
+  return [
+    0x41, 0x45, 0x49, 0x4D, 0x51, 0x55, 0x59, 0x63, 0x67, 0x6B, 0x6F, 0x73, 0x77, 0x30, 0x34, 0x38,
+  ]
+  .contains(finalByte)
+}
+
+private func isAllowedPendingCheckTokenByte(_ byte: UInt8) -> Bool {
+  (0x41...0x5A).contains(byte) || (0x61...0x7A).contains(byte)
+    || (0x30...0x39).contains(byte) || byte == 0x2D || byte == 0x5F
+}
+
+private func checkPendingRetryAfterMilliseconds(
+  _ value: Any?,
+  failures: inout Set<String>
+) {
+  guard let integer = integerValue(value) else {
+    if value != nil {
+      failures.insert("type")
+    }
+    return
+  }
+  if integer < 1 {
+    failures.insert("minimum")
+  }
+  if integer > 900_000 {
+    failures.insert("maximum")
+  }
+}
+
+private func checkPendingExpiresAt(_ value: Any?, failures: inout Set<String>) {
+  guard let string = value as? String else {
+    if value != nil {
+      failures.insert("type")
+    }
+    return
+  }
+
+  let pattern =
+    #"^(?!0000-)[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"#
+  if string.range(of: pattern, options: .regularExpression) == nil {
+    failures.insert("pattern")
+    return
+  }
+  if isRealPendingExpiryDateTime(string) == false {
+    failures.insert("format")
+  }
+}
+
+private func isRealPendingExpiryDateTime(_ value: String) -> Bool {
+  let pattern =
+    #"^([0-9]{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"#
+  guard let expression = try? NSRegularExpression(pattern: pattern) else {
+    return false
+  }
+  let fullRange = NSRange(value.startIndex..<value.endIndex, in: value)
+  guard let match = expression.firstMatch(in: value, range: fullRange), match.range == fullRange,
+    let year = integerCapture(1, from: match, in: value),
+    let month = integerCapture(2, from: match, in: value),
+    let day = integerCapture(3, from: match, in: value),
+    year >= 1
+  else {
+    return false
+  }
+
+  let maximumDay: Int
+  switch month {
+  case 2:
+    let isLeapYear =
+      year.isMultiple(of: 400)
+      || (year.isMultiple(of: 4) && year.isMultiple(of: 100) == false)
+    maximumDay = isLeapYear ? 29 : 28
+  case 4, 6, 9, 11:
+    maximumDay = 30
+  default:
+    maximumDay = 31
+  }
+  return (1...maximumDay).contains(day)
+}
+
+private func checkPendingRequestID(_ value: Any?, failures: inout Set<String>) {
+  guard let string = value as? String else {
+    if value != nil {
+      failures.insert("type")
+    }
+    return
+  }
+  if string.unicodeScalars.isEmpty {
+    failures.insert("minLength")
+    failures.insert("pattern")
+  }
+  if string.unicodeScalars.count > 128 {
+    failures.insert("maxLength")
+  }
+  if string.utf8.allSatisfy(isAllowedRequestIDByte) == false {
+    failures.insert("pattern")
+  }
+}
+
+private func pendingCheckResponsePrivateCandidates(in value: Any) -> [String] {
+  guard let object = value as? [String: Any] else {
+    return []
+  }
+  return ["check_token", "request_id"].compactMap { field in
+    guard let candidate = object[field] as? String, candidate.isEmpty == false else {
+      return nil
+    }
+    return candidate
+  }
+}
+
+private func expectPendingCheckResponseDecodeFailure(
+  from data: Data,
+  fixtureID: String,
+  privateCandidates: [String]
+) throws {
+  do {
+    _ = try HezoJSON.makeResponseDecoder().decode(PendingCheckResponseV1.self, from: data)
+    Issue.record("A declared invalid pending check response was accepted: \(fixtureID)")
+  } catch let error as DecodingError {
+    for candidate in privateCandidates where candidate.isEmpty == false {
+      #expect(String(describing: error).contains(candidate) == false)
+      #expect(String(reflecting: error).contains(candidate) == false)
+    }
+  } catch {
+    Issue.record("Pending check response decoding used an unexpected error category: \(fixtureID)")
   }
 }
 
