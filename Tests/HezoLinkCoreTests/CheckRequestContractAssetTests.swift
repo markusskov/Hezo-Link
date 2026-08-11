@@ -26,7 +26,7 @@ struct CheckRequestContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.4.0")
+    #expect(info["version"] as? String == "1.5.0")
     #expect(try requireString(info["description"]).isEmpty == false)
 
     let components = try requireObject(openAPI["components"])
@@ -37,7 +37,7 @@ struct CheckRequestContractAssetTests {
         == [
           "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
-          "VerdictReasonsV1",
+          "VerdictReasonsV1", "CheckResponseStatusV1",
         ]
     )
     let checkRequest = try requireObject(schemas["CheckRequestV1"])
@@ -98,7 +98,7 @@ struct CheckRequestContractAssetTests {
     for path in [
       "verdict-label-v1.schema.json", "recommended-action-v1.schema.json",
       "confidence-category-v1.schema.json", "evaluated-scope-v1.schema.json",
-      "verdict-reasons-v1.schema.json",
+      "verdict-reasons-v1.schema.json", "check-response-status-v1.schema.json",
     ] {
       let referencedPrimitiveSchemaURL = openAPIURL.deletingLastPathComponent()
         .appendingPathComponent("schemas/\(path)")
@@ -532,7 +532,7 @@ struct VerdictReasonContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.4.0")
+    #expect(info["version"] as? String == "1.5.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -544,7 +544,7 @@ struct VerdictReasonContractAssetTests {
         == [
           "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
-          "VerdictReasonsV1",
+          "VerdictReasonsV1", "CheckResponseStatusV1",
         ]
     )
     let verdictReason = try requireObject(schemas["VerdictReasonV1"])
@@ -809,7 +809,7 @@ struct VerdictPrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.4.0")
+    #expect(info["version"] as? String == "1.5.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1040,6 +1040,225 @@ struct VerdictPrimitiveContractAssetTests {
   }
 }
 
+struct CheckResponseStatusContractAssetTests {
+  @Test func schemaAndOpenAPIKeepTheFrozenCheckResponseStatusV1Surface() throws {
+    let openAPI = try loadObject("packages/contracts/openapi-components.json")
+    let schema = try loadObject(checkResponseStatusSchemaPath)
+
+    #expect(
+      Set(openAPI.keys)
+        == ["openapi", "info", "jsonSchemaDialect", "paths", "components"]
+    )
+    #expect(openAPI["openapi"] as? String == "3.1.0")
+    #expect(
+      openAPI["jsonSchemaDialect"] as? String
+        == "https://json-schema.org/draft/2020-12/schema"
+    )
+    #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
+    #expect(openAPI["servers"] == nil)
+    #expect(openAPI["security"] == nil)
+
+    let info = try requireObject(openAPI["info"])
+    #expect(Set(info.keys) == ["title", "version", "description"])
+    #expect(info["title"] as? String == "Hezo Link public contract components")
+    #expect(info["version"] as? String == "1.5.0")
+    #expect(
+      info["description"] as? String
+        == "Reusable offline check-input, problem, check-response-status, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+    )
+
+    let components = try requireObject(openAPI["components"])
+    #expect(Set(components.keys) == ["schemas"])
+    let schemas = try requireObject(components["schemas"])
+    #expect(Set(schemas.keys) == expectedOpenAPIComponentNames)
+    let component = try requireObject(schemas["CheckResponseStatusV1"])
+    #expect(Set(component.keys) == ["$ref"])
+    #expect(component["$ref"] as? String == checkResponseStatusOpenAPIReference)
+
+    let openAPIURL = repositoryRoot.appendingPathComponent(
+      "packages/contracts/openapi-components.json"
+    )
+    let referencedSchemaURL = openAPIURL.deletingLastPathComponent()
+      .appendingPathComponent(checkResponseStatusOpenAPIReference)
+      .standardizedFileURL
+    let schemaURL = repositoryRoot.appendingPathComponent(checkResponseStatusSchemaPath)
+      .standardizedFileURL
+    #expect(referencedSchemaURL == schemaURL)
+    #expect(FileManager.default.fileExists(atPath: referencedSchemaURL.path))
+
+    #expect(Set(schema.keys) == ["$schema", "$id", "title", "description", "type", "enum"])
+    #expect(schema["$schema"] as? String == "https://json-schema.org/draft/2020-12/schema")
+    #expect(schema["$id"] as? String == "urn:hezo-link:contract:check-response-status:v1")
+    #expect(schema["title"] as? String == "Hezo Link check response status V1")
+    #expect(
+      schema["description"] as? String
+        == "Exact standalone check-response status primitive. This value alone defines no endpoint, response branch, HTTP status, token, retry behavior, or check-response envelope."
+    )
+    #expect(schema["type"] as? String == "string")
+    #expect(try requireStringArray(schema["enum"]) == checkResponseStatusWireValues)
+    #expect(CheckResponseStatus.allCases.map(\.rawValue) == checkResponseStatusWireValues)
+  }
+
+  @Test func manifestHasCompleteUniqueCheckResponseStatusFixtureCoverage() throws {
+    let manifest = try loadObject(checkResponseStatusManifestPath)
+    #expect(Set(manifest.keys) == ["schema_version", "contract", "contract_schema", "cases"])
+    #expect(integerValue(manifest["schema_version"]) == 1)
+    #expect(manifest["contract"] as? String == "check-response-status-v1")
+    #expect(manifest["contract_schema"] as? String == checkResponseStatusManifestSchemaReference)
+
+    let cases = try requireObjectArray(manifest["cases"])
+    #expect(cases.count == checkResponseStatusFixturePaths.count)
+    let pairs = try cases.map { fixtureCase in
+      (try requireString(fixtureCase["id"]), try requireString(fixtureCase["path"]))
+    }
+    let ids = pairs.map(\.0)
+    let paths = pairs.map(\.1)
+    #expect(Set(ids).count == ids.count)
+    #expect(Set(paths).count == paths.count)
+    #expect(Dictionary(uniqueKeysWithValues: pairs) == checkResponseStatusFixturePaths)
+    #expect(Set(checkResponseStatusFixturePayloads.keys) == Set(ids))
+    #expect(
+      Set(checkResponseStatusFailureKeywords.keys)
+        == Set(ids).subtracting(checkResponseStatusValidFixtureIDs)
+    )
+
+    let fixtureRoot = repositoryRoot.appendingPathComponent(checkResponseStatusFixtureRoot)
+      .standardizedFileURL
+    #expect(try fixturePathsOnDisk(relativeTo: fixtureRoot) == Set(paths))
+
+    let manifestURL = repositoryRoot.appendingPathComponent(checkResponseStatusManifestPath)
+    let referencedSchemaURL = manifestURL.deletingLastPathComponent()
+      .appendingPathComponent(checkResponseStatusManifestSchemaReference)
+      .standardizedFileURL
+    let schemaURL = repositoryRoot.appendingPathComponent(checkResponseStatusSchemaPath)
+      .standardizedFileURL
+    #expect(referencedSchemaURL == schemaURL)
+  }
+
+  @Test func everyFixtureMatchesItsExactScalarIntentAndKeywordSet() throws {
+    let manifest = try loadObject(checkResponseStatusManifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+    var validCount = 0
+    var invalidCount = 0
+
+    for fixtureCase in cases {
+      let fixtureID = try requireString(fixtureCase["id"])
+      let path = try requireString(fixtureCase["path"])
+      let expectedValid = try requireBool(fixtureCase["expected_schema_valid"])
+      let fixture = try loadJSONValue("\(checkResponseStatusFixtureRoot)/\(path)")
+      let payload = try primitiveFixturePayload(from: fixture)
+      let failures = primitiveEnumSchemaFailures(
+        in: payload,
+        allowedValues: Set(checkResponseStatusWireValues)
+      )
+
+      #expect(
+        payload == checkResponseStatusFixturePayloads[fixtureID],
+        "Check-response status fixture payload drifted from its declared purpose: \(fixtureID)"
+      )
+
+      if expectedValid {
+        validCount += 1
+        #expect(Set(fixtureCase.keys) == ["id", "path", "expected_schema_valid"])
+        #expect(checkResponseStatusValidFixtureIDs.contains(fixtureID))
+        #expect(failures.isEmpty)
+      } else {
+        invalidCount += 1
+        let expectedKeywords = try declaredFailureKeywords(in: fixtureCase)
+        #expect(expectedKeywords == checkResponseStatusFailureKeywords[fixtureID])
+        #expect(failures == expectedKeywords)
+      }
+    }
+
+    #expect(validCount == 2)
+    #expect(invalidCount == 8)
+  }
+
+  @Test func validFixturesRoundTripThroughTheSwiftReader() throws {
+    let manifest = try loadObject(checkResponseStatusManifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+    var decodedRawValues = Set<String>()
+
+    for fixtureCase in cases where try requireBool(fixtureCase["expected_schema_valid"]) {
+      let path = try requireString(fixtureCase["path"])
+      let relativePath = "\(checkResponseStatusFixtureRoot)/\(path)"
+      let fixtureValue = try requirePrimitiveString(loadJSONValue(relativePath))
+      let decoded = try HezoJSON.makeResponseDecoder().decode(
+        CheckResponseStatus.self,
+        from: loadData(relativePath)
+      )
+      let encoded = try HezoJSON.makeEncoder().encode(decoded)
+
+      #expect(decoded.rawValue == fixtureValue)
+      #expect(try requirePrimitiveString(jsonValue(from: encoded)) == fixtureValue)
+      decodedRawValues.insert(decoded.rawValue)
+    }
+
+    #expect(decodedRawValues == Set(checkResponseStatusWireValues))
+  }
+
+  @Test func invalidFixturesFailThroughTheSwiftReaderWithoutReflectingCandidates() throws {
+    let manifest = try loadObject(checkResponseStatusManifestPath)
+    let cases = try requireObjectArray(manifest["cases"])
+
+    for fixtureCase in cases where try requireBool(fixtureCase["expected_schema_valid"]) == false {
+      let fixtureID = try requireString(fixtureCase["id"])
+      let path = try requireString(fixtureCase["path"])
+      let relativePath = "\(checkResponseStatusFixtureRoot)/\(path)"
+      let data = try loadData(relativePath)
+      let rejectedString = try? requirePrimitiveString(loadJSONValue(relativePath))
+
+      do {
+        _ = try HezoJSON.makeResponseDecoder().decode(CheckResponseStatus.self, from: data)
+        Issue.record("A declared invalid check-response status fixture was accepted: \(fixtureID)")
+      } catch let error as DecodingError {
+        if let rejectedString, rejectedString.isEmpty == false {
+          #expect(String(describing: error).contains(rejectedString) == false)
+          #expect(String(reflecting: error).contains(rejectedString) == false)
+        }
+      } catch {
+        Issue.record(
+          "Check-response status decoding used an unexpected error category: \(fixtureID)")
+      }
+    }
+  }
+
+  @Test func rejectedPrivacyCanaryIsNeverReflected() throws {
+    let rejectedCandidate = "PRIVATE_SENTINEL_CHECK_RESPONSE_STATUS"
+    let data = try JSONEncoder().encode(rejectedCandidate)
+
+    do {
+      _ = try HezoJSON.makeResponseDecoder().decode(CheckResponseStatus.self, from: data)
+      Issue.record("A privacy-canary check-response status was accepted")
+    } catch let error as DecodingError {
+      #expect(String(describing: error).contains(rejectedCandidate) == false)
+      #expect(String(reflecting: error).contains(rejectedCandidate) == false)
+    } catch {
+      Issue.record("Check-response status privacy canary used an unexpected error category")
+    }
+  }
+
+  @Test func standaloneStatusDoesNotAuthorizeAResponseBranchOrProtocolBehavior() throws {
+    let readmeData = try loadData("packages/contracts/README.md")
+    let readme = try #require(String(data: readmeData, encoding: .utf8))
+    #expect(readme.contains(checkResponseStatusBoundarySentence))
+
+    let schema = try loadObject(checkResponseStatusSchemaPath)
+    #expect(schema["type"] as? String == "string")
+    #expect(schema["properties"] == nil)
+    #expect(schema["required"] == nil)
+    #expect(schema["allOf"] == nil)
+    #expect(schema["anyOf"] == nil)
+    #expect(schema["oneOf"] == nil)
+
+    let openAPI = try loadObject("packages/contracts/openapi-components.json")
+    #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
+    #expect(openAPI["servers"] == nil)
+    #expect(openAPI["security"] == nil)
+    // Scalar validity proves no branch members, HTTP mapping, token, retry, polling, or envelope.
+  }
+}
+
 struct VerdictSupportingStablePrimitiveContractAssetTests {
   @Test(arguments: VerdictSupportingStablePrimitiveContract.allCases)
   func schemaAndOpenAPIKeepEachFrozenStablePrimitiveSurface(
@@ -1050,7 +1269,7 @@ struct VerdictSupportingStablePrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.4.0")
+    #expect(info["version"] as? String == "1.5.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1243,7 +1462,7 @@ struct VerdictReasonsContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.4.0")
+    #expect(info["version"] as? String == "1.5.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1586,11 +1805,62 @@ private let repositoryRoot = URL(fileURLWithPath: #filePath)
 private let expectedOpenAPIComponentNames: Set<String> = [
   "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
   "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
-  "VerdictReasonsV1",
+  "VerdictReasonsV1", "CheckResponseStatusV1",
 ]
 
 private let verdictPrimitiveBoundarySentence =
   "These standalone primitives validate individual wire values only. They neither define label/action pair coherence nor authorize a complete verdict or check-response envelope."
+
+private let checkResponseStatusSchemaPath =
+  "packages/contracts/schemas/check-response-status-v1.schema.json"
+private let checkResponseStatusOpenAPIReference =
+  "./schemas/check-response-status-v1.schema.json"
+private let checkResponseStatusFixtureRoot =
+  "packages/contracts/fixtures/check-response-status-v1"
+private let checkResponseStatusManifestPath =
+  "\(checkResponseStatusFixtureRoot)/manifest.json"
+private let checkResponseStatusManifestSchemaReference =
+  "../../schemas/check-response-status-v1.schema.json"
+private let checkResponseStatusWireValues = ["complete", "pending"]
+private let checkResponseStatusValidFixtureIDs: Set<String> = [
+  "valid-complete", "valid-pending",
+]
+private let checkResponseStatusFixturePaths = [
+  "valid-complete": "valid/complete.json",
+  "valid-pending": "valid/pending.json",
+  "reject-alias-completed": "invalid/alias-completed.json",
+  "reject-conceptual-analyzing": "invalid/conceptual-analyzing.json",
+  "reject-verdict-unknown": "invalid/verdict-unknown.json",
+  "reject-report-accepted": "invalid/report-accepted.json",
+  "reject-uppercase": "invalid/uppercase.json",
+  "reject-empty": "invalid/empty.json",
+  "reject-http-status-202": "invalid/http-status-202.json",
+  "reject-null": "invalid/null.json",
+]
+private let checkResponseStatusFixturePayloads: [String: PrimitiveFixturePayload] = [
+  "valid-complete": .string("complete"),
+  "valid-pending": .string("pending"),
+  "reject-alias-completed": .string("completed"),
+  "reject-conceptual-analyzing": .string("analyzing"),
+  "reject-verdict-unknown": .string("unknown"),
+  "reject-report-accepted": .string("accepted"),
+  "reject-uppercase": .string("COMPLETE"),
+  "reject-empty": .string(""),
+  "reject-http-status-202": .integer(202),
+  "reject-null": .null,
+]
+private let checkResponseStatusFailureKeywords: [String: Set<String>] = [
+  "reject-alias-completed": ["enum"],
+  "reject-conceptual-analyzing": ["enum"],
+  "reject-verdict-unknown": ["enum"],
+  "reject-report-accepted": ["enum"],
+  "reject-uppercase": ["enum"],
+  "reject-empty": ["enum"],
+  "reject-http-status-202": ["type", "enum"],
+  "reject-null": ["type", "enum"],
+]
+private let checkResponseStatusBoundarySentence =
+  "This primitive validates one check-response status value only. It defines no endpoint, response branch, HTTP status, token or capability, retry or polling behavior, completion guarantee, or check-response envelope."
 
 enum PrimitiveFixturePayload: Equatable, Sendable {
   case string(String)

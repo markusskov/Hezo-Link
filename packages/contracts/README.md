@@ -1,12 +1,14 @@
 # Hezo Link contract components
 
-This directory is the public, offline source of truth for the first check-input, problem, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
+This directory is the public, offline source of truth for the first check-input, problem, check-response-status, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
 
 ## Artifacts
 
 - `openapi-components.json` is an OpenAPI 3.1 components document. Its `paths` object is deliberately empty and it declares no server or security scheme.
 - `schemas/check-request-v1.schema.json` is the strict Draft 2020-12 request schema.
 - `fixtures/check-request-v1/manifest.json` lists deterministic, reserved-domain valid and invalid examples and their expected schema result.
+- `schemas/check-response-status-v1.schema.json` is the strict Draft 2020-12 standalone check-response-status enum schema.
+- `fixtures/check-response-status-v1/manifest.json` lists both valid statuses and deterministic invalid aliases, cross-vocabulary values, types, and spellings with their exact schema failure keyword sets.
 - `schemas/problem-v1.schema.json` is the strict Draft 2020-12 RFC 9457-style problem schema.
 - `fixtures/problem-v1/manifest.json` lists deterministic problem examples and the schema keyword or keyword set each invalid example exercises.
 - `schemas/verdict-reason-v1.schema.json` is the strict Draft 2020-12 public verdict-reason schema.
@@ -37,6 +39,12 @@ Unknown fields are rejected.
 ### URL validation boundary
 
 The schema's `maxLength: 8192` is a useful coarse upper bound, but Draft 2020-12 defines `maxLength` in Unicode code points rather than encoded bytes. A semantic validator must also reject a decoded `url` whose UTF-8 representation exceeds 8192 bytes. It must apply the URL target rules in [Sandboxing and security](../../docs/08-sandbox-and-security.md), including scheme, user-information, host, control-character, and ambiguity checks. Schema validation never rewrites the submitted value.
+
+## Check response status V1
+
+`CheckResponseStatusV1` is a standalone string enum with exactly two values: `complete` and `pending`. It rejects the conceptual state `analyzing`, the verdict label `unknown`, the report-response status `accepted`, HTTP status numbers, aliases, and alternate spellings.
+
+This primitive validates one check-response status value only. It defines no endpoint, response branch, HTTP status, token or capability, retry or polling behavior, completion guarantee, or check-response envelope.
 
 ## Problem V1
 
@@ -93,4 +101,4 @@ This standalone reason primitive does not define or authorize a complete verdict
 
 ## Explicit exclusions
 
-These artifacts contain only request, problem, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, I/O behavior, identity material, label/action coherence matrix, canonical Verdict object, complete verdict envelope, check-response envelope, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
+These artifacts contain only request, problem, check-response-status, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, I/O behavior, identity material, label/action coherence matrix, canonical Verdict object, complete verdict envelope, check-response envelope, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "contract": "check-response-status-v1",
+  "contract_schema": "../../schemas/check-response-status-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-complete",
+      "path": "valid/complete.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-pending",
+      "path": "valid/pending.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-alias-completed",
+      "path": "invalid/alias-completed.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-conceptual-analyzing",
+      "path": "invalid/conceptual-analyzing.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-verdict-unknown",
+      "path": "invalid/verdict-unknown.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-report-accepted",
+      "path": "invalid/report-accepted.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-uppercase",
+      "path": "invalid/uppercase.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-empty",
+      "path": "invalid/empty.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "enum"
+    },
+    {
+      "id": "reject-http-status-202",
+      "path": "invalid/http-status-202.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "enum"
+      ]
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "enum"
+      ]
+    }
+  ]
+}
