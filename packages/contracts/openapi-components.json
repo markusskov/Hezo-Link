@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Hezo Link public contract components",
-    "version": "1.5.0",
-    "description": "Reusable offline check-input, problem, check-response-status, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+    "version": "1.6.0",
+    "description": "Reusable offline check-input, problem, check-response-status, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
   },
   "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "paths": {},
@@ -35,6 +35,9 @@
       },
       "CheckResponseStatusV1": {
         "$ref": "./schemas/check-response-status-v1.schema.json"
+      },
+      "VerdictV1": {
+        "$ref": "./schemas/verdict-v1.schema.json"
       }
     }
   }

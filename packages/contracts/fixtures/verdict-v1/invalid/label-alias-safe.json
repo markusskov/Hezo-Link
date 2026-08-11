@@ -1,0 +1,7 @@
+{
+  "label": "safe",
+  "recommended_action": "allow",
+  "confidence": "high",
+  "evaluated_scope": "exact_url",
+  "reasons": []
+}

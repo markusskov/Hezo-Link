@@ -1,0 +1,6 @@
+{
+  "label": "caution",
+  "recommended_action": "warn",
+  "confidence": "medium",
+  "evaluated_scope": "exact_url"
+}

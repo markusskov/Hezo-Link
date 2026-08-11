@@ -1,0 +1,8 @@
+{
+  "label": "dangerous",
+  "recommended_action": "avoid",
+  "confidence": "high",
+  "evaluated_scope": "exact_url",
+  "reasons": [],
+  "block_eligible": true
+}

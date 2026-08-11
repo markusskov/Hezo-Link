@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:verdict:v1",
+  "title": "Hezo Link verdict V1",
+  "description": "Strict standalone public Verdict V1 object with bounded supporting values and an exact label/action coherence matrix. It does not authorize a complete check response or automatic blocking.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "label",
+    "recommended_action",
+    "confidence",
+    "evaluated_scope",
+    "reasons"
+  ],
+  "properties": {
+    "label": {
+      "$ref": "urn:hezo-link:contract:verdict-label:v1"
+    },
+    "recommended_action": {
+      "$ref": "urn:hezo-link:contract:recommended-action:v1"
+    },
+    "confidence": {
+      "$ref": "urn:hezo-link:contract:confidence-category:v1"
+    },
+    "evaluated_scope": {
+      "$ref": "urn:hezo-link:contract:evaluated-scope:v1"
+    },
+    "reasons": {
+      "$ref": "urn:hezo-link:contract:verdict-reasons:v1"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "label": {
+          "const": "unknown"
+        },
+        "recommended_action": {
+          "enum": [
+            "warn",
+            "retry"
+          ]
+        }
+      }
+    },
+    {
+      "properties": {
+        "label": {
+          "const": "no_known_danger"
+        },
+        "recommended_action": {
+          "const": "allow"
+        }
+      }
+    },
+    {
+      "properties": {
+        "label": {
+          "const": "caution"
+        },
+        "recommended_action": {
+          "const": "warn"
+        }
+      }
+    },
+    {
+      "properties": {
+        "label": {
+          "const": "dangerous"
+        },
+        "recommended_action": {
+          "const": "avoid"
+        }
+      }
+    }
+  ]
+}
