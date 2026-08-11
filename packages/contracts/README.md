@@ -1,6 +1,6 @@
 # Hezo Link contract components
 
-This directory is the public, offline source of truth for the first check-input, problem, and verdict-reason wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
+This directory is the public, offline source of truth for the first check-input, problem, verdict-reason, verdict-label, and recommended-action wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
 
 ## Artifacts
 
@@ -11,10 +11,12 @@ This directory is the public, offline source of truth for the first check-input,
 - `fixtures/problem-v1/manifest.json` lists deterministic problem examples and the schema keyword or keyword set each invalid example exercises.
 - `schemas/verdict-reason-v1.schema.json` is the strict Draft 2020-12 public verdict-reason schema.
 - `fixtures/verdict-reason-v1/manifest.json` lists deterministic verdict-reason boundary examples and the exact schema keyword or keyword set each invalid example exercises.
+- `schemas/verdict-label-v1.schema.json` and `schemas/recommended-action-v1.schema.json` are strict Draft 2020-12 standalone enum schemas.
+- `fixtures/verdict-label-v1/manifest.json` and `fixtures/recommended-action-v1/manifest.json` list every valid primitive and deterministic invalid aliases, types, and spellings with their exact schema failure keyword sets.
 
 The OpenAPI components reference the standalone JSON Schemas so there is one definition of each public shape to keep current.
 
-`CheckRequestContractAssetTests`, `ProblemContractAssetTests`, and `VerdictReasonContractAssetTests` run in both SwiftPM and the shared Xcode scheme. They pin the exact V1 schema surfaces, resolve the OpenAPI and manifest references, check complete unique fixture coverage, and independently evaluate every declared fixture result and failure keyword set. These tests are deliberately limited to the frozen contract subsets; they are not a general JSON Schema implementation. Expanding the schema vocabulary requires a versioned contract change and selected strict Draft 2020-12 validation tooling rather than silently widening the local evaluators.
+Contract asset tests run in both SwiftPM and the shared Xcode scheme. They pin the exact V1 schema surfaces, resolve the OpenAPI and manifest references, check complete unique fixture coverage, and independently evaluate every declared fixture result and failure keyword set. These tests are deliberately limited to the frozen contract subsets; they are not a general JSON Schema implementation. Expanding the schema vocabulary requires a versioned contract change and selected strict Draft 2020-12 validation tooling rather than silently widening the local evaluators.
 
 ## Check request V1
 
@@ -52,6 +54,14 @@ Draft 2020-12 `minLength` and `maxLength` count Unicode code points, not UTF-8 b
 
 The schema uses the standard `uri-reference` format for `type`. Strict validation of the fixture manifest therefore requires a Draft 2020-12 validator configured to assert formats, not one that treats `format` as annotation only. The accompanying ASCII pattern is an independent allowed-character constraint; it does not replace RFC 3986 syntax validation.
 
+## Verdict primitives V1
+
+`VerdictLabelV1` is a standalone string enum with exactly four values: `unknown`, `no_known_danger`, `caution`, and `dangerous`. It accepts no aliases, including internal or action vocabulary.
+
+`RecommendedActionV1` is a separate standalone string enum with exactly four values: `allow`, `warn`, `avoid`, and `retry`. It accepts no automatic-block alias or verdict-label value.
+
+These standalone primitives validate individual wire values only. They neither define label/action pair coherence nor authorize a complete verdict or check-response envelope.
+
 ## Verdict reason V1
 
 Every verdict reason is a JSON object with exactly these required fields:
@@ -71,4 +81,4 @@ This standalone reason primitive does not define or authorize a complete verdict
 
 ## Explicit exclusions
 
-These artifacts contain only request, problem, and verdict-reason shapes with reserved or synthetic examples. They define no endpoint, deployment, I/O behavior, identity material, complete verdict envelope, check-response envelope, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
+These artifacts contain only request, problem, verdict-reason, verdict-label, and recommended-action shapes with reserved or synthetic examples. They define no endpoint, deployment, I/O behavior, identity material, label/action coherence matrix, complete verdict envelope, check-response envelope, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.

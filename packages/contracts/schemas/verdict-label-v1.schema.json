@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:verdict-label:v1",
+  "title": "Hezo Link verdict label V1",
+  "description": "Exact public verdict-label primitive. This standalone value does not authorize label/action coherence or a complete verdict or check response.",
+  "type": "string",
+  "enum": [
+    "unknown",
+    "no_known_danger",
+    "caution",
+    "dangerous"
+  ]
+}
