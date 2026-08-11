@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Hezo Link public contract components",
-    "version": "1.3.0",
-    "description": "Reusable offline check-input, problem, verdict-reason, verdict-label, and recommended-action schemas. This document declares no deployed service or operation."
+    "version": "1.4.0",
+    "description": "Reusable offline check-input, problem, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
   },
   "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "paths": {},
@@ -23,6 +23,15 @@
       },
       "RecommendedActionV1": {
         "$ref": "./schemas/recommended-action-v1.schema.json"
+      },
+      "ConfidenceCategoryV1": {
+        "$ref": "./schemas/confidence-category-v1.schema.json"
+      },
+      "EvaluatedScopeV1": {
+        "$ref": "./schemas/evaluated-scope-v1.schema.json"
+      },
+      "VerdictReasonsV1": {
+        "$ref": "./schemas/verdict-reasons-v1.schema.json"
       }
     }
   }

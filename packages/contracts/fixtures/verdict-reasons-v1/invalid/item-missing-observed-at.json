@@ -1,0 +1,9 @@
+[
+  {
+    "code": "synthetic_reason_one",
+    "family": "synthetic_evidence",
+    "severity": "low",
+    "summary_key": "verdict.reason.synthetic_reason_one",
+    "freshness": "current"
+  }
+]

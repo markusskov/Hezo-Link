@@ -1,6 +1,6 @@
 # Hezo Link contract components
 
-This directory is the public, offline source of truth for the first check-input, problem, verdict-reason, verdict-label, and recommended-action wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
+This directory is the public, offline source of truth for the first check-input, problem, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
 
 ## Artifacts
 
@@ -13,6 +13,10 @@ This directory is the public, offline source of truth for the first check-input,
 - `fixtures/verdict-reason-v1/manifest.json` lists deterministic verdict-reason boundary examples and the exact schema keyword or keyword set each invalid example exercises.
 - `schemas/verdict-label-v1.schema.json` and `schemas/recommended-action-v1.schema.json` are strict Draft 2020-12 standalone enum schemas.
 - `fixtures/verdict-label-v1/manifest.json` and `fixtures/recommended-action-v1/manifest.json` list every valid primitive and deterministic invalid aliases, types, and spellings with their exact schema failure keyword sets.
+- `schemas/confidence-category-v1.schema.json` and `schemas/evaluated-scope-v1.schema.json` are strict Draft 2020-12 forward-compatible stable-value schemas.
+- `fixtures/confidence-category-v1/manifest.json` and `fixtures/evaluated-scope-v1/manifest.json` cover documented examples, additive values, exact bounds, and invalid grammar cases.
+- `schemas/verdict-reasons-v1.schema.json` is the strict ordered zero-through-five Verdict Reason V1 collection schema.
+- `fixtures/verdict-reasons-v1/manifest.json` covers every allowed count, preserved order, permitted duplicate items, collection limits, and invalid nested reasons.
 
 The OpenAPI components reference the standalone JSON Schemas so there is one definition of each public shape to keep current.
 
@@ -62,6 +66,14 @@ The schema uses the standard `uri-reference` format for `type`. Strict validatio
 
 These standalone primitives validate individual wire values only. They neither define label/action pair coherence nor authorize a complete verdict or check-response envelope.
 
+## Verdict-supporting primitives V1
+
+`ConfidenceCategoryV1` and `EvaluatedScopeV1` are standalone strings using the shared stable-value grammar: one through 128 ASCII bytes, beginning with a lowercase letter, with no doubled or trailing underscore. They are deliberately not enums, so new valid stable values remain additive. Confidence is a bounded category rather than an internal score or consumer probability; an evaluated scope value alone makes no coverage claim. `exact_url` is the only documented public V1 scope here. Other grammar-valid synthetic fixtures prove additive parsing behavior without publishing another scope meaning.
+
+`VerdictReasonsV1` is an ordered array containing zero through five strict `VerdictReasonV1` items. Array order is preserved. Duplicate items remain structurally valid because this primitive has no `uniqueItems` rule; semantic reason selection or deduplication belongs to a later verdict policy.
+
+These supporting primitives validate bounded wire values and an ordered reason collection only. They do not define verdict label/action coherence, a canonical Verdict object, or an evidence-bearing complete check-response envelope.
+
 ## Verdict reason V1
 
 Every verdict reason is a JSON object with exactly these required fields:
@@ -81,4 +93,4 @@ This standalone reason primitive does not define or authorize a complete verdict
 
 ## Explicit exclusions
 
-These artifacts contain only request, problem, verdict-reason, verdict-label, and recommended-action shapes with reserved or synthetic examples. They define no endpoint, deployment, I/O behavior, identity material, label/action coherence matrix, complete verdict envelope, check-response envelope, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
+These artifacts contain only request, problem, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, I/O behavior, identity material, label/action coherence matrix, canonical Verdict object, complete verdict envelope, check-response envelope, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.

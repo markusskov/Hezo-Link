@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:confidence-category:v1",
+  "title": "Hezo Link confidence category V1",
+  "description": "Forward-compatible bounded confidence-category primitive using the stable-value grammar. It is not a score, probability, or complete verdict.",
+  "type": "string",
+  "minLength": 1,
+  "maxLength": 128,
+  "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:verdict-reasons:v1",
+  "title": "Hezo Link verdict reasons V1",
+  "description": "Ordered zero-through-five array of strict Verdict Reason V1 items. Duplicate items remain structurally valid; this primitive does not define a complete verdict.",
+  "type": "array",
+  "minItems": 0,
+  "maxItems": 5,
+  "items": {
+    "$ref": "urn:hezo-link:contract:verdict-reason:v1"
+  }
+}
