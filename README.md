@@ -109,15 +109,20 @@ Phase 0 is a set of kill-risk validations, not product construction:
 - Approve the Stage 0 privacy data-flow inventory and canonical MPD definition and limitations, without accepting P-009 or closing the final O-010/O-011 launch decisions.
 - Record stack and hosting decisions in an ADR.
 
-Do not build the complete app or create external state before these risks are understood. Offline S1-A contract and URL-policy core work may proceed only within [ADR 0002](docs/adr/0002-local-first-product-foundation.md). The exact build sequence and stop gates are in the [implementation plan](docs/11-implementation-plan.md).
+Do not build the complete app or create product, service, provider, or production external state before these risks are understood. Offline S1-A contract and URL-policy core work may proceed only within [ADR 0002](docs/adr/0002-local-first-product-foundation.md). Owner-local Apple automatic signing for the inert shell is the sole external-state exception: it may create or fetch development provisioning state, but is neither proof evidence nor authority for entitlements, TestFlight, or release. The exact build sequence and stop gates are in the [implementation plan](docs/11-implementation-plan.md).
 
 ## Local verification
 
-The current Swift product-core package has no third-party dependencies and performs no network access:
+Open `HezoLink.xcodeproj` in Xcode for the minimal iOS app shell, the shared core sources, and their iOS test target. The same core sources remain a root Swift package for command-line and cross-platform testing. The shell exists only to surface Xcode build, runtime, and signing diagnostics; it does not yet implement a consumer flow or create network or persistent state. The shared `HezoLink` scheme runs all core tests with Product > Test.
+
+For a signed device build, copy `Config/Signing.local.example.xcconfig` to `Config/Signing.local.xcconfig` and replace the two placeholder values. The local file is ignored by Git so the Apple Team and final bundle identifier do not enter the public repository. Keep certificates, private keys, and provisioning profiles in Xcode, Keychain, or Apple-managed stores—not in either xcconfig. Simulator builds require no signing identity.
+
+The current Swift foundation has no third-party dependencies and performs no network access:
 
 ~~~sh
 swift test
-xcrun swift-format lint --configuration .swift-format --recursive Sources Tests Package.swift
+xcrun swift-format lint --configuration .swift-format --recursive Apps Sources Tests Package.swift
+xcodebuild build -project HezoLink.xcodeproj -scheme HezoLink -destination 'generic/platform=iOS Simulator'
 ~~~
 
 ## Future business direction
@@ -138,6 +143,6 @@ Documentation baseline: reviewed and merged.
 
 Stage 0: public governance and deterministic offline fixtures are established. The runnable proof harness remains paused until the repository and isolated-execution decisions are accepted; no proof is claimed complete.
 
-Application code: the bounded local S1-A foundation is now authorized by [ADR 0002](docs/adr/0002-local-first-product-foundation.md). Initial batches are offline, dependency-light contract and URL-policy core modules with executable tests; they create no external state and make no Stage 0, release, or production-readiness claim.
+Application code: the bounded local S1-A foundation is now authorized by [ADR 0002](docs/adr/0002-local-first-product-foundation.md). Initial batches are an offline contract core, a minimal Xcode app shell for compiler/runtime/signing setup, and then URL-policy core modules with executable tests. They create no product, service, provider, or production state. Owner-local automatic signing may create Apple development provisioning state as the sole non-proof exception. Nothing here makes a Stage 0, release, or production-readiness claim.
 
 Project license: not yet selected. Public visibility does not imply permission to reuse; O-019 requires the owner/legal decision before external contributions or reuse are promoted.

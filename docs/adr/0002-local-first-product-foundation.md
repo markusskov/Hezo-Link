@@ -14,7 +14,7 @@
 
 ## Context
 
-The documentation baseline originally barred all product foundations until every Stage 0 proof passed. That protected unresolved external and privacy boundaries, but it also prevented reversible code that neither creates external state nor consumes the blocked decisions. The accountable owner has directed implementation to begin, selected the foundation defaults below, and required blocked external work to be recorded and skipped while other work continues.
+The documentation baseline originally barred all product foundations until every Stage 0 proof passed. That protected unresolved external and privacy boundaries, but it also prevented reversible code that creates no product, service, provider, or production state and consumes none of the blocked decisions. The accountable owner has directed implementation to begin, selected the foundation defaults below, and required blocked external work to be recorded and skipped while other work continues. Owner-local Apple automatic signing for the inert shell is the sole external-state exception and may create or fetch development provisioning state without becoming proof evidence.
 
 This decision does not assert that any Stage 0 proof passed or resolve O-020 for Stage 0 proof execution and exit. It creates a narrower implementation exception in which deterministic, offline product foundations may be built and reviewed before the external proof program completes.
 
@@ -56,12 +56,12 @@ The accepted foundation is:
 - Local containers only when a slice needs a reproducible PostgreSQL or other approved local service.
 - Terraform for later infrastructure; AWS in a US region is the intended provider direction, but exact region, network, managed services, and deployment remain separate decisions.
 
-The repository may now implement the bounded S1-A foundation before the complete Stage 0 exit: shared contract values, error envelopes, parsing and redaction, offline fixtures, URL-policy interfaces, and tests. The first slice is a dependency-free Swift contract core. Database migrations, persistence, and replay infrastructure remain outside this exception until their own decisions and stage entry are complete. O-020 remains open for the Stage 0 proof-timing and exit rules; this exception is not authority to execute a proof.
+The repository may now implement the bounded S1-A foundation before the complete Stage 0 exit: shared contract values, error envelopes, parsing and redaction, offline fixtures, URL-policy interfaces, tests, and a minimal iOS app shell that imports the shared core. The shell is authorized only to expose Xcode compiler, simulator, and owner-controlled signing diagnostics; it contains no product flow, network request, persistence, analytics, URL Filter, or App Attest behavior. The first functional slice is a dependency-free Swift contract core. Database migrations, persistence, and replay infrastructure remain outside this exception until their own decisions and stage entry are complete. O-020 remains open for the Stage 0 proof-timing and exit rules; this exception is not authority to execute a proof.
 
 The following remain unauthorized until their own gates are complete:
 
 - cloud resources, public endpoints, production routes, paid API calls, and provider accounts;
-- Apple entitlement requests, signing changes, device or TestFlight execution, OHTTP/PIR onboarding, and App Attest service calls;
+- Apple entitlement requests, committed signing identities, capability changes, device or TestFlight proof execution, OHTTP/PIR onboarding, and App Attest service calls; owner-local automatic-signing configuration for the inert app shell may create or fetch development provisioning state, but is the sole external-state exception and is not proof evidence;
 - live or captured threat inputs, raw evidence, production credentials, and crawler execution;
 - product analytics or any cross-plane identifier;
 - retention behavior that exceeds the strict existing ceilings; and
@@ -85,7 +85,7 @@ An owner-controlled external-spend ceiling exists in the private decision record
 - O-001 remains open only for the Go HTTP framework and any cross-language build orchestration not covered by native SwiftPM and Go commands.
 - O-003 remains open for managed queue, cache, object storage, KMS, secrets, and observability choices.
 - Exact AWS region/network and all deployment details remain open.
-- This decision does not authorize a consumer UI, production API, vendor connector, or release.
+- This decision does not authorize a consumer feature flow, production API, vendor connector, or release. The inert app shell is infrastructure for local build and signing diagnostics, not a completed product screen.
 
 ## Safety and rights impact
 
@@ -103,17 +103,19 @@ The first Swift slice has no third-party dependency. Later dependencies require 
 
 ## Migration and compatibility
 
-The documentation-only repository gains a root Swift package first. Later iOS targets may import the product-core module without making it the app bundle or URL Filter extension. Go services, shared contract sources, database files, and infrastructure use separate top-level paths when their slices begin.
+The repository gains a root Swift package and a minimal iOS application target that imports the product-core module. The app target is not the URL Filter extension and does not authorize one. Go services, shared contract sources, database files, and infrastructure use separate top-level paths when their slices begin.
 
 Existing Stage 0 plans and fixtures remain valid as proof contracts. Their Draft and Not-decided states do not become favorable merely because local product code exists.
 
 ## Rollback
 
-If the selected foundation proves unsuitable, stop after the current safe batch, preserve contract fixtures, and supersede this ADR before changing languages or repository layout. The root Swift package is removable without deleting production data because this phase creates none. No external resource may be retained by omission.
+If the selected foundation proves unsuitable, stop after the current safe batch, preserve contract fixtures, and supersede this ADR before changing languages or repository layout. The root Swift package is removable without deleting production data because this phase creates none. No product or service resource may be retained by omission; owner-local Apple signing and provisioning state remains under the owner's Xcode, Keychain, and Developer Portal controls.
 
 ## Verification
 
 - Every new Swift and Go package builds from a clean checkout with native tooling.
+- The shared Xcode scheme builds for an iOS Simulator with warnings treated as errors and no signing identity.
+- Owner-local Team and bundle values remain in the ignored local configuration and never appear in a commit. Certificates, private keys, and provisioning profiles remain in Xcode-, Keychain-, or Apple-managed stores outside the repository and never enter an xcconfig.
 - Tests are deterministic, offline, and use no credentials or live targets.
 - Contract values round-trip with exact documented wire spellings.
 - Security-sensitive descriptions and logs exclude attacker-controlled detail.

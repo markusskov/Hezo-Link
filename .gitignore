@@ -11,6 +11,7 @@
 *.key
 *.mobileprovision
 *.provisionprofile
+Config/Signing.local.xcconfig
 
 # IDE-local state
 .idea/

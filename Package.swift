@@ -12,8 +12,15 @@ let package = Package(
     .library(name: "HezoLinkCore", targets: ["HezoLinkCore"])
   ],
   targets: [
-    .target(name: "HezoLinkCore"),
-    .testTarget(name: "HezoLinkCoreTests", dependencies: ["HezoLinkCore"]),
+    .target(
+      name: "HezoLinkCore",
+      swiftSettings: [.treatAllWarnings(as: .error)]
+    ),
+    .testTarget(
+      name: "HezoLinkCoreTests",
+      dependencies: ["HezoLinkCore"],
+      swiftSettings: [.treatAllWarnings(as: .error)]
+    ),
   ],
   swiftLanguageModes: [.v6]
 )

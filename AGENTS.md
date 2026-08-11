@@ -47,6 +47,7 @@ Every phase has an entry gate, deliverables, tests, and an exit gate. Stop if an
 - Primary intelligence store: PostgreSQL; exact version, UUID, migration, and persistence choices remain open until P-003 is accepted.
 - Architecture shape: a modular control-plane service plus worker, with separate deployables introduced only at security or scale boundaries. Do not create a microservice per table.
 - Repository: one public monorepo using native Swift and Go tooling unless a later ADR selects cross-language orchestration.
+- Xcode: the minimal iOS app shell may compile and import the same shared core sources exposed by the root Swift package for local compiler, simulator, and owner-controlled signing setup. Keep Xcode target membership synchronized when shared source or test files change. Keep only the Team ID and final bundle identifier in ignored local configuration. Certificates, private keys, and provisioning profiles stay in Xcode-, Keychain-, or Apple-managed stores outside the repository and must never be placed in an xcconfig.
 
 These operational defaults remain proposed until their own decisions and gates are complete:
 

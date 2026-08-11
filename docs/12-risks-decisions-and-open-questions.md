@@ -33,13 +33,13 @@ This is the sanitized public decision register. It contains architectural decisi
 | D-018 | Models create bounded signals or explanations, never sole verdict/block authority. | Current model outputs are not durable evidence and are evadable. |
 | D-019 | A campaign is an operational cluster, not attacker attribution. | Avoid unsupported legal and product claims. |
 | D-020 | Future revenue comes from Hezo-owned/licensed threat intelligence, not user behavior. | Align business incentives with a digital-trust brand. |
-| D-021 | Reversible local product foundations may begin before every Stage 0 proof passes, within the no-network, no-live-data, no-external-state boundary in [ADR 0002](adr/0002-local-first-product-foundation.md). | Converts reviewed contracts into executable code without treating blocked Apple, provider, cloud, or privacy work as approved. |
+| D-021 | Reversible local product foundations may begin before every Stage 0 proof passes, within the no-network, no-live-data, and no product/service/provider/production-state boundary in [ADR 0002](adr/0002-local-first-product-foundation.md). Owner-local Apple development provisioning for the inert shell is the sole non-proof external-state exception. | Converts reviewed contracts into executable code without treating blocked Apple, provider, cloud, or privacy work as approved. |
 
 ## Accepted technical decisions
 
 | ID | Decision | Authority and limits |
 |---|---|---|
-| P-001 | Swift and SwiftUI for the iOS product; Swift Package Manager for pure Swift product-core modules. | Accepted by [ADR 0002](adr/0002-local-first-product-foundation.md); this does not create app/extension signing authority. |
+| P-001 | Swift and SwiftUI for the iOS product; Swift Package Manager for pure Swift product-core modules. | Accepted by [ADR 0002](adr/0002-local-first-product-foundation.md); an inert app shell and owner-local automatic-signing configuration are allowed, but no extension, entitlement, device/TestFlight proof, or committed signing identity is authorized. |
 | P-002 | OpenAPI 3.1 and JSON Schema are the shared wire-contract sources. | Accepted by [ADR 0002](adr/0002-local-first-product-foundation.md); generation is verified in later slices. |
 | P-004 | Use a modular control plane plus worker and split deployables only at security or scale boundaries. | Accepted by [ADR 0002](adr/0002-local-first-product-foundation.md); managed-service topology remains open. |
 
