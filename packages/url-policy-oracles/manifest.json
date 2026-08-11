@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "hezo-url-policy-oracles-v1",
+  "purpose": "offline-parser-conformance-and-differential-testing",
+  "policyScope": "manual-url-syntax-profile-2",
+  "safety": {
+    "executionBoundary": "offline-only",
+    "networkAccessPermitted": false,
+    "operationalUsePermitted": false,
+    "containsCapturedInputs": false,
+    "containsOperationalInputs": false,
+    "containsPotentiallyResolvableNames": true,
+    "containsSecrets": false,
+    "networkBehavior": "must-not-resolve-connect-fetch-or-navigate",
+    "failureBehavior": "fail-closed-on-integrity-schema-count-or-provenance-mismatch"
+  },
+  "validationRequirements": {
+    "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+    "strictSchemaModeRequired": true,
+    "digestVerificationRequired": true,
+    "countVerificationRequired": true,
+    "lfLineEndingsRequired": true,
+    "finalNewlineRequired": true,
+    "unmanifestedArtifactUsePermitted": false,
+    "companionSemanticValidationRequired": true,
+    "companionSemanticChecks": [
+      "unique-project-case-ids",
+      "declared-vs-projected-category-and-outcome-counts",
+      "distinct-rfc-document-count",
+      "rfc-reference-tuple-coherence",
+      "transformation-role-coherence"
+    ]
+  },
+  "upstreamCorpora": [
+    {
+      "kind": "unicode-idna-test-v2",
+      "format": "UTS-46-IdnaTestV2",
+      "file": {
+        "path": "upstream/unicode/IdnaTestV2-17.0.0.txt",
+        "mediaType": "text/plain",
+        "encoding": "UTF-8",
+        "byteCount": 775973,
+        "sha256": "beb5d0be20e896189b03209a82fdc34f06351502bbd4b8e2523583fc2954d9cf",
+        "lineEnding": "LF",
+        "physicalLineCount": 6508,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Unicode Consortium",
+        "sourceURL": "https://www.unicode.org/Public/17.0.0/idna/IdnaTestV2.txt",
+        "revision": "Unicode 17.0.0; UTS #46 test data dated 2025-05-01",
+        "licenseSpdx": "Unicode-3.0",
+        "licensePath": "upstream/unicode/LICENSE.txt"
+      },
+      "counts": {
+        "testCaseCount": 6391,
+        "commentLineCount": 109,
+        "blankLineCount": 8
+      },
+      "transformations": [
+        {
+          "operation": "byte-for-byte-copy",
+          "contentChanged": false,
+          "description": "Copied from the staged official artifact without changing any content byte or encoding."
+        },
+        {
+          "operation": "repository-path-rename-only",
+          "contentChanged": false,
+          "description": "Renamed the official IdnaTestV2.txt to IdnaTestV2-17.0.0.txt; file contents are unchanged."
+        }
+      ]
+    },
+    {
+      "kind": "wpt-urltestdata",
+      "format": "WPT-urltestdata-JSON",
+      "file": {
+        "path": "upstream/wpt/urltestdata-eb7aa8a1.json",
+        "mediaType": "application/json",
+        "encoding": "UTF-8",
+        "byteCount": 228373,
+        "sha256": "355c9f1e5f34aae66ba8adfabf3c853f5cd30ea22964ef7a53eb292e7975d81e",
+        "lineEnding": "LF",
+        "physicalLineCount": 10631,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Web Platform Tests project",
+        "sourceURL": "https://raw.githubusercontent.com/web-platform-tests/wpt/eb7aa8a1d700d76170f68cf5c8da748928abd32f/url/resources/urltestdata.json",
+        "revision": "eb7aa8a1d700d76170f68cf5c8da748928abd32f",
+        "licenseSpdx": "BSD-3-Clause",
+        "licensePath": "upstream/wpt/LICENSE.md"
+      },
+      "counts": {
+        "topLevelEntryCount": 1004,
+        "commentEntryCount": 113,
+        "testCaseCount": 891,
+        "successCaseCount": 624,
+        "failureCaseCount": 267,
+        "objectCommentCount": 8
+      },
+      "transformations": [
+        {
+          "operation": "byte-for-byte-copy",
+          "contentChanged": false,
+          "description": "Copied from the staged commit-pinned artifact without changing any content byte."
+        },
+        {
+          "operation": "repository-path-rename-only",
+          "contentChanged": false,
+          "description": "Renamed urltestdata.json to include the short source revision; file contents are unchanged."
+        }
+      ]
+    }
+  ],
+  "licenses": [
+    {
+      "kind": "license-text",
+      "forArtifactKind": "unicode-idna-test-v2",
+      "spdxIdentifier": "Unicode-3.0",
+      "file": {
+        "path": "upstream/unicode/LICENSE.txt",
+        "mediaType": "text/plain",
+        "encoding": "UTF-8",
+        "byteCount": 1995,
+        "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+        "lineEnding": "LF",
+        "physicalLineCount": 39,
+        "finalNewline": true
+      },
+      "sourceURL": "https://www.unicode.org/license.txt",
+      "sourceRevision": "Unicode License V3 (Unicode-3.0); copyright line 1991-2026",
+      "transformations": [
+        {
+          "operation": "byte-for-byte-copy",
+          "contentChanged": false,
+          "description": "Copied from the staged official Unicode license artifact without changing any content byte."
+        },
+        {
+          "operation": "repository-path-rename-only",
+          "contentChanged": false,
+          "description": "Renamed the official license.txt to LICENSE.txt; file contents are unchanged."
+        }
+      ]
+    },
+    {
+      "kind": "license-text",
+      "forArtifactKind": "wpt-urltestdata",
+      "spdxIdentifier": "BSD-3-Clause",
+      "file": {
+        "path": "upstream/wpt/LICENSE.md",
+        "mediaType": "text/markdown",
+        "encoding": "UTF-8",
+        "byteCount": 1500,
+        "sha256": "5fac07febb0e2a97fb0d7b0def149ec08b642e1ba4b9c345283ab1cbd2af6570",
+        "lineEnding": "LF",
+        "physicalLineCount": 11,
+        "finalNewline": true
+      },
+      "sourceURL": "https://raw.githubusercontent.com/web-platform-tests/wpt/eb7aa8a1d700d76170f68cf5c8da748928abd32f/LICENSE.md",
+      "sourceRevision": "eb7aa8a1d700d76170f68cf5c8da748928abd32f",
+      "transformations": [
+        {
+          "operation": "byte-for-byte-copy",
+          "contentChanged": false,
+          "description": "Copied from the staged commit-pinned WPT license artifact without changing any content byte."
+        }
+      ]
+    }
+  ],
+  "projectCases": {
+    "kind": "project-address-policy-cases",
+    "file": {
+      "path": "cases/address-policy-cases-v1.json",
+      "mediaType": "application/json",
+      "encoding": "UTF-8",
+      "byteCount": 32680,
+      "sha256": "2e7b8a9b7613d884efc723d77d8efbf8951215efc4d64bac31018b579ac490d4",
+      "lineEnding": "LF",
+      "physicalLineCount": 1035,
+      "finalNewline": true
+    },
+    "schemaPath": "schemas/address-policy-cases-v1.schema.json",
+    "schemaSha256": "98c47aa08d694e29941321527aa3b2f082aceb6ce05a4613e31361cfc4640a2a",
+    "authoringBasis": [
+      {
+        "document": "RFC 3056",
+        "section": "2",
+        "url": "https://www.rfc-editor.org/rfc/rfc3056.html#section-2"
+      },
+      {
+        "document": "RFC 3849",
+        "section": "2",
+        "url": "https://www.rfc-editor.org/rfc/rfc3849.html#section-2"
+      },
+      {
+        "document": "RFC 3986",
+        "section": "3.2.2",
+        "url": "https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2"
+      },
+      {
+        "document": "RFC 4291",
+        "section": "2.2",
+        "url": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.2"
+      },
+      {
+        "document": "RFC 4380",
+        "section": "4",
+        "url": "https://www.rfc-editor.org/rfc/rfc4380.html#section-4"
+      },
+      {
+        "document": "RFC 5737",
+        "section": "3",
+        "url": "https://www.rfc-editor.org/rfc/rfc5737.html#section-3"
+      },
+      {
+        "document": "RFC 5952",
+        "section": "4",
+        "url": "https://www.rfc-editor.org/rfc/rfc5952.html#section-4"
+      },
+      {
+        "document": "RFC 6052",
+        "section": "2.1",
+        "url": "https://www.rfc-editor.org/rfc/rfc6052.html#section-2.1"
+      },
+      {
+        "document": "RFC 9844",
+        "section": "3",
+        "url": "https://www.rfc-editor.org/rfc/rfc9844.html#section-3"
+      }
+    ],
+    "counts": {
+      "caseCount": 42,
+      "acceptedCaseCount": 18,
+      "rejectedCaseCount": 24,
+      "rfcDocumentCount": 9,
+      "categoryCounts": {
+        "canonical-ipv4": 3,
+        "alternate-ipv4-rejection": 12,
+        "ipv6-rfc5952-normalization": 7,
+        "ipv4-mapped-ipv6": 3,
+        "nat64": 2,
+        "6to4": 2,
+        "teredo": 2,
+        "malformed-ipv6-rejection": 8,
+        "zone-identifier-rejection": 3
+      }
+    },
+    "transformations": [
+      {
+        "operation": "project-authored",
+        "contentChanged": true,
+        "description": "Authored as a closed RFC-derived policy fixture using documentation addresses and standard mechanism prefixes."
+      }
+    ]
+  },
+  "schemas": [
+    {
+      "kind": "json-schema",
+      "role": "manifest-schema",
+      "dialect": "https://json-schema.org/draft/2020-12/schema",
+      "file": {
+        "path": "manifest.schema.json",
+        "mediaType": "application/schema+json",
+        "encoding": "UTF-8",
+        "byteCount": 24496,
+        "sha256": "1d503430775e372523e1fb12fcc29dc89fdccc0977d89d735d730eb80fdeb9ec",
+        "lineEnding": "LF",
+        "physicalLineCount": 1017,
+        "finalNewline": true
+      }
+    },
+    {
+      "kind": "json-schema",
+      "role": "address-policy-cases-schema",
+      "dialect": "https://json-schema.org/draft/2020-12/schema",
+      "file": {
+        "path": "schemas/address-policy-cases-v1.schema.json",
+        "mediaType": "application/schema+json",
+        "encoding": "UTF-8",
+        "byteCount": 10293,
+        "sha256": "98c47aa08d694e29941321527aa3b2f082aceb6ce05a4613e31361cfc4640a2a",
+        "lineEnding": "LF",
+        "physicalLineCount": 431,
+        "finalNewline": true
+      }
+    }
+  ],
+  "documentation": {
+    "kind": "package-readme",
+    "file": {
+      "path": "README.md",
+      "mediaType": "text/markdown",
+      "encoding": "UTF-8",
+      "byteCount": 6985,
+      "sha256": "f49bcfe14cc20196e2fb586b1f567185580a3aa8908402e35f0952b5f5d50777",
+      "lineEnding": "LF",
+      "physicalLineCount": 53,
+      "finalNewline": true
+    }
+  }
+}

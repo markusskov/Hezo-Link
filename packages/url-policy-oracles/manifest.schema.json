@@ -1,0 +1,1017 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:url-policy-oracles:manifest:v1",
+  "title": "Hezo Link URL-policy oracle manifest V1",
+  "description": "Strict, type-specific provenance and integrity manifest for offline URL-policy oracle artifacts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "manifestId",
+    "purpose",
+    "policyScope",
+    "safety",
+    "validationRequirements",
+    "upstreamCorpora",
+    "licenses",
+    "projectCases",
+    "schemas",
+    "documentation"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "manifestId": {
+      "type": "string",
+      "const": "hezo-url-policy-oracles-v1"
+    },
+    "purpose": {
+      "type": "string",
+      "const": "offline-parser-conformance-and-differential-testing"
+    },
+    "policyScope": {
+      "type": "string",
+      "const": "manual-url-syntax-profile-2"
+    },
+    "safety": {
+      "$ref": "#/$defs/safety"
+    },
+    "validationRequirements": {
+      "$ref": "#/$defs/validationRequirements"
+    },
+    "upstreamCorpora": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/idnaCorpus"
+        },
+        {
+          "$ref": "#/$defs/wptCorpus"
+        }
+      ],
+      "items": false
+    },
+    "licenses": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/unicodeLicense"
+        },
+        {
+          "$ref": "#/$defs/wptLicense"
+        }
+      ],
+      "items": false
+    },
+    "projectCases": {
+      "$ref": "#/$defs/projectCases"
+    },
+    "schemas": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/manifestSchemaArtifact"
+        },
+        {
+          "$ref": "#/$defs/addressSchemaArtifact"
+        }
+      ],
+      "items": false
+    },
+    "documentation": {
+      "$ref": "#/$defs/documentationArtifact"
+    }
+  },
+  "$defs": {
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executionBoundary",
+        "networkAccessPermitted",
+        "operationalUsePermitted",
+        "containsCapturedInputs",
+        "containsOperationalInputs",
+        "containsPotentiallyResolvableNames",
+        "containsSecrets",
+        "networkBehavior",
+        "failureBehavior"
+      ],
+      "properties": {
+        "executionBoundary": {
+          "type": "string",
+          "const": "offline-only"
+        },
+        "networkAccessPermitted": {
+          "type": "boolean",
+          "const": false
+        },
+        "operationalUsePermitted": {
+          "type": "boolean",
+          "const": false
+        },
+        "containsCapturedInputs": {
+          "type": "boolean",
+          "const": false
+        },
+        "containsOperationalInputs": {
+          "type": "boolean",
+          "const": false
+        },
+        "containsPotentiallyResolvableNames": {
+          "type": "boolean",
+          "const": true
+        },
+        "containsSecrets": {
+          "type": "boolean",
+          "const": false
+        },
+        "networkBehavior": {
+          "type": "string",
+          "const": "must-not-resolve-connect-fetch-or-navigate"
+        },
+        "failureBehavior": {
+          "type": "string",
+          "const": "fail-closed-on-integrity-schema-count-or-provenance-mismatch"
+        }
+      }
+    },
+    "validationRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jsonSchemaDialect",
+        "strictSchemaModeRequired",
+        "digestVerificationRequired",
+        "countVerificationRequired",
+        "lfLineEndingsRequired",
+        "finalNewlineRequired",
+        "unmanifestedArtifactUsePermitted",
+        "companionSemanticValidationRequired",
+        "companionSemanticChecks"
+      ],
+      "properties": {
+        "jsonSchemaDialect": {
+          "type": "string",
+          "const": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "strictSchemaModeRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "digestVerificationRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "countVerificationRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "lfLineEndingsRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "finalNewlineRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "unmanifestedArtifactUsePermitted": {
+          "type": "boolean",
+          "const": false
+        },
+        "companionSemanticValidationRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "companionSemanticChecks": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "prefixItems": [
+            {
+              "const": "unique-project-case-ids"
+            },
+            {
+              "const": "declared-vs-projected-category-and-outcome-counts"
+            },
+            {
+              "const": "distinct-rfc-document-count"
+            },
+            {
+              "const": "rfc-reference-tuple-coherence"
+            },
+            {
+              "const": "transformation-role-coherence"
+            }
+          ],
+          "items": false
+        }
+      }
+    },
+    "fileIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "mediaType",
+        "encoding",
+        "byteCount",
+        "sha256",
+        "lineEnding",
+        "physicalLineCount",
+        "finalNewline"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$(?![\\s\\S])"
+        },
+        "mediaType": {
+          "type": "string",
+          "enum": [
+            "application/json",
+            "application/schema+json",
+            "text/markdown",
+            "text/plain"
+          ]
+        },
+        "encoding": {
+          "type": "string",
+          "const": "UTF-8"
+        },
+        "byteCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+        },
+        "lineEnding": {
+          "type": "string",
+          "const": "LF"
+        },
+        "physicalLineCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "finalNewline": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "idnaFileIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "const": "upstream/unicode/IdnaTestV2-17.0.0.txt"
+            },
+            "mediaType": {
+              "const": "text/plain"
+            }
+          }
+        }
+      ]
+    },
+    "wptFileIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "const": "upstream/wpt/urltestdata-eb7aa8a1.json"
+            },
+            "mediaType": {
+              "const": "application/json"
+            }
+          }
+        }
+      ]
+    },
+    "unicodeLicenseFileIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "const": "upstream/unicode/LICENSE.txt"
+            },
+            "mediaType": {
+              "const": "text/plain"
+            }
+          }
+        }
+      ]
+    },
+    "wptLicenseFileIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "const": "upstream/wpt/LICENSE.md"
+            },
+            "mediaType": {
+              "const": "text/markdown"
+            }
+          }
+        }
+      ]
+    },
+    "addressCasesFileIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "const": "cases/address-policy-cases-v1.json"
+            },
+            "mediaType": {
+              "const": "application/json"
+            }
+          }
+        }
+      ]
+    },
+    "manifestSchemaFileIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "const": "manifest.schema.json"
+            },
+            "mediaType": {
+              "const": "application/schema+json"
+            }
+          }
+        }
+      ]
+    },
+    "addressSchemaFileIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "const": "schemas/address-policy-cases-v1.schema.json"
+            },
+            "mediaType": {
+              "const": "application/schema+json"
+            }
+          }
+        }
+      ]
+    },
+    "readmeFileIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "const": "README.md"
+            },
+            "mediaType": {
+              "const": "text/markdown"
+            }
+          }
+        }
+      ]
+    },
+    "transformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "contentChanged",
+        "description"
+      ],
+      "properties": {
+        "operation": {
+          "type": "string",
+          "enum": [
+            "byte-for-byte-copy",
+            "repository-path-rename-only",
+            "project-authored"
+          ]
+        },
+        "contentChanged": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 300
+        }
+      }
+    },
+    "upstreamTransformations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/transformation"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "enum": [
+                  "byte-for-byte-copy",
+                  "repository-path-rename-only"
+                ]
+              },
+              "contentChanged": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "projectTransformations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "prefixItems": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/transformation"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "operation": {
+                  "const": "project-authored"
+                },
+                "contentChanged": {
+                  "const": true
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "items": false
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publisher",
+        "sourceURL",
+        "revision",
+        "licenseSpdx",
+        "licensePath"
+      ],
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100
+        },
+        "sourceURL": {
+          "type": "string",
+          "pattern": "^https://[^\\r\\n\\u2028\\u2029]+$(?![\\s\\S])"
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100
+        },
+        "licenseSpdx": {
+          "type": "string",
+          "enum": [
+            "Unicode-3.0",
+            "BSD-3-Clause"
+          ]
+        },
+        "licensePath": {
+          "type": "string",
+          "pattern": "^upstream/(?:unicode|wpt)/LICENSE\\.(?:txt|md)$(?![\\s\\S])"
+        }
+      }
+    },
+    "idnaSource": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/source"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "publisher": {
+              "const": "Unicode Consortium"
+            },
+            "sourceURL": {
+              "const": "https://www.unicode.org/Public/17.0.0/idna/IdnaTestV2.txt"
+            },
+            "revision": {
+              "const": "Unicode 17.0.0; UTS #46 test data dated 2025-05-01"
+            },
+            "licenseSpdx": {
+              "const": "Unicode-3.0"
+            },
+            "licensePath": {
+              "const": "upstream/unicode/LICENSE.txt"
+            }
+          }
+        }
+      ]
+    },
+    "wptSource": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/source"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "publisher": {
+              "const": "Web Platform Tests project"
+            },
+            "sourceURL": {
+              "const": "https://raw.githubusercontent.com/web-platform-tests/wpt/eb7aa8a1d700d76170f68cf5c8da748928abd32f/url/resources/urltestdata.json"
+            },
+            "revision": {
+              "const": "eb7aa8a1d700d76170f68cf5c8da748928abd32f"
+            },
+            "licenseSpdx": {
+              "const": "BSD-3-Clause"
+            },
+            "licensePath": {
+              "const": "upstream/wpt/LICENSE.md"
+            }
+          }
+        }
+      ]
+    },
+    "idnaCorpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "format",
+        "file",
+        "source",
+        "counts",
+        "transformations"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "unicode-idna-test-v2"
+        },
+        "format": {
+          "type": "string",
+          "const": "UTS-46-IdnaTestV2"
+        },
+        "file": {
+          "$ref": "#/$defs/idnaFileIdentity"
+        },
+        "source": {
+          "$ref": "#/$defs/idnaSource"
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "testCaseCount",
+            "commentLineCount",
+            "blankLineCount"
+          ],
+          "properties": {
+            "testCaseCount": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "commentLineCount": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "blankLineCount": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "transformations": {
+          "$ref": "#/$defs/upstreamTransformations"
+        }
+      }
+    },
+    "wptCorpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "format",
+        "file",
+        "source",
+        "counts",
+        "transformations"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "wpt-urltestdata"
+        },
+        "format": {
+          "type": "string",
+          "const": "WPT-urltestdata-JSON"
+        },
+        "file": {
+          "$ref": "#/$defs/wptFileIdentity"
+        },
+        "source": {
+          "$ref": "#/$defs/wptSource"
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "topLevelEntryCount",
+            "commentEntryCount",
+            "testCaseCount",
+            "successCaseCount",
+            "failureCaseCount",
+            "objectCommentCount"
+          ],
+          "properties": {
+            "topLevelEntryCount": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "commentEntryCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "testCaseCount": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "successCaseCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "failureCaseCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "objectCommentCount": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "transformations": {
+          "$ref": "#/$defs/upstreamTransformations"
+        }
+      }
+    },
+    "unicodeLicense": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "forArtifactKind",
+        "spdxIdentifier",
+        "file",
+        "sourceURL",
+        "sourceRevision",
+        "transformations"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "license-text"
+        },
+        "forArtifactKind": {
+          "type": "string",
+          "const": "unicode-idna-test-v2"
+        },
+        "spdxIdentifier": {
+          "type": "string",
+          "const": "Unicode-3.0"
+        },
+        "file": {
+          "$ref": "#/$defs/unicodeLicenseFileIdentity"
+        },
+        "sourceURL": {
+          "type": "string",
+          "const": "https://www.unicode.org/license.txt"
+        },
+        "sourceRevision": {
+          "type": "string",
+          "const": "Unicode License V3 (Unicode-3.0); copyright line 1991-2026"
+        },
+        "transformations": {
+          "$ref": "#/$defs/upstreamTransformations"
+        }
+      }
+    },
+    "wptLicense": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "forArtifactKind",
+        "spdxIdentifier",
+        "file",
+        "sourceURL",
+        "sourceRevision",
+        "transformations"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "license-text"
+        },
+        "forArtifactKind": {
+          "type": "string",
+          "const": "wpt-urltestdata"
+        },
+        "spdxIdentifier": {
+          "type": "string",
+          "const": "BSD-3-Clause"
+        },
+        "file": {
+          "$ref": "#/$defs/wptLicenseFileIdentity"
+        },
+        "sourceURL": {
+          "type": "string",
+          "const": "https://raw.githubusercontent.com/web-platform-tests/wpt/eb7aa8a1d700d76170f68cf5c8da748928abd32f/LICENSE.md"
+        },
+        "sourceRevision": {
+          "type": "string",
+          "const": "eb7aa8a1d700d76170f68cf5c8da748928abd32f"
+        },
+        "transformations": {
+          "$ref": "#/$defs/upstreamTransformations"
+        }
+      }
+    },
+    "categoryCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical-ipv4",
+        "alternate-ipv4-rejection",
+        "ipv6-rfc5952-normalization",
+        "ipv4-mapped-ipv6",
+        "nat64",
+        "6to4",
+        "teredo",
+        "malformed-ipv6-rejection",
+        "zone-identifier-rejection"
+      ],
+      "properties": {
+        "canonical-ipv4": {
+          "type": "integer",
+          "const": 3
+        },
+        "alternate-ipv4-rejection": {
+          "type": "integer",
+          "const": 12
+        },
+        "ipv6-rfc5952-normalization": {
+          "type": "integer",
+          "const": 7
+        },
+        "ipv4-mapped-ipv6": {
+          "type": "integer",
+          "const": 3
+        },
+        "nat64": {
+          "type": "integer",
+          "const": 2
+        },
+        "6to4": {
+          "type": "integer",
+          "const": 2
+        },
+        "teredo": {
+          "type": "integer",
+          "const": 2
+        },
+        "malformed-ipv6-rejection": {
+          "type": "integer",
+          "const": 8
+        },
+        "zone-identifier-rejection": {
+          "type": "integer",
+          "const": 3
+        }
+      }
+    },
+    "rfcReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document",
+        "section",
+        "url"
+      ],
+      "properties": {
+        "document": {
+          "type": "string",
+          "pattern": "^RFC [0-9]{4}$(?![\\s\\S])"
+        },
+        "section": {
+          "type": "string",
+          "pattern": "^[0-9]+(?:\\.[0-9]+)*$(?![\\s\\S])"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://www\\.rfc-editor\\.org/rfc/rfc[0-9]{4}\\.html#section-[0-9]+(?:\\.[0-9]+)*$(?![\\s\\S])"
+        }
+      }
+    },
+    "projectCases": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "file",
+        "schemaPath",
+        "schemaSha256",
+        "authoringBasis",
+        "counts",
+        "transformations"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "project-address-policy-cases"
+        },
+        "file": {
+          "$ref": "#/$defs/addressCasesFileIdentity"
+        },
+        "schemaPath": {
+          "type": "string",
+          "const": "schemas/address-policy-cases-v1.schema.json"
+        },
+        "schemaSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+        },
+        "authoringBasis": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/rfcReference"
+          }
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "caseCount",
+            "acceptedCaseCount",
+            "rejectedCaseCount",
+            "rfcDocumentCount",
+            "categoryCounts"
+          ],
+          "properties": {
+            "caseCount": {
+              "type": "integer",
+              "const": 42
+            },
+            "acceptedCaseCount": {
+              "type": "integer",
+              "const": 18
+            },
+            "rejectedCaseCount": {
+              "type": "integer",
+              "const": 24
+            },
+            "rfcDocumentCount": {
+              "type": "integer",
+              "const": 9
+            },
+            "categoryCounts": {
+              "$ref": "#/$defs/categoryCounts"
+            }
+          }
+        },
+        "transformations": {
+          "$ref": "#/$defs/projectTransformations"
+        }
+      }
+    },
+    "manifestSchemaArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "role",
+        "dialect",
+        "file"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "json-schema"
+        },
+        "role": {
+          "type": "string",
+          "const": "manifest-schema"
+        },
+        "dialect": {
+          "type": "string",
+          "const": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "file": {
+          "$ref": "#/$defs/manifestSchemaFileIdentity"
+        }
+      }
+    },
+    "addressSchemaArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "role",
+        "dialect",
+        "file"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "json-schema"
+        },
+        "role": {
+          "type": "string",
+          "const": "address-policy-cases-schema"
+        },
+        "dialect": {
+          "type": "string",
+          "const": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "file": {
+          "$ref": "#/$defs/addressSchemaFileIdentity"
+        }
+      }
+    },
+    "documentationArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "file"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "package-readme"
+        },
+        "file": {
+          "$ref": "#/$defs/readmeFileIdentity"
+        }
+      }
+    }
+  }
+}

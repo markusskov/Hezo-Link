@@ -468,7 +468,7 @@ struct ManualURLInputValidatorTests {
       return
     }
     let profileIsPinned =
-      value.syntaxProfileVersion == 1
+      value.syntaxProfileVersion == 2
       && ManualURLInputValidator.specialUseDomainRegistryRevision == "2026-05-22"
     #expect(profileIsPinned, "Accepted values must identify the frozen syntax policy.")
     expectRejection(otherReservedOutcome, expected: .invalidURL)

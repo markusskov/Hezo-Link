@@ -15,6 +15,10 @@
 		200000000000000000000005 /* ManualURLInputProblemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000006 /* ManualURLInputProblemTests.swift */; };
 		200000000000000000000006 /* ManualURLInputValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000007 /* ManualURLInputValidatorTests.swift */; };
 		200000000000000000000007 /* SubmittedURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000008 /* SubmittedURLTests.swift */; };
+		20000000000000000000000A /* URLPolicyOracleManifestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000B /* URLPolicyOracleManifestTests.swift */; };
+		20000000000000000000000B /* URLPolicyOracleTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000C /* URLPolicyOracleTestSupport.swift */; };
+		20000000000000000000000C /* URLPolicyOracleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000D /* URLPolicyOracleTests.swift */; };
+		20000000000000000000000D /* URLPolicyPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000E /* URLPolicyPropertyTests.swift */; };
 		200000000000000000000008 /* URLPolicyTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000009 /* URLPolicyTestSupport.swift */; };
 		417DC138A5E9FC9F40F7F17B /* HezoLinkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B389ED6C05395E0C9A16C35 /* HezoLinkApp.swift */; };
 		F9294C4A276C665F6741DAC5 /* AppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5943CF0C9718C73A59EA62C0 /* AppShellView.swift */; };
@@ -41,6 +45,10 @@
 		100000000000000000000006 /* ManualURLInputProblemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualURLInputProblemTests.swift; sourceTree = "<group>"; };
 		100000000000000000000007 /* ManualURLInputValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualURLInputValidatorTests.swift; sourceTree = "<group>"; };
 		100000000000000000000008 /* SubmittedURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmittedURLTests.swift; sourceTree = "<group>"; };
+		10000000000000000000000B /* URLPolicyOracleManifestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyOracleManifestTests.swift; sourceTree = "<group>"; };
+		10000000000000000000000C /* URLPolicyOracleTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyOracleTestSupport.swift; sourceTree = "<group>"; };
+		10000000000000000000000D /* URLPolicyOracleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyOracleTests.swift; sourceTree = "<group>"; };
+		10000000000000000000000E /* URLPolicyPropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyPropertyTests.swift; sourceTree = "<group>"; };
 		100000000000000000000009 /* URLPolicyTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyTestSupport.swift; sourceTree = "<group>"; };
 		1A0D1E94FB5AE0F2DD5359B0 /* HezoLink.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = HezoLink.xcconfig; sourceTree = "<group>"; };
 		1A0D1E94FB5AE0F2DD5359B1 /* Signing.local.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.example.xcconfig; sourceTree = "<group>"; };
@@ -122,6 +130,10 @@
 				100000000000000000000007 /* ManualURLInputValidatorTests.swift */,
 				100000000000000000000002 /* ProblemTests.swift */,
 				100000000000000000000008 /* SubmittedURLTests.swift */,
+				10000000000000000000000B /* URLPolicyOracleManifestTests.swift */,
+				10000000000000000000000C /* URLPolicyOracleTestSupport.swift */,
+				10000000000000000000000D /* URLPolicyOracleTests.swift */,
+				10000000000000000000000E /* URLPolicyPropertyTests.swift */,
 				100000000000000000000009 /* URLPolicyTestSupport.swift */,
 				100000000000000000000003 /* VerdictTests.swift */,
 			);
@@ -305,6 +317,10 @@
 				200000000000000000000006 /* ManualURLInputValidatorTests.swift in Sources */,
 				200000000000000000000002 /* ProblemTests.swift in Sources */,
 				200000000000000000000007 /* SubmittedURLTests.swift in Sources */,
+				20000000000000000000000A /* URLPolicyOracleManifestTests.swift in Sources */,
+				20000000000000000000000B /* URLPolicyOracleTestSupport.swift in Sources */,
+				20000000000000000000000C /* URLPolicyOracleTests.swift in Sources */,
+				20000000000000000000000D /* URLPolicyPropertyTests.swift in Sources */,
 				200000000000000000000008 /* URLPolicyTestSupport.swift in Sources */,
 				200000000000000000000003 /* VerdictTests.swift in Sources */,
 			);
