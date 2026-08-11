@@ -10,5 +10,6 @@ Use the [proof-plan template](../proof-plan-template.md) and follow the [reposit
 | [S0-B URL Filter, PIR, and distribution](s0-b-url-filter-pir-distribution.md) | S0-B | Draft | Not authorized | Not authorized | Not decided |
 | [S0-C App Attest integrity](s0-c-app-attest-integrity.md) | S0-C | Draft | Not authorized | Not authorized | Not decided |
 | [S0-D sandbox boundary](s0-d-sandbox-boundary.md) | S0-D | Draft | Not authorized | Not authorized | Not decided |
+| [S0-E privacy and measurement](s0-e-privacy-and-measurement.md) | S0-E | Draft | Not authorized | Not authorized | Not decided |
 
 Only an accountable human role may approve a plan to run, complete a review, or make a gate decision. Missing plans and Draft plans leave their work packages open.
