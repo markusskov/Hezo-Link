@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "url": "https://analysis-profile.example.test/",
+  "analysis_profile": "fast",
+  "wait_budget_ms": 1200,
+  "reason_schema_version": 1
+}

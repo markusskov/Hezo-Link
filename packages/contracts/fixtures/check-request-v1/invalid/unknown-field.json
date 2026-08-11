@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "url": "https://unknown-field.example.test/",
+  "analysis_profile": "standard",
+  "wait_budget_ms": 1200,
+  "reason_schema_version": 1,
+  "source_application": "synthetic"
+}

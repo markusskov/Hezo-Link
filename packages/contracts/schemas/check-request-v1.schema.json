@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:check-request:v1",
+  "title": "Hezo Link check request V1",
+  "description": "Strict, public request shape for one deliberate manual URL check. URL safety and the 8192 UTF-8 byte maximum require semantic validation after schema validation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "url",
+    "analysis_profile",
+    "wait_budget_ms",
+    "reason_schema_version"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192,
+      "pattern": "^[Hh][Tt][Tt][Pp][Ss]?://",
+      "description": "Exact deliberate submission. Do not normalize or strip query or fragment. In addition to this code-point bound, reject values over 8192 UTF-8 bytes and apply the documented semantic URL policy."
+    },
+    "analysis_profile": {
+      "type": "string",
+      "const": "standard"
+    },
+    "wait_budget_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647,
+      "description": "Nonnegative signed 32-bit completion-wait hint, not a completion promise."
+    },
+    "reason_schema_version": {
+      "type": "integer",
+      "const": 1
+    }
+  }
+}

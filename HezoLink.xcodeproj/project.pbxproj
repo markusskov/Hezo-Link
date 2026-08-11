@@ -8,8 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		200000000000000000000001 /* ContractValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000001 /* ContractValueTests.swift */; };
+		200000000000000000000009 /* CheckRequestContractAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000A /* CheckRequestContractAssetTests.swift */; };
 		200000000000000000000002 /* ProblemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000002 /* ProblemTests.swift */; };
 		200000000000000000000003 /* VerdictTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000003 /* VerdictTests.swift */; };
+		200000000000000000000004 /* LogSafeURLRedactorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000005 /* LogSafeURLRedactorTests.swift */; };
+		200000000000000000000005 /* ManualURLInputProblemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000006 /* ManualURLInputProblemTests.swift */; };
+		200000000000000000000006 /* ManualURLInputValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000007 /* ManualURLInputValidatorTests.swift */; };
+		200000000000000000000007 /* SubmittedURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000008 /* SubmittedURLTests.swift */; };
+		200000000000000000000008 /* URLPolicyTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000009 /* URLPolicyTestSupport.swift */; };
 		417DC138A5E9FC9F40F7F17B /* HezoLinkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B389ED6C05395E0C9A16C35 /* HezoLinkApp.swift */; };
 		F9294C4A276C665F6741DAC5 /* AppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5943CF0C9718C73A59EA62C0 /* AppShellView.swift */; };
 		810000000000000000000001 /* ContractValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000001 /* ContractValue.swift */; };
@@ -18,13 +24,24 @@
 		810000000000000000000004 /* Verdict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000004 /* Verdict.swift */; };
 		810000000000000000000005 /* libHezoLinkCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 800000000000000000000005 /* libHezoLinkCore.a */; };
 		810000000000000000000006 /* libHezoLinkCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 800000000000000000000005 /* libHezoLinkCore.a */; };
+		810000000000000000000007 /* LogSafeURLRedactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000007 /* LogSafeURLRedactor.swift */; };
+		810000000000000000000008 /* ManualURLInputProblem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000008 /* ManualURLInputProblem.swift */; };
+		810000000000000000000009 /* ManualURLInputValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000009 /* ManualURLInputValidator.swift */; };
+		81000000000000000000000A /* SubmittedURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80000000000000000000000A /* SubmittedURL.swift */; };
+		81000000000000000000000B /* ValidatedManualURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80000000000000000000000B /* ValidatedManualURL.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		100000000000000000000001 /* ContractValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractValueTests.swift; sourceTree = "<group>"; };
+		10000000000000000000000A /* CheckRequestContractAssetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRequestContractAssetTests.swift; sourceTree = "<group>"; };
 		100000000000000000000002 /* ProblemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProblemTests.swift; sourceTree = "<group>"; };
 		100000000000000000000003 /* VerdictTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictTests.swift; sourceTree = "<group>"; };
 		100000000000000000000004 /* HezoLinkCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HezoLinkCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		100000000000000000000005 /* LogSafeURLRedactorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSafeURLRedactorTests.swift; sourceTree = "<group>"; };
+		100000000000000000000006 /* ManualURLInputProblemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualURLInputProblemTests.swift; sourceTree = "<group>"; };
+		100000000000000000000007 /* ManualURLInputValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualURLInputValidatorTests.swift; sourceTree = "<group>"; };
+		100000000000000000000008 /* SubmittedURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmittedURLTests.swift; sourceTree = "<group>"; };
+		100000000000000000000009 /* URLPolicyTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyTestSupport.swift; sourceTree = "<group>"; };
 		1A0D1E94FB5AE0F2DD5359B0 /* HezoLink.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = HezoLink.xcconfig; sourceTree = "<group>"; };
 		1A0D1E94FB5AE0F2DD5359B1 /* Signing.local.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.example.xcconfig; sourceTree = "<group>"; };
 		3F234DFD5F5D8E6136A617B8 /* HezoLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HezoLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -36,6 +53,11 @@
 		800000000000000000000004 /* Verdict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verdict.swift; sourceTree = "<group>"; };
 		800000000000000000000005 /* libHezoLinkCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHezoLinkCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		800000000000000000000006 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		800000000000000000000007 /* LogSafeURLRedactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSafeURLRedactor.swift; sourceTree = "<group>"; };
+		800000000000000000000008 /* ManualURLInputProblem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualURLInputProblem.swift; sourceTree = "<group>"; };
+		800000000000000000000009 /* ManualURLInputValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualURLInputValidator.swift; sourceTree = "<group>"; };
+		80000000000000000000000A /* SubmittedURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmittedURL.swift; sourceTree = "<group>"; };
+		80000000000000000000000B /* ValidatedManualURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidatedManualURL.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,8 +115,14 @@
 		400000000000000000000002 /* HezoLinkCoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				10000000000000000000000A /* CheckRequestContractAssetTests.swift */,
 				100000000000000000000001 /* ContractValueTests.swift */,
+				100000000000000000000005 /* LogSafeURLRedactorTests.swift */,
+				100000000000000000000006 /* ManualURLInputProblemTests.swift */,
+				100000000000000000000007 /* ManualURLInputValidatorTests.swift */,
 				100000000000000000000002 /* ProblemTests.swift */,
+				100000000000000000000008 /* SubmittedURLTests.swift */,
+				100000000000000000000009 /* URLPolicyTestSupport.swift */,
 				100000000000000000000003 /* VerdictTests.swift */,
 			);
 			path = HezoLinkCoreTests;
@@ -121,7 +149,12 @@
 			children = (
 				800000000000000000000001 /* ContractValue.swift */,
 				800000000000000000000002 /* HezoJSON.swift */,
+				800000000000000000000007 /* LogSafeURLRedactor.swift */,
+				800000000000000000000008 /* ManualURLInputProblem.swift */,
+				800000000000000000000009 /* ManualURLInputValidator.swift */,
 				800000000000000000000003 /* Problem.swift */,
+				80000000000000000000000A /* SubmittedURL.swift */,
+				80000000000000000000000B /* ValidatedManualURL.swift */,
 				800000000000000000000004 /* Verdict.swift */,
 			);
 			path = HezoLinkCore;
@@ -265,8 +298,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				200000000000000000000009 /* CheckRequestContractAssetTests.swift in Sources */,
 				200000000000000000000001 /* ContractValueTests.swift in Sources */,
+				200000000000000000000004 /* LogSafeURLRedactorTests.swift in Sources */,
+				200000000000000000000005 /* ManualURLInputProblemTests.swift in Sources */,
+				200000000000000000000006 /* ManualURLInputValidatorTests.swift in Sources */,
 				200000000000000000000002 /* ProblemTests.swift in Sources */,
+				200000000000000000000007 /* SubmittedURLTests.swift in Sources */,
+				200000000000000000000008 /* URLPolicyTestSupport.swift in Sources */,
 				200000000000000000000003 /* VerdictTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,7 +316,12 @@
 			files = (
 				810000000000000000000001 /* ContractValue.swift in Sources */,
 				810000000000000000000002 /* HezoJSON.swift in Sources */,
+				810000000000000000000007 /* LogSafeURLRedactor.swift in Sources */,
+				810000000000000000000008 /* ManualURLInputProblem.swift in Sources */,
+				810000000000000000000009 /* ManualURLInputValidator.swift in Sources */,
 				810000000000000000000003 /* Problem.swift in Sources */,
+				81000000000000000000000A /* SubmittedURL.swift in Sources */,
+				81000000000000000000000B /* ValidatedManualURL.swift in Sources */,
 				810000000000000000000004 /* Verdict.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

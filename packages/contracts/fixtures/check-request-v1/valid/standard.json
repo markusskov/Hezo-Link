@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "url": "https://example.test/path?opaque=value#route",
+  "analysis_profile": "standard",
+  "wait_budget_ms": 1200,
+  "reason_schema_version": 1
+}

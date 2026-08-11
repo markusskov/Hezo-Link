@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "analysis_profile": "standard",
+  "wait_budget_ms": 1200,
+  "reason_schema_version": 1
+}
