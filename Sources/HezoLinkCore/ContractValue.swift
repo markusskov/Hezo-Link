@@ -358,7 +358,7 @@ public struct PendingCheckResponseV1: Codable, Equatable, Sendable, CustomString
   public static let maximumRetryAfterMilliseconds = 900_000
 
   /// The maximum ASCII byte length of a plane-local request identifier.
-  public static let maximumRequestIDByteCount = 128
+  public static let maximumRequestIDByteCount = RequestIDV1.maximumByteCount
 
   /// The opaque token field carried by the wire response.
   public let checkToken: CheckTokenV1
@@ -371,6 +371,8 @@ public struct PendingCheckResponseV1: Codable, Equatable, Sendable, CustomString
 
   /// A bounded plane-local request identifier.
   public let requestID: String
+
+  private let requestIDValue: RequestIDV1
 
   private static let descriptionValue = "Pending check response."
 
@@ -413,12 +415,13 @@ public struct PendingCheckResponseV1: Codable, Equatable, Sendable, CustomString
     } catch {
       throw PendingCheckResponseContractError.invalidExpiry
     }
-    try Self.validateRequestID(requestID)
+    let validatedRequestID = try Self.validatedRequestIDForCompatibility(requestID)
 
     self.checkToken = checkToken
     self.retryAfterMilliseconds = retryAfterMilliseconds
     self.expiresAt = expiresAt
     self.requestID = requestID
+    self.requestIDValue = validatedRequestID
   }
 
   /// Decodes the exact pending envelope while dropping genuinely unknown additive fields.
@@ -469,7 +472,7 @@ public struct PendingCheckResponseV1: Codable, Equatable, Sendable, CustomString
     try container.encode(checkToken, forKey: .checkToken)
     try container.encode(retryAfterMilliseconds, forKey: .retryAfterMilliseconds)
     try container.encode(expiresAt, forKey: .expiresAt)
-    try container.encode(requestID, forKey: .requestID)
+    try container.encode(requestIDValue, forKey: .requestID)
   }
 
   /// A fixed summary that omits the token and request identifier.
@@ -487,21 +490,16 @@ public struct PendingCheckResponseV1: Codable, Equatable, Sendable, CustomString
     Mirror(self, children: ["value": Self.descriptionValue])
   }
 
-  private static func validateRequestID(_ value: String) throws {
-    guard value.isEmpty == false else {
+  private static func validatedRequestIDForCompatibility(_ value: String) throws -> RequestIDV1 {
+    do {
+      return try RequestIDV1(validating: value)
+    } catch RequestIDContractError.empty {
       throw PendingCheckResponseContractError.emptyRequestID
-    }
-    guard value.utf8.count <= maximumRequestIDByteCount else {
+    } catch RequestIDContractError.tooLong {
       throw PendingCheckResponseContractError.requestIDTooLong
-    }
-    guard value.utf8.allSatisfy(isRequestIDByte) else {
+    } catch RequestIDContractError.invalidFormat {
       throw PendingCheckResponseContractError.invalidRequestIDFormat
     }
-  }
-
-  private static func isRequestIDByte(_ byte: UInt8) -> Bool {
-    (0x30...0x39).contains(byte) || (0x41...0x5A).contains(byte)
-      || (0x61...0x7A).contains(byte) || byte == 0x2D || byte == 0x5F
   }
 }
 

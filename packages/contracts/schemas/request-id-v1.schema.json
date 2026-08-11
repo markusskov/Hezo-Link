@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:request-id:v1",
+  "title": "Hezo Link request ID V1",
+  "description": "Strict standalone bounded ASCII request identifier shape. This schema validates structure only and proves no entropy, authority, lifetime, retention or logging permission, or cross-plane identity.",
+  "type": "string",
+  "minLength": 1,
+  "maxLength": 128,
+  "pattern": "^[A-Za-z0-9_-]+$"
+}

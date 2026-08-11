@@ -149,7 +149,10 @@
       "id": "reject-empty-request-id",
       "path": "invalid/empty-request-id.json",
       "expected_schema_valid": false,
-      "expected_failure_keyword": "minLength"
+      "expected_failure_keywords": [
+        "minLength",
+        "pattern"
+      ]
     },
     {
       "id": "reject-request-id-character",

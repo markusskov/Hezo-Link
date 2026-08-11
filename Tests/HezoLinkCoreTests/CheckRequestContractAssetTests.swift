@@ -26,7 +26,7 @@ struct CheckRequestContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.7.0")
+    #expect(info["version"] as? String == "1.8.0")
     #expect(try requireString(info["description"]).isEmpty == false)
 
     let components = try requireObject(openAPI["components"])
@@ -35,7 +35,7 @@ struct CheckRequestContractAssetTests {
     #expect(
       Set(schemas.keys)
         == [
-          "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+          "CheckRequestV1", "RequestIDV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
           "VerdictReasonsV1", "CheckResponseStatusV1", "PendingCheckResponseV1",
           "VerdictV1",
@@ -44,6 +44,10 @@ struct CheckRequestContractAssetTests {
     let checkRequest = try requireObject(schemas["CheckRequestV1"])
     #expect(Set(checkRequest.keys) == ["$ref"])
     #expect(checkRequest["$ref"] as? String == "./schemas/check-request-v1.schema.json")
+
+    let requestID = try requireObject(schemas["RequestIDV1"])
+    #expect(Set(requestID.keys) == ["$ref"])
+    #expect(requestID["$ref"] as? String == requestIDOpenAPIReference)
 
     let problem = try requireObject(schemas["ProblemV1"])
     #expect(Set(problem.keys) == ["$ref"])
@@ -86,6 +90,14 @@ struct CheckRequestContractAssetTests {
     ).standardizedFileURL
     #expect(referencedProblemSchemaURL == problemSchemaURL)
     #expect(FileManager.default.fileExists(atPath: referencedProblemSchemaURL.path))
+
+    let referencedRequestIDSchemaURL = openAPIURL.deletingLastPathComponent()
+      .appendingPathComponent(requestIDOpenAPIReference)
+      .standardizedFileURL
+    let requestIDSchemaURL = repositoryRoot.appendingPathComponent(requestIDSchemaPath)
+      .standardizedFileURL
+    #expect(referencedRequestIDSchemaURL == requestIDSchemaURL)
+    #expect(FileManager.default.fileExists(atPath: referencedRequestIDSchemaURL.path))
 
     let referencedVerdictReasonSchemaURL = openAPIURL.deletingLastPathComponent()
       .appendingPathComponent("schemas/verdict-reason-v1.schema.json")
@@ -339,13 +351,15 @@ struct ProblemContractAssetTests {
     #expect(code["pattern"] as? String == "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$")
 
     let requestID = try requireObject(properties["request_id"])
-    #expect(
-      Set(requestID.keys) == ["type", "minLength", "maxLength", "pattern", "description"]
+    #expect(Set(requestID.keys) == ["$ref"])
+    #expect(requestID["$ref"] as? String == requestIDSchemaID)
+
+    let requestIDRegistry = try loadProblemSchemaRegistry()
+    let resolvedRequestID = try resolveFrozenProblemRequestIDSchema(
+      from: schema,
+      registry: requestIDRegistry
     )
-    #expect(requestID["type"] as? String == "string")
-    #expect(integerValue(requestID["minLength"]) == 1)
-    #expect(integerValue(requestID["maxLength"]) == 128)
-    #expect(requestID["pattern"] as? String == "^[A-Za-z0-9_-]*$")
+    #expect(resolvedRequestID["$id"] as? String == requestIDSchemaID)
 
     let retryable = try requireObject(properties["retryable"])
     #expect(Set(retryable.keys) == ["type"])
@@ -405,6 +419,8 @@ struct ProblemContractAssetTests {
   @Test func everyProblemFixtureMatchesItsDeclaredExpectation() throws {
     let manifest = try loadObject("packages/contracts/fixtures/problem-v1/manifest.json")
     let cases = try requireObjectArray(manifest["cases"])
+    let schema = try loadObject("packages/contracts/schemas/problem-v1.schema.json")
+    let registry = try loadProblemSchemaRegistry()
     let fixtureRoot = "packages/contracts/fixtures/problem-v1"
     var validCount = 0
     var invalidCount = 0
@@ -419,7 +435,7 @@ struct ProblemContractAssetTests {
       let relativePath = try requireString(fixtureCase["path"])
       let expectedValid = try requireBool(fixtureCase["expected_schema_valid"])
       let fixture = try loadObject("\(fixtureRoot)/\(relativePath)")
-      let failures = problemSchemaFailures(in: fixture)
+      let failures = try problemSchemaFailures(in: fixture, schema: schema, registry: registry)
       #expect(
         try problemFixtureMatchesExpectedPurpose(id: fixtureID, object: fixture),
         "Problem fixture payload drifted from its declared purpose: \(fixtureID)"
@@ -448,6 +464,57 @@ struct ProblemContractAssetTests {
 
     #expect(validCount == 5)
     #expect(invalidCount == 28)
+  }
+
+  @Test func evaluatorRequiresTheExactRegisteredAbsoluteRequestIDReference() throws {
+    let schema = try loadObject("packages/contracts/schemas/problem-v1.schema.json")
+    let registry = try loadProblemSchemaRegistry()
+    let fixture = try loadObject(
+      "packages/contracts/fixtures/problem-v1/valid/non-retryable.json"
+    )
+    #expect(try problemSchemaFailures(in: fixture, schema: schema, registry: registry).isEmpty)
+
+    var unresolvedSchema = schema
+    var unresolvedProperties = try requireObject(unresolvedSchema["properties"])
+    unresolvedProperties["request_id"] = [
+      "$ref": "urn:hezo-link:contract:unregistered:v1"
+    ]
+    unresolvedSchema["properties"] = unresolvedProperties
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenProblemRequestIDSchema(from: unresolvedSchema, registry: registry)
+    }
+
+    var relativeSchema = schema
+    var relativeProperties = try requireObject(relativeSchema["properties"])
+    relativeProperties["request_id"] = ["$ref": "./request-id-v1.schema.json"]
+    relativeSchema["properties"] = relativeProperties
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenProblemRequestIDSchema(from: relativeSchema, registry: registry)
+    }
+
+    let requestIDSchema = try #require(registry[requestIDSchemaID])
+    var inlinedSchema = schema
+    var inlinedProperties = try requireObject(inlinedSchema["properties"])
+    inlinedProperties["request_id"] = requestIDSchema
+    inlinedSchema["properties"] = inlinedProperties
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenProblemRequestIDSchema(from: inlinedSchema, registry: registry)
+    }
+
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenProblemRequestIDSchema(from: schema, registry: [:])
+    }
+
+    var mismatchedRegistry = registry
+    var mismatchedRequestIDSchema = requestIDSchema
+    mismatchedRequestIDSchema["$id"] = "urn:hezo-link:contract:mismatched:v1"
+    mismatchedRegistry[requestIDSchemaID] = mismatchedRequestIDSchema
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenProblemRequestIDSchema(
+        from: schema,
+        registry: mismatchedRegistry
+      )
+    }
   }
 
   @Test func validProblemFixturesRoundTripThroughTheSwiftReader() throws {
@@ -506,7 +573,9 @@ struct ProblemContractAssetTests {
     var fixture = try loadObject(relativePath)
     fixture[field] = String(repeating: "é", count: maximumUTF8ByteCount)
 
-    #expect(problemSchemaFailures(in: fixture).isEmpty)
+    let schema = try loadObject("packages/contracts/schemas/problem-v1.schema.json")
+    let registry = try loadProblemSchemaRegistry()
+    #expect(try problemSchemaFailures(in: fixture, schema: schema, registry: registry).isEmpty)
     let data = try JSONSerialization.data(withJSONObject: fixture, options: [.sortedKeys])
     #expect(throws: DecodingError.self) {
       try HezoJSON.makeResponseDecoder().decode(Problem.self, from: data)
@@ -517,7 +586,12 @@ struct ProblemContractAssetTests {
     let relativePath =
       "packages/contracts/fixtures/problem-v1/invalid/unknown-field.json"
     let fixture = try loadObject(relativePath)
-    #expect(problemSchemaFailures(in: fixture) == ["additionalProperties"])
+    let schema = try loadObject("packages/contracts/schemas/problem-v1.schema.json")
+    let registry = try loadProblemSchemaRegistry()
+    #expect(
+      try problemSchemaFailures(in: fixture, schema: schema, registry: registry)
+        == ["additionalProperties"]
+    )
 
     let problem = try HezoJSON.makeResponseDecoder().decode(
       Problem.self,
@@ -534,7 +608,7 @@ struct VerdictReasonContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.7.0")
+    #expect(info["version"] as? String == "1.8.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -544,7 +618,7 @@ struct VerdictReasonContractAssetTests {
     #expect(
       Set(schemas.keys)
         == [
-          "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+          "CheckRequestV1", "RequestIDV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
           "VerdictReasonsV1", "CheckResponseStatusV1", "PendingCheckResponseV1",
           "VerdictV1",
@@ -812,7 +886,7 @@ struct VerdictPrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.7.0")
+    #expect(info["version"] as? String == "1.8.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1064,10 +1138,10 @@ struct CheckResponseStatusContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.7.0")
+    #expect(info["version"] as? String == "1.8.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, request-ID, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
@@ -1303,17 +1377,17 @@ struct PendingCheckResponseContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.7.0")
+    #expect(info["version"] as? String == "1.8.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, request-ID, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
     #expect(Set(components.keys) == ["schemas"])
     let schemas = try requireObject(components["schemas"])
     #expect(Set(schemas.keys) == expectedOpenAPIComponentNames)
-    #expect(schemas.count == 11)
+    #expect(schemas.count == 12)
     let component = try requireObject(schemas["PendingCheckResponseV1"])
     #expect(Set(component.keys) == ["$ref"])
     #expect(component["$ref"] as? String == pendingCheckResponseOpenAPIReference)
@@ -1379,22 +1453,20 @@ struct PendingCheckResponseContractAssetTests {
     #expect(try requireString(expiresAt["description"]).isEmpty == false)
 
     let requestID = try requireObject(properties["request_id"])
-    #expect(
-      Set(requestID.keys)
-        == ["type", "minLength", "maxLength", "pattern", "description"]
-    )
-    #expect(requestID["type"] as? String == "string")
-    #expect(integerValue(requestID["minLength"]) == 1)
-    #expect(integerValue(requestID["maxLength"]) == 128)
-    #expect(requestID["pattern"] as? String == pendingCheckRequestIDPattern)
-    #expect(try requireString(requestID["description"]).isEmpty == false)
+    #expect(Set(requestID.keys) == ["$ref"])
+    #expect(requestID["$ref"] as? String == requestIDSchemaID)
 
     let registry = try loadPendingCheckResponseSchemaRegistry()
-    let resolved = try resolveFrozenPendingCheckResponseStatusSchema(
+    let resolvedStatus = try resolveFrozenPendingCheckResponseStatusSchema(
       from: schema,
       registry: registry
     )
-    #expect(resolved["$id"] as? String == checkResponseStatusSchemaID)
+    let resolvedRequestID = try resolveFrozenPendingCheckResponseRequestIDSchema(
+      from: schema,
+      registry: registry
+    )
+    #expect(resolvedStatus["$id"] as? String == checkResponseStatusSchemaID)
+    #expect(resolvedRequestID["$id"] as? String == requestIDSchemaID)
     #expect(PendingCheckResponseV1.schemaVersion == 1)
     #expect(PendingCheckResponseV1.status == .pending)
     #expect(PendingCheckResponseV1.minimumRetryAfterMilliseconds == 1)
@@ -1483,7 +1555,7 @@ struct PendingCheckResponseContractAssetTests {
     #expect(invalidCount == 42)
   }
 
-  @Test func evaluatorRequiresTheExactRegisteredAbsoluteStatusReference() throws {
+  @Test func evaluatorRequiresTheExactRegisteredAbsoluteReferences() throws {
     let schema = try loadObject(pendingCheckResponseSchemaPath)
     let registry = try loadPendingCheckResponseSchemaRegistry()
     let fixture = try loadJSONValue(
@@ -1544,6 +1616,62 @@ struct PendingCheckResponseContractAssetTests {
       _ = try resolveFrozenPendingCheckResponseStatusSchema(
         from: schema,
         registry: mismatchedRegistry
+      )
+    }
+
+    var unresolvedRequestIDSchema = schema
+    var unresolvedRequestIDProperties = try requireObject(
+      unresolvedRequestIDSchema["properties"]
+    )
+    unresolvedRequestIDProperties["request_id"] = [
+      "$ref": "urn:hezo-link:contract:unregistered:v1"
+    ]
+    unresolvedRequestIDSchema["properties"] = unresolvedRequestIDProperties
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseRequestIDSchema(
+        from: unresolvedRequestIDSchema,
+        registry: registry
+      )
+    }
+
+    var relativeRequestIDSchema = schema
+    var relativeRequestIDProperties = try requireObject(relativeRequestIDSchema["properties"])
+    relativeRequestIDProperties["request_id"] = ["$ref": "./request-id-v1.schema.json"]
+    relativeRequestIDSchema["properties"] = relativeRequestIDProperties
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseRequestIDSchema(
+        from: relativeRequestIDSchema,
+        registry: registry
+      )
+    }
+
+    let requestIDSchema = try #require(registry[requestIDSchemaID])
+    var inlinedRequestIDSchema = schema
+    var inlinedRequestIDProperties = try requireObject(inlinedRequestIDSchema["properties"])
+    inlinedRequestIDProperties["request_id"] = requestIDSchema
+    inlinedRequestIDSchema["properties"] = inlinedRequestIDProperties
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseRequestIDSchema(
+        from: inlinedRequestIDSchema,
+        registry: registry
+      )
+    }
+
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseRequestIDSchema(
+        from: schema,
+        registry: [checkResponseStatusSchemaID: statusSchema]
+      )
+    }
+
+    var mismatchedRequestIDRegistry = registry
+    var mismatchedRequestIDSchema = requestIDSchema
+    mismatchedRequestIDSchema["$id"] = "urn:hezo-link:contract:mismatched:v1"
+    mismatchedRequestIDRegistry[requestIDSchemaID] = mismatchedRequestIDSchema
+    #expect(throws: ContractAssetTestError.self) {
+      _ = try resolveFrozenPendingCheckResponseRequestIDSchema(
+        from: schema,
+        registry: mismatchedRequestIDRegistry
       )
     }
   }
@@ -1694,7 +1822,7 @@ struct VerdictSupportingStablePrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.7.0")
+    #expect(info["version"] as? String == "1.8.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1887,7 +2015,7 @@ struct VerdictReasonsContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.7.0")
+    #expect(info["version"] as? String == "1.8.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -2238,10 +2366,10 @@ struct VerdictContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.7.0")
+    #expect(info["version"] as? String == "1.8.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, request-ID, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
@@ -2683,10 +2811,15 @@ private let repositoryRoot = URL(fileURLWithPath: #filePath)
   .deletingLastPathComponent()
 
 private let expectedOpenAPIComponentNames: Set<String> = [
-  "CheckRequestV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+  "CheckRequestV1", "RequestIDV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
   "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
   "VerdictReasonsV1", "CheckResponseStatusV1", "PendingCheckResponseV1", "VerdictV1",
 ]
+
+private let requestIDSchemaPath = "packages/contracts/schemas/request-id-v1.schema.json"
+private let requestIDOpenAPIReference = "./schemas/request-id-v1.schema.json"
+private let requestIDSchemaID = "urn:hezo-link:contract:request-id:v1"
+private let requestIDPattern = "^[A-Za-z0-9_-]+$"
 
 private let verdictPrimitiveBoundarySentence =
   "These standalone primitives validate individual wire values only. They neither define label/action pair coherence nor authorize a complete verdict or check-response envelope."
@@ -2762,7 +2895,6 @@ private let pendingCheckResponseFields = [
 private let pendingCheckTokenPattern = "^[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$"
 private let pendingCheckExpiresAtPattern =
   "^(?!0000-)[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
-private let pendingCheckRequestIDPattern = "^[A-Za-z0-9_-]+$"
 private let pendingCheckDefaultToken = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 private let pendingCheckDefaultExpiry = "2000-01-01T00:15:00Z"
 private let pendingCheckResponseValidFixtureIDs: Set<String> = [
@@ -5234,7 +5366,10 @@ private func expectedPendingCheckResponseObject(
 }
 
 private func loadPendingCheckResponseSchemaRegistry() throws -> [String: [String: Any]] {
-  [checkResponseStatusSchemaID: try loadObject(checkResponseStatusSchemaPath)]
+  [
+    checkResponseStatusSchemaID: try loadObject(checkResponseStatusSchemaPath),
+    requestIDSchemaID: try loadObject(requestIDSchemaPath),
+  ]
 }
 
 private func resolveFrozenPendingCheckResponseStatusSchema(
@@ -5268,6 +5403,14 @@ private func requireFrozenPendingCheckResponseStatusEvaluatorSurface(
   else {
     throw ContractAssetTestError.invalidAsset
   }
+}
+
+private func resolveFrozenPendingCheckResponseRequestIDSchema(
+  from pendingSchema: [String: Any],
+  registry: [String: [String: Any]]
+) throws -> [String: Any] {
+  let properties = try requireObject(pendingSchema["properties"])
+  return try resolveFrozenRequestIDSchema(from: properties["request_id"], registry: registry)
 }
 
 private func requireFrozenPendingCheckResponseEvaluatorSurface(
@@ -5320,19 +5463,12 @@ private func requireFrozenPendingCheckResponseEvaluatorSurface(
     throw ContractAssetTestError.invalidAsset
   }
 
-  let requestID = try requireObject(properties["request_id"])
-  guard requestID["type"] as? String == "string",
-    integerValue(requestID["minLength"]) == 1,
-    integerValue(requestID["maxLength"]) == 128,
-    requestID["pattern"] as? String == pendingCheckRequestIDPattern
-  else {
-    throw ContractAssetTestError.invalidAsset
-  }
+  _ = try resolveFrozenPendingCheckResponseRequestIDSchema(from: schema, registry: registry)
 }
 
 // This independently evaluates only the frozen Pending Check Response V1 subset after resolving
-// its absolute status-schema reference from the supplied registry. It is not a general JSON Schema
-// Draft 2020-12 or RFC 3339 implementation.
+// its absolute status and request-ID schema references from the supplied registry. It is not a
+// general JSON Schema Draft 2020-12 or RFC 3339 implementation.
 private func pendingCheckResponseSchemaFailures(
   in value: Any,
   schema: [String: Any],
@@ -5571,6 +5707,82 @@ private func expectStableVerdictReasonProperty(_ value: Any?) throws {
   #expect(integerValue(property["maxLength"]) == 128)
   #expect(property["pattern"] as? String == verdictReasonStableValuePattern)
   #expect(try requireString(property["description"]).isEmpty == false)
+}
+
+private func loadProblemSchemaRegistry() throws -> [String: [String: Any]] {
+  [requestIDSchemaID: try loadObject(requestIDSchemaPath)]
+}
+
+private func resolveFrozenProblemRequestIDSchema(
+  from problemSchema: [String: Any],
+  registry: [String: [String: Any]]
+) throws -> [String: Any] {
+  let properties = try requireObject(problemSchema["properties"])
+  return try resolveFrozenRequestIDSchema(from: properties["request_id"], registry: registry)
+}
+
+private func resolveFrozenRequestIDSchema(
+  from referenceValue: Any?,
+  registry: [String: [String: Any]]
+) throws -> [String: Any] {
+  let referenceObject = try requireObject(referenceValue)
+  guard Set(referenceObject.keys) == ["$ref"],
+    let reference = referenceObject["$ref"] as? String,
+    reference == requestIDSchemaID,
+    let resolved = registry[reference],
+    resolved["$id"] as? String == reference
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+  try requireFrozenRequestIDEvaluatorSurface(resolved)
+  return resolved
+}
+
+private func requireFrozenRequestIDEvaluatorSurface(_ schema: [String: Any]) throws {
+  guard
+    Set(schema.keys)
+      == ["$schema", "$id", "title", "description", "type", "minLength", "maxLength", "pattern"],
+    schema["$schema"] as? String == "https://json-schema.org/draft/2020-12/schema",
+    schema["$id"] as? String == requestIDSchemaID,
+    schema["title"] as? String == "Hezo Link request ID V1",
+    try requireString(schema["description"]).isEmpty == false,
+    schema["type"] as? String == "string",
+    integerValue(schema["minLength"]) == 1,
+    integerValue(schema["maxLength"]) == 128,
+    schema["pattern"] as? String == requestIDPattern
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+}
+
+private func requireFrozenProblemEvaluatorSurface(
+  _ schema: [String: Any],
+  registry: [String: [String: Any]]
+) throws {
+  let expectedFields: Set<String> = [
+    "type", "title", "status", "code", "detail", "request_id", "retryable",
+  ]
+  guard schema["$id"] as? String == "urn:hezo-link:contract:problem:v1",
+    schema["type"] as? String == "object",
+    try requireBool(schema["additionalProperties"]) == false,
+    Set(try requireStringArray(schema["required"])) == expectedFields
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+  let properties = try requireObject(schema["properties"])
+  guard Set(properties.keys) == expectedFields.union(["retry_after_seconds"]) else {
+    throw ContractAssetTestError.invalidAsset
+  }
+  _ = try resolveFrozenProblemRequestIDSchema(from: schema, registry: registry)
+}
+
+private func problemSchemaFailures(
+  in object: [String: Any],
+  schema: [String: Any],
+  registry: [String: [String: Any]]
+) throws -> Set<String> {
+  try requireFrozenProblemEvaluatorSurface(schema, registry: registry)
+  return problemSchemaFailures(in: object)
 }
 
 // This is intentionally an independent evaluator for the frozen Problem V1 subset, not a
@@ -5819,11 +6031,10 @@ private func checkProblemRequestID(_ value: Any?, failures: inout Set<String>) {
   }
   if string.unicodeScalars.isEmpty {
     failures.insert("minLength")
-    return
+    failures.insert("pattern")
   }
   if string.unicodeScalars.count > 128 {
     failures.insert("maxLength")
-    return
   }
   if string.utf8.allSatisfy(isAllowedRequestIDByte) == false {
     failures.insert("pattern")

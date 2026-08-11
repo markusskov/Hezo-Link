@@ -1,12 +1,14 @@
 # Hezo Link contract components
 
-This directory is the public, offline source of truth for the first check-input, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
+This directory is the public, offline source of truth for the first check-input, request-ID, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
 
 ## Artifacts
 
 - `openapi-components.json` is an OpenAPI 3.1 components document. Its `paths` object is deliberately empty and it declares no server or security scheme.
 - `schemas/check-request-v1.schema.json` is the strict Draft 2020-12 request schema.
 - `fixtures/check-request-v1/manifest.json` lists deterministic, reserved-domain valid and invalid examples and their expected schema result.
+- `schemas/request-id-v1.schema.json` is the strict Draft 2020-12 standalone request-ID scalar schema.
+- `fixtures/request-id-v1/manifest.json` lists the exact length and alphabet boundaries plus deterministic invalid punctuation, whitespace, control, non-ASCII, null, and type examples with their exact schema failure keyword sets.
 - `schemas/check-response-status-v1.schema.json` is the strict Draft 2020-12 standalone check-response-status enum schema.
 - `fixtures/check-response-status-v1/manifest.json` lists both valid statuses and deterministic invalid aliases, cross-vocabulary values, types, and spellings with their exact schema failure keyword sets.
 - `schemas/pending-check-response-v1.schema.json` is the strict Draft 2020-12 Pending Check Response V1 object schema.
@@ -50,6 +52,12 @@ The schema's `maxLength: 8192` is a useful coarse upper bound, but Draft 2020-12
 
 This primitive validates one check-response status value only. It defines no endpoint, response branch, HTTP status, token or capability, retry or polling behavior, completion guarantee, or check-response envelope.
 
+## Request ID V1
+
+`RequestIDV1` is a string containing one through 128 ASCII letters, digits, `_`, or `-`. Its ASCII grammar makes the schema's code-point bounds equal its UTF-8 byte bounds. Problem V1 and Pending Check Response V1 use the same absolute standalone schema reference for their `request_id` member without widening this accepted language.
+
+`RequestIDV1` is a strict standalone bounded ASCII shape only. Acceptance proves no entropy, uniqueness, authority, lifetime, retention or logging permission, or cross-plane identity.
+
 ## Pending check response V1
 
 Every pending check response is a JSON object with exactly these required fields:
@@ -59,7 +67,7 @@ Every pending check response is a JSON object with exactly these required fields
 - `check_token`: exactly 43 ASCII characters matching canonical unpadded base64url for 32 bytes. The first 42 characters use letters, digits, `_`, or `-`; the last character is one of `AEIMQUYcgkosw048` so unused base64 bits are zero. A producer must start with exactly 32 random bytes and emit their canonical unpadded base64url encoding.
 - `retry_after_ms`: an integer from `1` through `900000` inclusive. The upper bound is a wire-value cap only, not a polling schedule or duration policy.
 - `expires_at`: a real UTC whole-second instant in the exact `YYYY-MM-DDTHH:mm:ssZ` wire shape, with a year from `0001` through `9999`.
-- `request_id`: one through 128 ASCII letters, digits, `_`, or `-`.
+- `request_id`: the absolute `RequestIDV1` reference, accepting one through 128 ASCII letters, digits, `_`, or `-`.
 
 Unknown fields are rejected by the strict published schema. A specifically designated Swift Pending Check Response V1 reader may discard genuinely additive unknown response members for forward compatibility, but it must continue to require and validate every known member exactly. It must reject any payload containing the known hybrid-envelope keys `verdict`, `target`, `analysis`, `source_notices`, `versions`, `evaluated_at`, `valid_until`, or `block_eligible`; those members cannot be treated as harmless future additions. This tolerant client boundary does not widen the public schema or make an unknown member meaningful.
 
@@ -76,7 +84,7 @@ Every problem is a JSON object with these required fields:
 - `status`: an integer from `400` through `599`.
 - `code`: a forward-compatible lower-snake-case ASCII value of at most 128 bytes. It begins with a lowercase letter and has no doubled or trailing underscore.
 - `detail`: nonempty, non-sensitive copy of at most 512 UTF-8 bytes, without Unicode control or format characters.
-- `request_id`: a nonempty plane-local identifier of at most 128 ASCII bytes using letters, digits, `_`, or `-`.
+- `request_id`: the absolute `RequestIDV1` reference, accepting one through 128 ASCII letters, digits, `_`, or `-`.
 - `retryable`: a Boolean.
 
 `retry_after_seconds` is optional. When present, it is an integer from `0` through `86400`, and `retryable` must be `true`. Unknown fields are rejected by the public server schema. A specifically designated response reader may tolerate additive unknown response members while continuing to enforce all known-field invariants.
@@ -128,4 +136,4 @@ This standalone reason primitive does not define or authorize a complete verdict
 
 ## Explicit exclusions
 
-These artifacts contain only request, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token issuance or entropy proof, TTL, retention, storage, network or other I/O behavior, identity material, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
+These artifacts contain only request, request-ID, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, lifetime, retention or logging permission, storage, network or other I/O behavior, cross-plane identity, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
