@@ -1,0 +1,17 @@
+// Shared public build settings. Keep Apple account identifiers out of this file.
+IPHONEOS_DEPLOYMENT_TARGET = 26.0
+SWIFT_VERSION = 6.0
+SWIFT_STRICT_CONCURRENCY = complete
+SWIFT_TREAT_WARNINGS_AS_ERRORS = YES
+SWIFT_SUPPRESS_WARNINGS = NO
+GCC_TREAT_WARNINGS_AS_ERRORS = YES
+CODE_SIGN_STYLE = Automatic
+TARGETED_DEVICE_FAMILY = 1
+
+// Simulator builds use this harmless local identifier. The optional ignored
+// include overrides both values for an owner-controlled signed device build.
+HEZOLINK_BUNDLE_IDENTIFIER = com.hezo.link.local
+HEZOLINK_DEVELOPMENT_TEAM =
+#include? "Signing.local.xcconfig"
+PRODUCT_BUNDLE_IDENTIFIER = $(HEZOLINK_BUNDLE_IDENTIFIER)
+DEVELOPMENT_TEAM = $(HEZOLINK_DEVELOPMENT_TEAM)

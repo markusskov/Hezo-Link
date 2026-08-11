@@ -6,7 +6,7 @@ No work package, stage, or release gate passes without complete, reviewable evid
 
 ## Work-package map
 
-S0-A starts first. S0-B through S0-F may proceed independently after the decisions and access required by each proof are ready. Stage 1 remains blocked until the complete [Stage 0 exit gate](../11-implementation-plan.md#stage-0-exit-gate) passes.
+S0-A starts first. S0-B through S0-F may proceed independently after the decisions and access required by each proof are ready. The complete [Stage 0 exit gate](../11-implementation-plan.md#stage-0-exit-gate) still blocks Stage 2, live operations, and release; [ADR 0002](../adr/0002-local-first-product-foundation.md) authorizes only a bounded, offline S1-A product-foundation exception.
 
 | Package | Purpose and kill-risk question | Accountable roles | Required evidence family |
 |---|---|---|---|

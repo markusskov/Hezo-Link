@@ -81,4 +81,5 @@ ADRs may cite public, sanitized repository artifacts or opaque evidence identifi
 | Record | Status | Summary |
 |---|---|---|
 | [0000](0000-template.md) | Template | Copy this file to create a decision record. |
-| [0001](0001-stage-0-gate-timing.md) | Proposed | Recommends explicit decision boundaries for Stage 0 proof authorization, Stage 1 entry, and Stage 2 entry; the conservative current block remains until human acceptance. |
+| [0001](0001-stage-0-gate-timing.md) | Proposed | Historical proof-boundary recommendation; [ADR 0002](0002-local-first-product-foundation.md) now governs local product-foundation entry without accepting this proposal wholesale. |
+| [0002](0002-local-first-product-foundation.md) | Accepted | Authorizes reversible local product foundations, selects Swift/Go/OpenAPI/PostgreSQL and native monorepo tooling, and keeps all external-state work gated. |

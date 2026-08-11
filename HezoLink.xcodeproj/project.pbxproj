@@ -1,0 +1,590 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		200000000000000000000001 /* ContractValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000001 /* ContractValueTests.swift */; };
+		200000000000000000000002 /* ProblemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000002 /* ProblemTests.swift */; };
+		200000000000000000000003 /* VerdictTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000003 /* VerdictTests.swift */; };
+		417DC138A5E9FC9F40F7F17B /* HezoLinkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B389ED6C05395E0C9A16C35 /* HezoLinkApp.swift */; };
+		F9294C4A276C665F6741DAC5 /* AppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5943CF0C9718C73A59EA62C0 /* AppShellView.swift */; };
+		810000000000000000000001 /* ContractValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000001 /* ContractValue.swift */; };
+		810000000000000000000002 /* HezoJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000002 /* HezoJSON.swift */; };
+		810000000000000000000003 /* Problem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000003 /* Problem.swift */; };
+		810000000000000000000004 /* Verdict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000004 /* Verdict.swift */; };
+		810000000000000000000005 /* libHezoLinkCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 800000000000000000000005 /* libHezoLinkCore.a */; };
+		810000000000000000000006 /* libHezoLinkCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 800000000000000000000005 /* libHezoLinkCore.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		100000000000000000000001 /* ContractValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractValueTests.swift; sourceTree = "<group>"; };
+		100000000000000000000002 /* ProblemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProblemTests.swift; sourceTree = "<group>"; };
+		100000000000000000000003 /* VerdictTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictTests.swift; sourceTree = "<group>"; };
+		100000000000000000000004 /* HezoLinkCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HezoLinkCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A0D1E94FB5AE0F2DD5359B0 /* HezoLink.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = HezoLink.xcconfig; sourceTree = "<group>"; };
+		1A0D1E94FB5AE0F2DD5359B1 /* Signing.local.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.example.xcconfig; sourceTree = "<group>"; };
+		3F234DFD5F5D8E6136A617B8 /* HezoLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HezoLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5943CF0C9718C73A59EA62C0 /* AppShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShellView.swift; sourceTree = "<group>"; };
+		8B389ED6C05395E0C9A16C35 /* HezoLinkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HezoLinkApp.swift; sourceTree = "<group>"; };
+		800000000000000000000001 /* ContractValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractValue.swift; sourceTree = "<group>"; };
+		800000000000000000000002 /* HezoJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HezoJSON.swift; sourceTree = "<group>"; };
+		800000000000000000000003 /* Problem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Problem.swift; sourceTree = "<group>"; };
+		800000000000000000000004 /* Verdict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verdict.swift; sourceTree = "<group>"; };
+		800000000000000000000005 /* libHezoLinkCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHezoLinkCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		800000000000000000000006 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXContainerItemProxy section */
+		860000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6A4D5018B3C4A7B2EB5D3403 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 840000000000000000000001;
+			remoteInfo = HezoLinkCore;
+		};
+		860000000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6A4D5018B3C4A7B2EB5D3403 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 840000000000000000000001;
+			remoteInfo = HezoLinkCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		300000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				810000000000000000000006 /* libHezoLinkCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E80DED6F4E23CE6AABF206C6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				810000000000000000000005 /* libHezoLinkCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		820000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		400000000000000000000001 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				400000000000000000000002 /* HezoLinkCoreTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		400000000000000000000002 /* HezoLinkCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000001 /* ContractValueTests.swift */,
+				100000000000000000000002 /* ProblemTests.swift */,
+				100000000000000000000003 /* VerdictTests.swift */,
+			);
+			path = HezoLinkCoreTests;
+			sourceTree = "<group>";
+		};
+		5308C0BFA2C324360FB77BE4 /* Apps */ = {
+			isa = PBXGroup;
+			children = (
+				7BF7FB280EC2F6D2BF67A176 /* HezoLink */,
+			);
+			path = Apps;
+			sourceTree = "<group>";
+		};
+		830000000000000000000001 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				830000000000000000000002 /* HezoLinkCore */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		830000000000000000000002 /* HezoLinkCore */ = {
+			isa = PBXGroup;
+			children = (
+				800000000000000000000001 /* ContractValue.swift */,
+				800000000000000000000002 /* HezoJSON.swift */,
+				800000000000000000000003 /* Problem.swift */,
+				800000000000000000000004 /* Verdict.swift */,
+			);
+			path = HezoLinkCore;
+			sourceTree = "<group>";
+		};
+		7BF7FB280EC2F6D2BF67A176 /* HezoLink */ = {
+			isa = PBXGroup;
+			children = (
+				5943CF0C9718C73A59EA62C0 /* AppShellView.swift */,
+				8B389ED6C05395E0C9A16C35 /* HezoLinkApp.swift */,
+			);
+			path = HezoLink;
+			sourceTree = "<group>";
+		};
+		9681A7D9AAB766CBE094AC3E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3F234DFD5F5D8E6136A617B8 /* HezoLink.app */,
+				800000000000000000000005 /* libHezoLinkCore.a */,
+				100000000000000000000004 /* HezoLinkCoreTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AF1500A53C3F2D4972B71970 = {
+			isa = PBXGroup;
+			children = (
+				800000000000000000000006 /* Package.swift */,
+				5308C0BFA2C324360FB77BE4 /* Apps */,
+				DF38505AF950D27B9AF339F6 /* Config */,
+				830000000000000000000001 /* Sources */,
+				400000000000000000000001 /* Tests */,
+				9681A7D9AAB766CBE094AC3E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DF38505AF950D27B9AF339F6 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1A0D1E94FB5AE0F2DD5359B0 /* HezoLink.xcconfig */,
+				1A0D1E94FB5AE0F2DD5359B1 /* Signing.local.example.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		500000000000000000000001 /* HezoLinkCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 600000000000000000000003 /* Build configuration list for PBXNativeTarget "HezoLinkCoreTests" */;
+			buildPhases = (
+				300000000000000000000002 /* Sources */,
+				300000000000000000000001 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				870000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = HezoLinkCoreTests;
+			productName = HezoLinkCoreTests;
+			productReference = 100000000000000000000004 /* HezoLinkCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		5FD5C619918C8DCF43DDB1ED /* HezoLink */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4EE3D789154E299C35593BD4 /* Build configuration list for PBXNativeTarget "HezoLink" */;
+			buildPhases = (
+				BF359010B0B659D775D2813A /* Sources */,
+				E80DED6F4E23CE6AABF206C6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				870000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = HezoLink;
+			productName = HezoLink;
+			productReference = 3F234DFD5F5D8E6136A617B8 /* HezoLink.app */;
+			productType = "com.apple.product-type.application";
+		};
+		840000000000000000000001 /* HezoLinkCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 850000000000000000000003 /* Build configuration list for PBXNativeTarget "HezoLinkCore" */;
+			buildPhases = (
+				820000000000000000000001 /* Sources */,
+				820000000000000000000002 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HezoLinkCore;
+			productName = HezoLinkCore;
+			productReference = 800000000000000000000005 /* libHezoLinkCore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6A4D5018B3C4A7B2EB5D3403 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2660;
+				TargetAttributes = {
+					500000000000000000000001 = {
+						ProvisioningStyle = Automatic;
+					};
+					5FD5C619918C8DCF43DDB1ED = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 41BC43497F1886C6F04500FD /* Build configuration list for PBXProject "HezoLink" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = AF1500A53C3F2D4972B71970;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9681A7D9AAB766CBE094AC3E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5FD5C619918C8DCF43DDB1ED /* HezoLink */,
+				840000000000000000000001 /* HezoLinkCore */,
+				500000000000000000000001 /* HezoLinkCoreTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		300000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				200000000000000000000001 /* ContractValueTests.swift in Sources */,
+				200000000000000000000002 /* ProblemTests.swift in Sources */,
+				200000000000000000000003 /* VerdictTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		820000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				810000000000000000000001 /* ContractValue.swift in Sources */,
+				810000000000000000000002 /* HezoJSON.swift in Sources */,
+				810000000000000000000003 /* Problem.swift in Sources */,
+				810000000000000000000004 /* Verdict.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF359010B0B659D775D2813A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F9294C4A276C665F6741DAC5 /* AppShellView.swift in Sources */,
+				417DC138A5E9FC9F40F7F17B /* HezoLinkApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		600000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A0D1E94FB5AE0F2DD5359B0 /* HezoLink.xcconfig */;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HEZOLINK_BUNDLE_IDENTIFIER).core-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		600000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A0D1E94FB5AE0F2DD5359B0 /* HezoLink.xcconfig */;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HEZOLINK_BUNDLE_IDENTIFIER).core-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		850000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				DEFINES_MODULE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_SUPPRESS_WARNINGS = NO;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		850000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				DEFINES_MODULE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_SUPPRESS_WARNINGS = NO;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		417E317E4652C98EEC7C8B51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_SUPPRESS_WARNINGS = NO;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A9C9455A957C9F88C49C571A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A0D1E94FB5AE0F2DD5359B0 /* HezoLink.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hezo Link";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HEZOLINK_BUNDLE_IDENTIFIER)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		DA56529E8AF2DA51EC70411C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_SUPPRESS_WARNINGS = NO;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		EA436D7065E85BCE80EF8CB7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A0D1E94FB5AE0F2DD5359B0 /* HezoLink.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hezo Link";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HEZOLINK_BUNDLE_IDENTIFIER)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		600000000000000000000003 /* Build configuration list for PBXNativeTarget "HezoLinkCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				600000000000000000000001 /* Debug */,
+				600000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		850000000000000000000003 /* Build configuration list for PBXNativeTarget "HezoLinkCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				850000000000000000000001 /* Debug */,
+				850000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		41BC43497F1886C6F04500FD /* Build configuration list for PBXProject "HezoLink" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA56529E8AF2DA51EC70411C /* Debug */,
+				417E317E4652C98EEC7C8B51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4EE3D789154E299C35593BD4 /* Build configuration list for PBXNativeTarget "HezoLink" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9C9455A957C9F88C49C571A /* Debug */,
+				EA436D7065E85BCE80EF8CB7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin PBXTargetDependency section */
+		870000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 840000000000000000000001 /* HezoLinkCore */;
+			targetProxy = 860000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		870000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 840000000000000000000001 /* HezoLinkCore */;
+			targetProxy = 860000000000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+	};
+	rootObject = 6A4D5018B3C4A7B2EB5D3403 /* Project object */;
+}

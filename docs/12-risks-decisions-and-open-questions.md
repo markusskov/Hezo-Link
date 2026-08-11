@@ -33,17 +33,23 @@ This is the sanitized public decision register. It contains architectural decisi
 | D-018 | Models create bounded signals or explanations, never sole verdict/block authority. | Current model outputs are not durable evidence and are evadable. |
 | D-019 | A campaign is an operational cluster, not attacker attribution. | Avoid unsupported legal and product claims. |
 | D-020 | Future revenue comes from Hezo-owned/licensed threat intelligence, not user behavior. | Align business incentives with a digital-trust brand. |
+| D-021 | Reversible local product foundations may begin before every Stage 0 proof passes, within the no-network, no-live-data, and no product/service/provider/production-state boundary in [ADR 0002](adr/0002-local-first-product-foundation.md). Owner-local Apple development provisioning for the inert shell is the sole non-proof external-state exception. | Converts reviewed contracts into executable code without treating blocked Apple, provider, cloud, or privacy work as approved. |
+
+## Accepted technical decisions
+
+| ID | Decision | Authority and limits |
+|---|---|---|
+| P-001 | Swift and SwiftUI for the iOS product; Swift Package Manager for pure Swift product-core modules. | Accepted by [ADR 0002](adr/0002-local-first-product-foundation.md); an inert app shell and owner-local automatic-signing configuration are allowed, but no extension, entitlement, device/TestFlight proof, or committed signing identity is authorized. |
+| P-002 | OpenAPI 3.1 and JSON Schema are the shared wire-contract sources. | Accepted by [ADR 0002](adr/0002-local-first-product-foundation.md); generation is verified in later slices. |
+| P-004 | Use a modular control plane plus worker and split deployables only at security or scale boundaries. | Accepted by [ADR 0002](adr/0002-local-first-product-foundation.md); managed-service topology remains open. |
 
 ## Proposed technical decisions
 
-Every entry in this table remains **Proposed** until its named decision point produces an owner-approved record. Listing a proposal here, assessing public terms in document 09, or adding a synthetic fixture does not accept it. P-010 and P-011 are explicitly still Proposed.
+Every entry remaining in this table is **Proposed** until its named decision point produces an owner-approved record. Listing a proposal here, assessing public terms in document 09, or adding a synthetic fixture does not accept it. P-010 and P-011 are explicitly still Proposed.
 
 | ID | Proposal | Decision point |
 |---|---|---|
-| P-001 | Swift and SwiftUI for the iOS app and extensions. | ADR before Stage 1. |
-| P-002 | OpenAPI 3.1 and JSON Schema generate contract models/tests. | ADR before Stage 1. |
 | P-003 | PostgreSQL 17 or later with application-generated time-sortable UUIDs. | ADR before first migration. |
-| P-004 | Modular control plane plus worker; separate deployables only at security/scale boundaries. | ADR before repository scaffolding. |
 | P-005 | Managed queue, object storage, KMS, and secrets service in a US region. | Cloud ADR in Stage 0. |
 | P-006 | Hardware-virtualized disposable worker per dynamic crawl. | Sandbox ADR before Stage 4. |
 | P-007 | V1 browser navigation supports HTTP/HTTPS on ports 80 and 443 only. | Threat-model review in Stage 0; surface unsupported port truthfully. |
@@ -59,8 +65,8 @@ These are deliberate owner decisions, not invitations for Codex to guess.
 
 | ID | Decision required | Owner | Needed by |
 |---|---|---|---|
-| O-001 | Backend language, framework, package manager, and monorepo tooling. | Backend lead/founder | Stage 1 |
-| O-002 | Cloud provider, US region, environments, network model, and estimated monthly budget. | Infrastructure owner | Stage 0 |
+| O-001 | Select the Go HTTP framework or standard-library-only approach and any cross-language build orchestration. Swift/SwiftPM, Go/Go modules, and the public monorepo are already accepted by ADR 0002. | Backend lead/founder | Before the first Go service slice |
+| O-002 | Exact AWS US region, environments, network model, managed capacity, and operation within the private owner-controlled spending ceiling. | Infrastructure owner | Before creating cloud state |
 | O-003 | Managed queue, cache, object storage, KMS, secrets, and observability vendors. | Infrastructure owner | Stage 1 |
 | O-004 | Apple Developer team, bundle IDs, App Groups, signing ownership, and entitlement-request owner. | iOS owner | Stage 0 |
 | O-005 | Accountless PIR bearer-token design accepted by Apple/sample implementation. | iOS/security owner | Stage 0 |
@@ -78,7 +84,7 @@ These are deliberate owner decisions, not invitations for Codex to guess.
 | O-017 | Exact lifecycle for restricted report URL/comment/receipt, deletion-capability and idempotency digests, per-record key destruction, backups, and report-only derived support. The proposed ceiling is delete after triage/derivation and no later than 30 days, with a 24-hour replay digest. | Privacy/legal/intelligence/operations | Before Stage 6 |
 | O-018 | Exact inactivity and absolute expiry for Apple PIR `User-Identifier` digest/evaluation-key state, validated against Apple's protocol lifecycle, capacity, and recovery behavior. | iOS/security/privacy/infrastructure | Stage 0 distribution proof |
 | O-019 | Project license or explicit proprietary policy, contribution terms, and copyright owner wording. Until selected, do not imply that public visibility grants reuse rights. | Founder/legal | Before accepting external contributions or promoting reuse |
-| O-020 | Reconcile whether O-001, O-003, and O-007 are Stage 0 exit requirements or retain their table deadlines, and distinguish the Stage 0 privacy proof approval from final P-009/O-010/O-011 decisions. [ADR 0001](adr/0001-stage-0-gate-timing.md) is a Proposed recommendation only. | Founder/technical/privacy | Before Stage 0 gate review |
+| O-020 | Reconcile Stage 0 proof authorization and exit timing. [ADR 0002](adr/0002-local-first-product-foundation.md) authorizes a local product-foundation exception only; it does not authorize proof execution or resolve the Stage 0 exit. | Founder/technical/privacy | Before Stage 0 gate review |
 
 ## External dependencies and kill risks
 
@@ -306,7 +312,7 @@ The documentation handoff is ready when:
 - Codex can identify exactly one first work package;
 - application code has not been prematurely scaffolded.
 
-Implementation is not ready for a Stage 0 gate review until O-020 resolves the timing conflict between the open-decision table and the former blanket O-001-through-O-007 rule. Until that owner decision is recorded, use the conservative interpretation and treat O-001 through O-007 as unresolved Stage 0 blockers; do not use the table's later deadlines to authorize Stage 1. Independently of O-020, the Stage 0 viability/rights/proof-spend portion of O-008, O-014, O-018, the required S0-A through S0-F proof outcomes, and privacy-owner approval of the Stage 0 data inventory and canonical MPD definition/limitations must be complete. That narrow Stage 0 privacy approval does not accept P-009's proposed production retention schedule or close the final O-010/O-011 launch decisions. The production procurement/account/annual-budget portion of O-008 may remain open through Stage 1 but must be approved before Stage 2. Stage 0 also requires a commercially permitted qualified exact-threat source suitable for the Stage 2 manual-check slice; P-011/CISA enrichment cannot satisfy that requirement. O-017 may remain open during earlier manual-check stages but must be decided before Stage 6 report intake begins.
+[ADR 0002](adr/0002-local-first-product-foundation.md) authorizes a narrow local product-foundation exception: bounded local S1-A code may overlap incomplete Stage 0 proofs, but it creates no live, paid, device-distribution, provider, crawler, database, or production state. O-020 remains open for Stage 0 proof authorization and exit, so the conservative rule still applies to those proof runs until a synchronized owner outcome replaces it. The complete Stage 0 exit is still required before Stage 2, a user-facing release, or any operation that consumes a blocked decision. The Stage 0 viability/rights/proof-spend portion of O-008, O-014, O-018, the required S0-A through S0-F proof outcomes, and privacy-owner approval of the Stage 0 data inventory and canonical MPD definition/limitations remain incomplete until evidenced. The production procurement/account/annual-budget portion of O-008 must be approved before Stage 2 integrates or calls a production source. O-017 must be decided before Stage 6 report intake begins.
 
 ## Change policy
 

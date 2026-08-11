@@ -1,0 +1,3 @@
+// Copy this file to Signing.local.xcconfig. The copy is ignored by Git.
+HEZOLINK_DEVELOPMENT_TEAM = YOUR_TEAM_ID
+HEZOLINK_BUNDLE_IDENTIFIER = com.yourcompany.hezolink
