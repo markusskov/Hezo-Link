@@ -14,7 +14,10 @@ let package = Package(
   targets: [
     .target(
       name: "HezoLinkCore",
-      resources: [.copy("Resources/PublicSuffix")],
+      resources: [
+        .copy("Resources/PublicSuffix"),
+        .copy("Resources/AddressRegistry"),
+      ],
       swiftSettings: [.treatAllWarnings(as: .error)]
     ),
     .testTarget(

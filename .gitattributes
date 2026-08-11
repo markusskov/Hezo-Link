@@ -1,2 +1,6 @@
 # Preserve digest-pinned upstream oracle corpora byte-for-byte.
 packages/url-policy-oracles/upstream/** -whitespace
+
+# Preserve every digest-pinned IANA package and runtime resource byte-for-byte.
+packages/iana-address-registries/** -text -whitespace
+Sources/HezoLinkCore/Resources/AddressRegistry/** -text -whitespace

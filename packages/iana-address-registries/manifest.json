@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "hezo-iana-address-registries-v1",
+  "purpose": "offline-address-registry-classification",
+  "profileVersion": "iana-2025-10-23-hezo-overlay-v1",
+  "safety": {
+    "runtimeNetworkAccessPermitted": false,
+    "runtimeExternalDataAccessPermitted": false,
+    "runtimeSourceSnapshotParsingPermitted": false,
+    "containsUserData": false,
+    "containsSecrets": false,
+    "classificationOnly": true,
+    "failureBehavior": "unavailable-on-missing-invalid-or-integrity-mismatched-resource"
+  },
+  "validationRequirements": {
+    "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+    "strictSchemaModeRequired": true,
+    "duplicateJSONKeysRejected": true,
+    "digestVerificationRequired": true,
+    "countVerificationRequired": true,
+    "inventoryClosureRequired": true,
+    "lfLineEndingsRequired": true,
+    "finalNewlineRequired": true,
+    "sourceSnapshotsByteExact": true,
+    "runtimeProjectionByteEqualityRequired": true,
+    "companionSemanticValidationRequired": true,
+    "companionSemanticChecks": [
+      "duplicate-json-key-rejection",
+      "manifest-inventory-closure",
+      "file-identity-and-format",
+      "source-registry-revision-and-counts",
+      "deterministic-projection-regeneration",
+      "prefix-normalization-and-order",
+      "record-identity-uniqueness",
+      "declared-count-coherence",
+      "package-runtime-projection-byte-equality"
+    ]
+  },
+  "sourceRegistries": [
+    {
+      "id": "iana-ipv4-special-purpose",
+      "family": "ipv4",
+      "kind": "special-purpose",
+      "file": {
+        "pathBase": "package-relative",
+        "path": "upstream/iana/iana-ipv4-special-registry-2025-10-09.xml",
+        "mediaType": "application/xml",
+        "encoding": "UTF-8",
+        "byteCount": 13459,
+        "sha256": "cf24e11f41b7d42c68debe2d18b97cac815084ec413ebb3b244f704028a16f20",
+        "lineEnding": "LF",
+        "physicalLineCount": 384,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Internet Assigned Numbers Authority",
+        "sourceURL": "https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xml",
+        "revision": "2025-10-09",
+        "retrievedOn": "2026-08-11",
+        "licenseSpdx": "CC0-1.0"
+      },
+      "sourceRecordCount": 25,
+      "projectedRecordCount": 26,
+      "transformation": "byte-for-byte-copy-with-repository-filename-only"
+    },
+    {
+      "id": "iana-ipv6-special-purpose",
+      "family": "ipv6",
+      "kind": "special-purpose",
+      "file": {
+        "pathBase": "package-relative",
+        "path": "upstream/iana/iana-ipv6-special-registry-2025-10-09.xml",
+        "mediaType": "application/xml",
+        "encoding": "UTF-8",
+        "byteCount": 13431,
+        "sha256": "c17f4380ba84fb2160dae82ebfd8bd155a5853cfab624ed3a9fd251638a8be02",
+        "lineEnding": "LF",
+        "physicalLineCount": 383,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Internet Assigned Numbers Authority",
+        "sourceURL": "https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xml",
+        "revision": "2025-10-09",
+        "retrievedOn": "2026-08-11",
+        "licenseSpdx": "CC0-1.0"
+      },
+      "sourceRecordCount": 25,
+      "projectedRecordCount": 25,
+      "transformation": "byte-for-byte-copy-with-repository-filename-only"
+    },
+    {
+      "id": "iana-ipv4-address-space",
+      "family": "ipv4",
+      "kind": "address-space",
+      "file": {
+        "pathBase": "package-relative",
+        "path": "upstream/iana/ipv4-address-space-2025-10-10.xml",
+        "mediaType": "application/xml",
+        "encoding": "UTF-8",
+        "byteCount": 76759,
+        "sha256": "8ca3774374c81e4a673bb12d0eb415e7ac9970c6f5a6ceb14106de64b2cb3dcd",
+        "lineEnding": "LF",
+        "physicalLineCount": 2646,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Internet Assigned Numbers Authority",
+        "sourceURL": "https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xml",
+        "revision": "2025-10-10",
+        "retrievedOn": "2026-08-11",
+        "licenseSpdx": "CC0-1.0"
+      },
+      "sourceRecordCount": 256,
+      "projectedRecordCount": 256,
+      "transformation": "byte-for-byte-copy-with-repository-filename-only"
+    },
+    {
+      "id": "iana-ipv6-address-space",
+      "family": "ipv6",
+      "kind": "address-space",
+      "file": {
+        "pathBase": "package-relative",
+        "path": "upstream/iana/ipv6-address-space-2025-10-23.xml",
+        "mediaType": "application/xml",
+        "encoding": "UTF-8",
+        "byteCount": 6956,
+        "sha256": "15481d1e549b481f3bd0321c5cd2c0327a00cbd3d5a6fc35fc7b53b51e70b1cb",
+        "lineEnding": "LF",
+        "physicalLineCount": 154,
+        "finalNewline": true
+      },
+      "source": {
+        "publisher": "Internet Assigned Numbers Authority",
+        "sourceURL": "https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xml",
+        "revision": "2025-10-23",
+        "retrievedOn": "2026-08-11",
+        "licenseSpdx": "CC0-1.0"
+      },
+      "sourceRecordCount": 20,
+      "projectedRecordCount": 20,
+      "transformation": "byte-for-byte-copy-with-repository-filename-only"
+    }
+  ],
+  "licensing": {
+    "spdxIdentifier": "CC0-1.0",
+    "applicability": "iana-ietf-protocol-registry-data",
+    "evidence": {
+      "file": {
+        "pathBase": "package-relative",
+        "path": "upstream/licensing/iana-ietf-protocol-registry-licensing-terms-2021-11-10.html",
+        "mediaType": "text/html",
+        "encoding": "UTF-8",
+        "byteCount": 8375,
+        "sha256": "9e9694eb818bcd620f153c208f431e9a0212c7202d35951f5cc3fcfe3720754b",
+        "lineEnding": "LF",
+        "physicalLineCount": 190,
+        "finalNewline": true
+      },
+      "sourceURL": "https://www.iana.org/help/licensing-terms",
+      "sourceRevision": "2021-11-10",
+      "transformation": "byte-for-byte-copy-with-repository-filename-only"
+    },
+    "legalCode": {
+      "file": {
+        "pathBase": "package-relative",
+        "path": "upstream/licensing/CC0-1.0-legalcode.txt",
+        "mediaType": "text/plain",
+        "encoding": "UTF-8",
+        "byteCount": 7048,
+        "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+        "lineEnding": "LF",
+        "physicalLineCount": 121,
+        "finalNewline": true
+      },
+      "sourceURL": "https://creativecommons.org/publicdomain/zero/1.0/legalcode.txt",
+      "sourceRevision": "CC0 1.0 Universal",
+      "transformation": "byte-for-byte-copy-with-repository-filename-only"
+    }
+  },
+  "runtimeProjection": {
+    "profileId": "iana-address-profile-v1",
+    "profileVersion": "iana-2025-10-23-hezo-overlay-v1",
+    "packageFile": {
+      "pathBase": "package-relative",
+      "path": "projection/iana-address-profile-v1.json",
+      "mediaType": "application/json",
+      "encoding": "UTF-8",
+      "byteCount": 118651,
+      "sha256": "9697f3b6da69ec68fea355c7f6bb0ae95151125fedb8c363e72d1cd7844af0be",
+      "lineEnding": "LF",
+      "physicalLineCount": 4342,
+      "finalNewline": true
+    },
+    "runtimeResourceFile": {
+      "pathBase": "repository-relative",
+      "path": "Sources/HezoLinkCore/Resources/AddressRegistry/iana-address-profile-v1.json",
+      "mediaType": "application/json",
+      "encoding": "UTF-8",
+      "byteCount": 118651,
+      "sha256": "9697f3b6da69ec68fea355c7f6bb0ae95151125fedb8c363e72d1cd7844af0be",
+      "lineEnding": "LF",
+      "physicalLineCount": 4342,
+      "finalNewline": true
+    },
+    "counts": {
+      "sourceRegistryCount": 4,
+      "policyOverlayCount": 2,
+      "recordCount": 329,
+      "familyRecords": {
+        "ipv4": 283,
+        "ipv6": 46
+      },
+      "registryRecords": {
+        "iana-ipv4-special-purpose": 26,
+        "iana-ipv6-special-purpose": 25,
+        "iana-ipv4-address-space": 256,
+        "iana-ipv6-address-space": 20,
+        "hezo-ipv4-multicast-overlay": 1,
+        "hezo-ipv6-multicast-overlay": 1
+      },
+      "ipv4StatusCounts": {
+        "ALLOCATED": 129,
+        "LEGACY": 92,
+        "RESERVED": 35
+      },
+      "ipv6AddressSpaceNameCounts": {
+        "Reserved by IETF": 16,
+        "Global Unicast": 1,
+        "Unique Local Unicast": 1,
+        "Link-Scoped Unicast": 1,
+        "Multicast": 1
+      }
+    },
+    "transformation": "deterministic-normalization-and-byte-for-byte-runtime-copy"
+  },
+  "schemas": [
+    {
+      "role": "manifest-schema",
+      "dialect": "https://json-schema.org/draft/2020-12/schema",
+      "file": {
+        "pathBase": "package-relative",
+        "path": "manifest.schema.json",
+        "mediaType": "application/schema+json",
+        "encoding": "UTF-8",
+        "byteCount": 27302,
+        "sha256": "39816cb025b7b01d544f4bebf822ed158c782f8b53bc3d176deb7da5c664ac39",
+        "lineEnding": "LF",
+        "physicalLineCount": 1135,
+        "finalNewline": true
+      }
+    },
+    {
+      "role": "runtime-profile-schema",
+      "dialect": "https://json-schema.org/draft/2020-12/schema",
+      "file": {
+        "pathBase": "package-relative",
+        "path": "schemas/iana-address-profile-v1.schema.json",
+        "mediaType": "application/schema+json",
+        "encoding": "UTF-8",
+        "byteCount": 21412,
+        "sha256": "7cd2cd135c547f51d33c5c43a6f88f27bfcf7f0793ec1df47d465501873367e7",
+        "lineEnding": "LF",
+        "physicalLineCount": 914,
+        "finalNewline": true
+      }
+    }
+  ],
+  "documentation": {
+    "role": "package-readme",
+    "file": {
+      "pathBase": "package-relative",
+      "path": "README.md",
+      "mediaType": "text/markdown",
+      "encoding": "UTF-8",
+      "byteCount": 11298,
+      "sha256": "cf289c8f4266a78dffd0a171bc0b342b1fb93cc12e50dd34a76e12974791d12e",
+      "lineEnding": "LF",
+      "physicalLineCount": 95,
+      "finalNewline": true
+    }
+  }
+}
