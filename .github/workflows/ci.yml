@@ -11,10 +11,222 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out commit history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install pinned secret scanner
+        env:
+          GITLEAKS_VERSION: 8.30.1
+          GITLEAKS_ARCHIVE_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+        run: |
+          set -euo pipefail
+
+          archive="$RUNNER_TEMP/gitleaks.tar.gz"
+          binary_directory="$RUNNER_TEMP/gitleaks-bin"
+          curl \
+            --fail \
+            --location \
+            --proto '=https' \
+            --retry 3 \
+            --retry-all-errors \
+            --silent \
+            --show-error \
+            --tlsv1.2 \
+            --output "$archive" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          printf '%s  %s\n' "$GITLEAKS_ARCHIVE_SHA256" "$archive" | sha256sum --check --strict
+          mkdir -p "$binary_directory"
+          tar --extract --gzip --file "$archive" --directory "$binary_directory" gitleaks
+          chmod 0755 "$binary_directory/gitleaks"
+
+      - name: Scan reachable Git history for secrets
+        env:
+          GITLEAKS_CONFIG_TOML: |
+            [extend]
+            useDefault = true
+          GITLEAKS_IGNORE_SHA256: 335dd573eb352d321fd4a121bd9ab6b19c783fc0b8191d35bf3ad8230233e4ac
+        run: |
+          set -euo pipefail
+
+          scanner="$RUNNER_TEMP/gitleaks-bin/gitleaks"
+          report="$RUNNER_TEMP/gitleaks-report.json"
+          scanner_output="$RUNNER_TEMP/gitleaks-output.log"
+          reviewed_fingerprints="$GITHUB_WORKSPACE/.github/gitleaks-reviewed-fingerprints.txt"
+
+          printf '%s  %s\n' "$GITLEAKS_IGNORE_SHA256" "$reviewed_fingerprints" \
+            | sha256sum --check --strict
+
+          set +e
+          "$scanner" git \
+            --exit-code 1 \
+            --gitleaks-ignore-path "$reviewed_fingerprints" \
+            --ignore-gitleaks-allow \
+            --no-banner \
+            --no-color \
+            --redact=100 \
+            --report-format json \
+            --report-path "$report" \
+            --timeout 300 \
+            --log-opts '--diff-merges=first-parent HEAD' \
+            "$GITHUB_WORKSPACE" >"$scanner_output" 2>&1
+          scan_status="$?"
+          set -e
+
+          rm -f "$report" "$scanner_output"
+          if [[ "$scan_status" -ne 0 ]]; then
+            echo '::error::Secret scanning found a potential credential or could not complete safely. Reproduce locally with the pinned scanner; findings are intentionally not printed.'
+            exit 1
+          fi
+
+  dependency-review:
+    name: Dependency review
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Review introduced dependencies
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          retries: 2
+          script: |
+            const zeroSha = '0'.repeat(40)
+            const shaPattern = /^[0-9a-f]{40}$/
+            const headSha = context.sha
+            let baseSha
+
+            if (context.eventName === 'pull_request') {
+              baseSha = context.payload.pull_request.base.sha
+            } else if (context.eventName === 'push') {
+              baseSha = context.payload.before
+              if (baseSha === zeroSha) {
+                core.setFailed('Dependency review has no trustworthy base for this push.')
+                return
+              }
+            } else if (context.eventName === 'workflow_dispatch') {
+              const commit = await github.rest.repos.getCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: headSha
+              })
+              if (commit.data.parents.length === 0) {
+                core.setFailed('Dependency review cannot compare a root commit.')
+                return
+              }
+              baseSha = commit.data.parents[0].sha
+            } else {
+              core.setFailed('Dependency review does not recognize this workflow event.')
+              return
+            }
+
+            if (!shaPattern.test(baseSha) || !shaPattern.test(headSha)) {
+              core.setFailed('Dependency review received an invalid commit boundary.')
+              return
+            }
+
+            async function compareDependencies() {
+              const changes = []
+              let snapshotWarning = false
+              const route = 'GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}'
+
+              for await (const response of github.paginate.iterator(route, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                basehead: `${baseSha}...${headSha}`,
+                per_page: 100,
+                headers: {
+                  'X-GitHub-Api-Version': '2026-03-10'
+                }
+              })) {
+                const warningHeader =
+                  response.headers['x-github-dependency-graph-snapshot-warnings']
+                snapshotWarning ||=
+                  typeof warningHeader === 'string' && warningHeader.length > 0
+                changes.push(...response.data)
+              }
+
+              return { changes, snapshotWarning }
+            }
+
+            let comparison
+            for (let attempt = 1; attempt <= 13; attempt += 1) {
+              comparison = await compareDependencies()
+              if (!comparison.snapshotWarning) {
+                break
+              }
+              if (attempt < 13) {
+                await new Promise(resolve => setTimeout(resolve, 10_000))
+              }
+            }
+
+            if (comparison.snapshotWarning) {
+              core.setFailed(
+                'Dependency review remained incomplete after bounded retries.'
+              )
+              return
+            }
+
+            // This is an admission filter, not automatic approval to add a dependency.
+            const allowedLicenses = new Set([
+              'Apache-2.0',
+              'BSD-2-Clause',
+              'BSD-3-Clause',
+              'ISC',
+              'MIT',
+              'Unicode-3.0',
+              'Zlib'
+            ])
+            // GitHub currently omits license metadata for Actions dependencies.
+            // Keep exceptions PURL-exact and commit-pinned; this action was reviewed as MIT.
+            const reviewedMissingLicenseMetadata = new Set([
+              'pkg:githubactions/actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
+            ])
+            const violations = []
+
+            for (const change of comparison.changes) {
+              if (change.change_type === 'removed') {
+                continue
+              }
+
+              const dependency = `${change.name}@${change.version}`
+              const licenseIsAllowed = allowedLicenses.has(change.license ?? '')
+              const missingLicenseWasReviewed =
+                change.license == null &&
+                reviewedMissingLicenseMetadata.has(change.package_url ?? '')
+              if (!licenseIsAllowed && !missingLicenseWasReviewed) {
+                violations.push(
+                  `${dependency}: license is absent or outside the reviewed allowlist`
+                )
+              }
+
+              for (const vulnerability of change.vulnerabilities ?? []) {
+                violations.push(
+                  `${dependency}: ${vulnerability.severity} ${vulnerability.advisory_ghsa_id}`
+                )
+              }
+            }
+
+            for (const violation of violations) {
+              core.error(violation)
+            }
+            if (violations.length > 0) {
+              core.setFailed(
+                `${violations.length} blocked dependency change(s) introduced.`
+              )
+            }
+
   native:
     name: Swift and Xcode
     runs-on: macos-26
