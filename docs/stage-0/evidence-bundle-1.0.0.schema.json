@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:hezo-link:schema:stage-0-evidence-bundle:2.0.0",
+  "$id": "urn:hezo-link:schema:stage-0-evidence-bundle:1.0.0",
   "title": "Hezo Link Stage 0 public evidence bundle",
-  "description": "Strict metadata contract for one sanitized Stage 0 proof result. Version 2 adds representable run, evidence, external-state, case-contact, decision, and closeout chronology. Raw or restricted evidence is referenced, never embedded.",
+  "description": "Strict metadata contract for one sanitized Stage 0 proof result. Raw or restricted evidence is referenced, never embedded.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -31,7 +31,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "2.0.0"
+      "const": "1.0.0"
     },
     "bundle_id": {
       "$ref": "#/$defs/identifier"
@@ -41,7 +41,7 @@
     },
     "proof_id": {
       "type": "string",
-      "pattern": "^S0-[A-F]-P[0-9]{2,3}(?![\\s\\S])"
+      "pattern": "^S0-[A-F]-P[0-9]{2,3}$"
     },
     "work_package": {
       "$ref": "#/$defs/workPackage"
@@ -53,12 +53,6 @@
         "stop",
         "inconclusive"
       ]
-    },
-    "run_started_at": {
-      "$ref": "#/$defs/utcDateTime"
-    },
-    "run_ended_at": {
-      "$ref": "#/$defs/utcDateTime"
     },
     "recorded_at": {
       "$ref": "#/$defs/utcDateTime"
@@ -156,72 +150,6 @@
       "if": {
         "properties": {
           "gate_decision": {
-            "const": "not_decided"
-          }
-        },
-        "required": [
-          "gate_decision"
-        ]
-      },
-      "then": {
-        "properties": {
-          "review": {
-            "type": "object",
-            "properties": {
-              "final_decision": {
-                "const": "not_decided"
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "cases": {
-            "type": "array",
-            "contains": {
-              "type": "object",
-              "properties": {
-                "outcome": {
-                  "enum": [
-                    "pass",
-                    "fail",
-                    "skipped",
-                    "not_applicable"
-                  ]
-                }
-              },
-              "required": [
-                "outcome"
-              ]
-            }
-          }
-        },
-        "required": [
-          "cases"
-        ]
-      },
-      "then": {
-        "required": [
-          "run_started_at",
-          "run_ended_at"
-        ],
-        "properties": {
-          "run_started_at": {
-            "$ref": "#/$defs/utcDateTime"
-          },
-          "run_ended_at": {
-            "$ref": "#/$defs/utcDateTime"
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "gate_decision": {
             "enum": [
               "pass",
               "stop",
@@ -234,17 +162,7 @@
         ]
       },
       "then": {
-        "required": [
-          "run_started_at",
-          "run_ended_at"
-        ],
         "properties": {
-          "run_started_at": {
-            "$ref": "#/$defs/utcDateTime"
-          },
-          "run_ended_at": {
-            "$ref": "#/$defs/utcDateTime"
-          },
           "cases": {
             "type": "array",
             "items": {
@@ -395,7 +313,6 @@
                     "properties": {
                       "outcome": {
                         "enum": [
-                          "fail",
                           "skipped",
                           "not_run",
                           "not_applicable"
@@ -563,37 +480,6 @@
                 "const": 0
               }
             }
-          },
-          "cases": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "contact_counts": {
-                  "type": "object",
-                  "properties": {
-                    "tcp_connections": {
-                      "const": 0
-                    },
-                    "udp_datagrams": {
-                      "const": 0
-                    },
-                    "application_requests": {
-                      "const": 0
-                    },
-                    "metadata_contacts": {
-                      "const": 0
-                    },
-                    "production_resource_contacts": {
-                      "const": 0
-                    },
-                    "cross_job_contacts": {
-                      "const": 0
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -708,7 +594,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 96,
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*(?![\\s\\S])"
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
     },
     "workPackage": {
       "enum": [
@@ -722,17 +608,17 @@
     },
     "sha256": {
       "type": "string",
-      "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+      "pattern": "^[0-9a-f]{64}$"
     },
     "utcDateTime": {
       "type": "string",
-      "pattern": "^(?:19|20|21)[0-9]{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\\.[0-9]{1,9})?Z(?![\\s\\S])"
+      "pattern": "^(?:19|20|21)[0-9]{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\\.[0-9]{1,9})?Z$"
     },
     "safeText": {
       "type": "string",
       "minLength": 1,
       "maxLength": 500,
-      "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?://|[Ff][Ii][Ll][Ee]://|/[Uu]sers/|/[Hh]ome/|[A-Za-z]:\\\\|[Bb][Ee][Gg][Ii][Nn] [A-Za-z ]*[Pp][Rr][Ii][Vv][Aa][Tt][Ee] [Kk][Ee][Yy]|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}))[ -~]+(?![\\s\\S])"
+      "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?://|[Ff][Ii][Ll][Ee]://|/[Uu]sers/|/[Hh]ome/|[A-Za-z]:\\\\|[Bb][Ee][Gg][Ii][Nn] [A-Za-z ]*[Pp][Rr][Ii][Vv][Aa][Tt][Ee] [Kk][Ee][Yy]|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}))[ -~]+$"
     },
     "role": {
       "enum": [
@@ -757,7 +643,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 240,
-      "pattern": "^(?!.*(?:^|/)\\.)(?:docs|fixtures|evidence)/[A-Za-z0-9._/-]+(?![\\s\\S])"
+      "pattern": "^(?!.*(?:^|/)\\.)(?:docs|fixtures|evidence)/[A-Za-z0-9._/-]+$"
     },
     "revision": {
       "type": "object",
@@ -789,7 +675,7 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 160,
-          "pattern": "^[A-Za-z0-9._:+-]+(?![\\s\\S])"
+          "pattern": "^[A-Za-z0-9._:+-]+$"
         },
         "sha256": {
           "$ref": "#/$defs/sha256"
@@ -831,7 +717,7 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 96,
-          "pattern": "^[A-Za-z0-9._+-]+(?![\\s\\S])"
+          "pattern": "^[A-Za-z0-9._+-]+$"
         },
         "sha256": {
           "$ref": "#/$defs/sha256"
@@ -908,13 +794,12 @@
         "revision_refs",
         "fixture_refs",
         "evidence_refs",
-        "contact_counts",
         "recorded_at"
       ],
       "properties": {
         "case_id": {
           "type": "string",
-          "pattern": "^S0-[A-F]-[A-Z0-9][A-Z0-9_-]{0,47}(?![\\s\\S])"
+          "pattern": "^S0-[A-F]-[A-Z0-9][A-Z0-9_-]{0,47}$"
         },
         "required": {
           "type": "boolean"
@@ -962,15 +847,6 @@
             "$ref": "#/$defs/identifier"
           }
         },
-        "contact_counts": {
-          "$ref": "#/$defs/canaryContacts"
-        },
-        "started_at": {
-          "$ref": "#/$defs/utcDateTime"
-        },
-        "ended_at": {
-          "$ref": "#/$defs/utcDateTime"
-        },
         "recorded_at": {
           "$ref": "#/$defs/utcDateTime"
         },
@@ -998,50 +874,6 @@
         }
       },
       "allOf": [
-        {
-          "if": {
-            "properties": {
-              "outcome": {
-                "enum": [
-                  "pass",
-                  "fail"
-                ]
-              }
-            },
-            "required": [
-              "outcome"
-            ]
-          },
-          "then": {
-            "required": [
-              "started_at",
-              "ended_at"
-            ],
-            "properties": {
-              "started_at": {
-                "$ref": "#/$defs/utcDateTime"
-              },
-              "ended_at": {
-                "$ref": "#/$defs/utcDateTime"
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "contact_counts": {
-                "type": "object",
-                "properties": {
-                  "applicable": {
-                    "const": false
-                  }
-                }
-              },
-              "started_at": false,
-              "ended_at": false,
-              "duration_ms": false
-            }
-          }
-        },
         {
           "if": {
             "properties": {
@@ -1184,7 +1016,6 @@
         "required_for_pass",
         "state",
         "as_of",
-        "review_due_at",
         "accountable_role",
         "evidence_refs"
       ],
@@ -1232,9 +1063,6 @@
         "as_of": {
           "$ref": "#/$defs/utcDateTime"
         },
-        "review_due_at": {
-          "$ref": "#/$defs/utcDateTime"
-        },
         "accountable_role": {
           "$ref": "#/$defs/role"
         },
@@ -1256,8 +1084,7 @@
         "classification",
         "kind",
         "path",
-        "sha256",
-        "recorded_at"
+        "sha256"
       ],
       "properties": {
         "evidence_id": {
@@ -1284,9 +1111,6 @@
         },
         "sha256": {
           "$ref": "#/$defs/sha256"
-        },
-        "recorded_at": {
-          "$ref": "#/$defs/utcDateTime"
         }
       }
     },
@@ -1297,8 +1121,7 @@
         "evidence_id",
         "classification",
         "kind",
-        "opaque_reference",
-        "recorded_at"
+        "opaque_reference"
       ],
       "properties": {
         "evidence_id": {
@@ -1320,10 +1143,7 @@
         },
         "opaque_reference": {
           "type": "string",
-          "pattern": "^PRIV-[A-Z0-9]{8,32}(?![\\s\\S])"
-        },
-        "recorded_at": {
-          "$ref": "#/$defs/utcDateTime"
+          "pattern": "^PRIV-[A-Z0-9]{8,32}$"
         }
       }
     },
@@ -1375,7 +1195,7 @@
           "uniqueItems": true,
           "items": {
             "type": "string",
-            "pattern": "^S0-[A-F]-[A-Z0-9][A-Z0-9_-]{0,47}(?![\\s\\S])"
+            "pattern": "^S0-[A-F]-[A-Z0-9][A-Z0-9_-]{0,47}$"
           }
         },
         "decision_ref": {
@@ -1614,9 +1434,6 @@
             "inconclusive"
           ]
         },
-        "decided_at": {
-          "$ref": "#/$defs/utcDateTime"
-        },
         "entries": {
           "type": "array",
           "minItems": 1,
@@ -1633,40 +1450,7 @@
             "$ref": "#/$defs/identifier"
           }
         }
-      },
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "final_decision": {
-                "enum": [
-                  "pass",
-                  "stop",
-                  "inconclusive"
-                ]
-              }
-            },
-            "required": [
-              "final_decision"
-            ]
-          },
-          "then": {
-            "required": [
-              "decided_at"
-            ],
-            "properties": {
-              "decided_at": {
-                "$ref": "#/$defs/utcDateTime"
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "decided_at": false
-            }
-          }
-        }
-      ]
+      }
     },
     "closeout": {
       "type": "object",
@@ -1739,42 +1523,8 @@
             "rejected",
             "expired"
           ]
-        },
-        "completed_at": {
-          "$ref": "#/$defs/utcDateTime"
         }
-      },
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "state": {
-                "const": "complete"
-              }
-            },
-            "required": [
-              "state"
-            ]
-          },
-          "then": {
-            "required": [
-              "completed_at"
-            ],
-            "properties": {
-              "completed_at": {
-                "$ref": "#/$defs/utcDateTime"
-              }
-            }
-          },
-          "else": {
-            "not": {
-              "required": [
-                "completed_at"
-              ]
-            }
-          }
-        }
-      ]
+      }
     },
     "privacyDeclaration": {
       "type": "object",

@@ -76,6 +76,8 @@ Include positive, negative, failure, rollback, and limitation cases needed to an
 
 No required case may disappear after a failure. Add newly discovered cases and preserve the original result.
 
+The current [evidence-bundle schema](evidence-bundle.schema.json) records a root run interval. Every executed case records `started_at`, `ended_at`, result `recorded_at`, optional `duration_ms`, and typed `contact_counts`; non-executed cases do not fabricate an interval and declare contact counting inapplicable with zero counters. Each cited evidence record has its own finalization time. The companion validator, not JSON Schema alone, proves chronology and that bundle contact counters equal the per-case sums.
+
 ## Gates
 
 ### Pass gate
@@ -113,13 +115,13 @@ Define conditions that make the result undecidable, such as an unavailable exter
 
 Use [the evidence-bundle schema](evidence-bundle.schema.json) for public-safe metadata. Before execution, list the expected evidence for each case and its retention class. After execution, record:
 
-- exact case result, timestamp range, revision, fixture version, and material environment versions;
+- exact root run interval and, for every executed case, its start, end, result-recording time, optional duration, typed contact counters, revision, fixture version, and material environment versions;
 - skips, retries, deviations, partial failures, and contradictory observations;
-- sanitized summary or opaque approved evidence ID;
+- sanitized summary or opaque approved evidence ID with the time that reference became citeable;
 - evidence expiry or review deadline; and
 - the role authorized to inspect any restricted underlying material.
 
-Do not put private storage paths, access URLs, raw logs, screenshots, captures, attestations, source records, identifiers, or credentials in the plan or evidence bundle.
+The final review records its decision time, and a completed teardown or productionization closeout records `completed_at`. Do not put private storage paths, access URLs, raw logs, screenshots, captures, attestations, source records, identifiers, or credentials in the plan or evidence bundle.
 
 ## Limitations and unsupported claims
 
