@@ -133,6 +133,15 @@ xcrun swift-format lint --configuration .swift-format --recursive Apps Sources T
 xcodebuild build -project HezoLink.xcodeproj -scheme HezoLink -destination 'generic/platform=iOS Simulator'
 ~~~
 
+Native CI also runs fixed-seed, time-bounded URL-policy and address-classification campaigns as two independent jobs on every pull request, push to `main`, and manual workflow dispatch. Each job pins Xcode 26.6, treats Swift warnings as errors, verifies that exactly one intended campaign test is selected, and requires at least 600 seconds of campaign execution. Run the same focused commands locally with:
+
+~~~sh
+HEZOLINK_URL_FUZZ_SECONDS=600 swift test --filter 'URLPolicyPropertyTests.environmentControlledCampaign' -Xswiftc -warnings-as-errors
+HEZOLINK_ADDRESS_FUZZ_SECONDS=600 swift test --filter 'AddressRegistryClassifierTests.environmentControlledCampaign' -Xswiftc -warnings-as-errors
+~~~
+
+The seed and generated-input order are reproducible, while the exact case count depends on runner speed. These runs satisfy the current 600-second pull-request generated-input duration for the existing URL-policy and address-classification targets only. They do not establish native branch coverage, coverage-guided or exhaustive fuzzing, ingress-to-egress parser equivalence, the required 24-hour pre-release campaign, SSRF resistance, release readiness, or passage of any Stage gate.
+
 ## Future business direction
 
 Core consumer protection remains free in the intended model. Future revenue comes from intelligence about malicious infrastructure and campaigns, not consumer behavior:
@@ -151,6 +160,6 @@ Documentation baseline: reviewed and merged.
 
 Stage 0: public governance and deterministic offline fixtures are established. The runnable proof harness remains paused until the repository and isolated-execution decisions are accepted; no proof is claimed complete.
 
-Application code: the bounded local S1-A foundation is authorized by [ADR 0002](docs/adr/0002-local-first-product-foundation.md), and the transient offline manual-entry prototype is authorized by [ADR 0003](docs/adr/0003-offline-manual-entry-prototype.md). The accepted implementation baseline contains the offline contract core, strict Check Request V1 and bounded Pending Check Response V1 data contracts, URL-input policy primitives with executable tests, pinned PSL and IANA address-profile classifiers, and a local syntax-status screen. The repository contains no connected consumer check, network client, persistence, provider integration, crawler, URL Filter, App Attest, analytics, or measurement behavior. Owner-local automatic signing may create Apple development provisioning state as the sole non-proof exception. Nothing here makes a Stage 0, Stage 1, Stage 2, SSRF, egress, release, or production-readiness claim.
+Application code: the bounded local S1-A foundation is authorized by [ADR 0002](docs/adr/0002-local-first-product-foundation.md), and the transient offline manual-entry prototype is authorized by [ADR 0003](docs/adr/0003-offline-manual-entry-prototype.md). The accepted implementation baseline contains the offline contract core, strict Check Request V1 and bounded Pending Check Response V1 data contracts, URL-input policy primitives with executable tests, pinned PSL and IANA address-profile classifiers, and a local syntax-status screen. Native CI runs independent 600-second fixed-seed, time-bounded campaigns for the existing URL-policy and address-classification targets on pull requests, pushes to `main`, and manual dispatch. Those checks are bounded regression evidence; they do not establish coverage-guided or exhaustive fuzzing, branch coverage, ingress-to-egress equivalence, SSRF resistance, release readiness, or a Stage gate. The repository contains no connected consumer check, network client, persistence, provider integration, crawler, URL Filter, App Attest, analytics, or measurement behavior. Owner-local automatic signing may create Apple development provisioning state as the sole non-proof exception. Nothing here makes a Stage 0, Stage 1, Stage 2, SSRF, egress, release, or production-readiness claim.
 
 Project license: not yet selected. Public visibility does not imply permission to reuse; O-019 requires the owner/legal decision before external contributions or reuse are promoted.
