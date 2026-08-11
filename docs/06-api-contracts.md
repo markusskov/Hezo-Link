@@ -115,13 +115,15 @@ Contract rules:
 
 ### Completed check
 
+The completed envelope below remains a design target, not part of the bounded offline `PendingCheckResponseV1` contract decision. That decision approves no completed-response schema, decoder, status transition, or runtime behavior; completed-response implementation remains blocked.
+
 Return `200 OK`:
 
 ~~~json
 {
   "schema_version": 1,
   "status": "complete",
-  "check_token": "opaque-short-lived-capability",
+  "check_token": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "verdict": {
     "label": "caution",
     "recommended_action": "warn",
@@ -192,31 +194,35 @@ Provider-specific attribution or advisory requirements appear in `source_notices
 
 ### Pending check
 
-If useful work exceeds the wait budget, return `202 Accepted`:
+`PendingCheckResponseV1` is a bounded offline data contract only. It contains exactly these six required fields:
 
 ~~~json
 {
   "schema_version": 1,
   "status": "pending",
-  "check_token": "opaque-short-lived-capability",
+  "check_token": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "retry_after_ms": 750,
   "expires_at": "2026-08-11T10:30:00Z",
   "request_id": "plane-local-random-id"
 }
 ~~~
 
-The token is at least 192 bits of randomness, stored server-side only as a digest, scoped to status retrieval/report linkage, and proposed to expire within 10–15 minutes. It contains no installation or App Attest identifier.
+- `schema_version` is the integer `1`.
+- `status` is the string `pending`.
+- `check_token` is the canonical unpadded base64url encoding of exactly 32 bytes: exactly 43 ASCII characters with no `=` padding. A producer must generate exactly 32 cryptographically random bytes and encode those bytes canonically. A decoder must reject padding, noncanonical trailing bits, alternate encodings, and any value that does not decode to exactly 32 bytes and re-encode to the identical text. These checks prove only the canonical wire shape, not producer entropy or randomness.
+- `retry_after_ms` is an integer from `1` through `900000`, inclusive.
+- `expires_at` is a canonical UTC whole-second absolute instant using the common `YYYY-MM-DDTHH:mm:ssZ` grammar in years `0001` through `9999`. Fractional seconds, offsets, lowercase `z`, year `0000`, and impossible calendar instants are invalid.
+- `request_id` uses the existing request-ID grammar: 1 through 128 ASCII characters drawn only from letters, digits, `_`, or `-`.
 
-Poll with:
+The token shown above is deliberately zero-entropy public fixture text for wire-shape illustration and is forbidden for operational use.
 
-~~~text
-GET /v1/checks/status
-Authorization: HezoCheck <check_token>
-~~~
+The strict public schema rejects unknown fields. The specifically designated Swift response reader may discard genuinely additive unknown top-level keys for forward compatibility, but it must reject a hybrid pending envelope containing any of these completed-response or enforcement keys: `verdict`, `target`, `analysis`, `source_notices`, `versions`, `evaluated_at`, `valid_until`, or `block_eligible`.
 
-Using one fixed status path keeps the capability out of URL paths and ordinary access logs. Return `202` while pending and the completed `200` envelope when ready. An expired or unknown token returns a generic `404`; do not create an existence oracle.
+A future consumer runtime must make its effective delay at least the maximum of `retry_after_ms`, its local minimum retry floor, and its current backoff. It must never schedule an attempt at or after `expires_at`; if the resulting allowed attempt time reaches that instant, it schedules nothing. This is a constraint on any future consumer, not approval to implement one here.
 
-If the selected analysis profile terminates without enough evidence, return a completed `unknown` verdict with analysis completeness and bounded operational codes. Do not leave the client polling indefinitely.
+This offline contract decision does not approve or implement issuance TTL, retention and deletion, token digesting or storage, replay handling, report linkage, endpoint and path, HTTP behavior, authentication, polling, network I/O, persistence, App Attest, deployment, or completion. The `900000` maximum is only a value cap for `retry_after_ms`; it is not a token lifetime, TTL, or expiry promise. No completed-response contract is approved by this slice, and completed-response work remains blocked.
+
+The existing future runtime sketch remains Proposed, not authorized by this offline contract: a server would store only a token digest, scope the token to status retrieval and report linkage, and use a short lifetime in the proposed 10–15 minute range. Status retrieval would use one fixed path with the token in its authorization header rather than its URL, return pending only while work is genuinely active, avoid an existence oracle for expired or unknown tokens, and terminate insufficient analysis as a completed `unknown` result rather than polling indefinitely. These runtime choices still require their own reviewed implementation authority and exact lifecycle, retention, replay, authentication, and endpoint contracts.
 
 ### Unknown versus transport failure
 
@@ -250,7 +256,7 @@ Request with a fresh check token:
 {
   "schema_version": 1,
   "report_type": "incorrect_verdict",
-  "check_token": "opaque-short-lived-capability",
+  "check_token": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "category": "legitimate_site",
   "comment": "Optional short explanation",
   "deletion_capability_digest": "base64url-sha256"

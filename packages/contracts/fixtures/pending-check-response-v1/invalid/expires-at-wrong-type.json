@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "status": "pending",
+  "check_token": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "retry_after_ms": 750,
+  "expires_at": 946685700,
+  "request_id": "synthetic-expiry-type"
+}

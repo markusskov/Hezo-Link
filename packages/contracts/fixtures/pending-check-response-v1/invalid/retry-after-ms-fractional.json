@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "status": "pending",
+  "check_token": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "retry_after_ms": 750.5,
+  "expires_at": "2000-01-01T00:15:00Z",
+  "request_id": "synthetic-retry-fraction"
+}

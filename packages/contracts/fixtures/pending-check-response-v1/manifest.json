@@ -1,0 +1,296 @@
+{
+  "schema_version": 1,
+  "contract": "pending-check-response-v1",
+  "contract_schema": "../../schemas/pending-check-response-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-standard",
+      "path": "valid/standard.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-retry-after-ms-lower-boundary",
+      "path": "valid/retry-after-ms-lower-boundary.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-retry-after-ms-upper-boundary",
+      "path": "valid/retry-after-ms-upper-boundary.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-request-id-upper-boundary",
+      "path": "valid/request-id-upper-boundary.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-canonical-token-controls",
+      "path": "valid/canonical-token-controls.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-missing-schema-version",
+      "path": "invalid/missing-schema-version.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-missing-status",
+      "path": "invalid/missing-status.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-missing-check-token",
+      "path": "invalid/missing-check-token.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-missing-retry-after-ms",
+      "path": "invalid/missing-retry-after-ms.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-missing-expires-at",
+      "path": "invalid/missing-expires-at.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-missing-request-id",
+      "path": "invalid/missing-request-id.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-schema-version-mismatch",
+      "path": "invalid/schema-version-mismatch.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-status-complete",
+      "path": "invalid/status-complete.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-status-invalid",
+      "path": "invalid/status-invalid.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "enum",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-check-token-short",
+      "path": "invalid/check-token-short.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "minLength",
+        "pattern"
+      ]
+    },
+    {
+      "id": "reject-check-token-long",
+      "path": "invalid/check-token-long.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "maxLength",
+        "pattern"
+      ]
+    },
+    {
+      "id": "reject-check-token-invalid-character",
+      "path": "invalid/check-token-invalid-character.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-check-token-noncanonical-final-character",
+      "path": "invalid/check-token-noncanonical-final-character.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-check-token-null",
+      "path": "invalid/check-token-null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-check-token-wrong-type",
+      "path": "invalid/check-token-wrong-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-retry-after-ms-zero",
+      "path": "invalid/retry-after-ms-zero.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "minimum"
+    },
+    {
+      "id": "reject-retry-after-ms-above-maximum",
+      "path": "invalid/retry-after-ms-above-maximum.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maximum"
+    },
+    {
+      "id": "reject-retry-after-ms-fractional",
+      "path": "invalid/retry-after-ms-fractional.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-retry-after-ms-null",
+      "path": "invalid/retry-after-ms-null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-retry-after-ms-wrong-type",
+      "path": "invalid/retry-after-ms-wrong-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-expires-at-fractional",
+      "path": "invalid/expires-at-fractional.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-expires-at-offset",
+      "path": "invalid/expires-at-offset.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-expires-at-impossible",
+      "path": "invalid/expires-at-impossible.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-expires-at-lowercase-z",
+      "path": "invalid/expires-at-lowercase-z.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-expires-at-year-zero",
+      "path": "invalid/expires-at-year-zero.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-expires-at-null",
+      "path": "invalid/expires-at-null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-expires-at-wrong-type",
+      "path": "invalid/expires-at-wrong-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-request-id-empty",
+      "path": "invalid/request-id-empty.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "minLength",
+        "pattern"
+      ]
+    },
+    {
+      "id": "reject-request-id-invalid-character",
+      "path": "invalid/request-id-invalid-character.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-request-id-oversized",
+      "path": "invalid/request-id-oversized.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    },
+    {
+      "id": "reject-request-id-null",
+      "path": "invalid/request-id-null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-request-id-wrong-type",
+      "path": "invalid/request-id-wrong-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-wrong-top-level-type",
+      "path": "invalid/wrong-top-level-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-unknown-future-field",
+      "path": "invalid/unknown-future-field.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-forbidden-verdict",
+      "path": "invalid/forbidden-verdict.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-forbidden-target",
+      "path": "invalid/forbidden-target.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-forbidden-analysis",
+      "path": "invalid/forbidden-analysis.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-forbidden-source-notices",
+      "path": "invalid/forbidden-source-notices.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-forbidden-versions",
+      "path": "invalid/forbidden-versions.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-forbidden-evaluated-at",
+      "path": "invalid/forbidden-evaluated-at.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-forbidden-valid-until",
+      "path": "invalid/forbidden-valid-until.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-forbidden-block-eligible",
+      "path": "invalid/forbidden-block-eligible.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    }
+  ]
+}
