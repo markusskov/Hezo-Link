@@ -150,6 +150,8 @@ Use one canonical URL and IP parsing implementation across validation and the eg
 
 Allow only ordinary public-unicast destinations.
 
+“Ordinary public-unicast” is a future complete destination-policy outcome, not an IANA registry category. A broad allocation classification is necessary context but is never sufficient authority to resolve, connect, fetch, navigate, or call a destination safe.
+
 The deny policy must include every special-purpose IPv4 and IPv6 allocation in pinned copies of the IANA registries, not only RFC 1918. It therefore covers:
 
 - unspecified, loopback, private, link-local, shared carrier-grade NAT, multicast, broadcast, reserved, documentation, benchmarking, discard, protocol-assignment, transition, and translation space;
@@ -159,6 +161,25 @@ The deny policy must include every special-purpose IPv4 and IPv6 allocation in p
 - public Hezo addresses that expose control-plane, administrative, or otherwise non-public services.
 
 Registry updates are reviewed and versioned. A registry sync cannot silently widen egress.
+
+### Accepted pinned IANA classification profile
+
+[ADR 0005](adr/0005-pinned-iana-address-profile.md) accepts a deterministic offline profile made from exact XML snapshots of four IANA registries: IPv4 and IPv6 Special-Purpose Address Space, IPv4 Address Space, and IPv6 Address Space. The accepted source revisions are 2025-10-09, 2025-10-09, 2025-10-10, and 2025-10-23 respectively; the ADR records the exact upstream URLs and SHA-256 values. The founder/technical owner accepted the dependency decision on 2026-08-11. This approves the profile, not an implementation or any proof, security, stage, or release gate; dependency-bearing code and assets still require their ordinary review and verification before merge.
+
+The accepted closed IP categories are:
+
+- `specialPurpose`: any matching prefix in either special-purpose registry, even when that row says it is globally reachable;
+- `allocatedOrLegacyIPv4`: an IPv4 address whose containing broad address-space entry is `ALLOCATED` or `LEGACY`, after higher-precedence checks;
+- `globalUnicastIPv6`: an IPv6 address in the broad registry's Global Unicast space, after higher-precedence checks;
+- `multicast`: the explicit IPv4 `224.0.0.0/4` or IPv6 `ff00::/8` overlay, unless a special-purpose entry takes precedence;
+- `reserved`: broad registry space identified as reserved or as a non-global IPv6 allocation after higher-precedence checks; and
+- `unallocated`: an explicit no-match/default category for a valid profile. The accepted snapshots cover both address families completely, so this exact profile is not expected to emit it; missing or corrupt dependency data is never `unallocated`.
+
+Matching is longest-prefix first within the applicable registry data. Every special-purpose match wins over multicast and broad allocation data, then the explicit multicast overlays win over the broad address-space registry. Domain names are not resolved by this classifier and produce a distinct not-applicable result. Every IP result identifies the profile through `sourceRevision` value `iana-address-profile-v1`; separate verified integrity metadata binds the exact projection bytes and upstream revisions.
+
+`allocatedOrLegacyIPv4` and `globalUnicastIPv6` are registry-space candidates only. None of the categories claims DNS resolution, reachability, routability, safety, trust, a consumer verdict, destination ownership, connection eligibility, egress permission, SSRF resistance, redirect or rebinding safety, mixed-answer safety, organization or deployed VPC/corporate coverage, network behavior, persistence, UI behavior, enforcement, or passage of any Stage gate. A later caller must add the complete connection-time and environment-specific policy in this document.
+
+The dependency is updated only by a manual reviewed change that pins new exact bytes, revisions, hashes, counts, semantic prefix/category diffs, and regenerated deterministic assets. It performs no runtime fetch and has no live-data fallback. Missing, malformed, unsupported, inconsistent, or integrity-mismatched assets make classification unavailable with bounded content-free output; they must never become `unallocated`, a broad candidate, or a permissive decision.
 
 ## DNS rebinding and connection validation
 
@@ -490,6 +511,9 @@ This gate covers the dynamic-analysis boundary. URL Filter distribution, fail-op
 - [OWASP Web Security Testing Guide: Testing for SSRF](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/07-Input_Validation_Testing/19-Testing_for_Server-Side_Request_Forgery)
 - [IANA IPv4 Special-Purpose Address Registry](https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml)
 - [IANA IPv6 Special-Purpose Address Registry](https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xhtml)
+- [IANA IPv4 Address Space Registry](https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml)
+- [IANA IPv6 Address Space Registry](https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml)
+- [IANA/IETF protocol-registry licensing terms](https://www.iana.org/help/licensing-terms)
 - [IANA Special-Use Domain Names Registry](https://www.iana.org/assignments/special-use-domain-names/special-use-domain-names.xhtml)
 - [RFC 9460: Service Binding and HTTPS DNS Resource Records](https://www.rfc-editor.org/rfc/rfc9460.html)
 - [RFC 7838: HTTP Alternative Services](https://www.rfc-editor.org/rfc/rfc7838.html)

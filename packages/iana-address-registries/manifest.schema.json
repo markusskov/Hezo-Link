@@ -1,0 +1,1135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:iana-address-registries:manifest:v1",
+  "title": "Hezo Link pinned IANA address-registry manifest V1",
+  "description": "Strict provenance, integrity, inventory, and safety manifest for the offline address-registry profile.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "manifestId",
+    "purpose",
+    "profileVersion",
+    "safety",
+    "validationRequirements",
+    "sourceRegistries",
+    "licensing",
+    "runtimeProjection",
+    "schemas",
+    "documentation"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "manifestId": {
+      "type": "string",
+      "const": "hezo-iana-address-registries-v1"
+    },
+    "purpose": {
+      "type": "string",
+      "const": "offline-address-registry-classification"
+    },
+    "profileVersion": {
+      "type": "string",
+      "const": "iana-2025-10-23-hezo-overlay-v1"
+    },
+    "safety": {
+      "$ref": "#/$defs/safety"
+    },
+    "validationRequirements": {
+      "$ref": "#/$defs/validationRequirements"
+    },
+    "sourceRegistries": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/ipv4SpecialSource"
+        },
+        {
+          "$ref": "#/$defs/ipv6SpecialSource"
+        },
+        {
+          "$ref": "#/$defs/ipv4AddressSpaceSource"
+        },
+        {
+          "$ref": "#/$defs/ipv6AddressSpaceSource"
+        }
+      ],
+      "items": false
+    },
+    "licensing": {
+      "$ref": "#/$defs/licensing"
+    },
+    "runtimeProjection": {
+      "$ref": "#/$defs/runtimeProjection"
+    },
+    "schemas": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/manifestSchemaArtifact"
+        },
+        {
+          "$ref": "#/$defs/profileSchemaArtifact"
+        }
+      ],
+      "items": false
+    },
+    "documentation": {
+      "$ref": "#/$defs/documentationArtifact"
+    }
+  },
+  "$defs": {
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtimeNetworkAccessPermitted",
+        "runtimeExternalDataAccessPermitted",
+        "runtimeSourceSnapshotParsingPermitted",
+        "containsUserData",
+        "containsSecrets",
+        "classificationOnly",
+        "failureBehavior"
+      ],
+      "properties": {
+        "runtimeNetworkAccessPermitted": {
+          "type": "boolean",
+          "const": false
+        },
+        "runtimeExternalDataAccessPermitted": {
+          "type": "boolean",
+          "const": false
+        },
+        "runtimeSourceSnapshotParsingPermitted": {
+          "type": "boolean",
+          "const": false
+        },
+        "containsUserData": {
+          "type": "boolean",
+          "const": false
+        },
+        "containsSecrets": {
+          "type": "boolean",
+          "const": false
+        },
+        "classificationOnly": {
+          "type": "boolean",
+          "const": true
+        },
+        "failureBehavior": {
+          "type": "string",
+          "const": "unavailable-on-missing-invalid-or-integrity-mismatched-resource"
+        }
+      }
+    },
+    "validationRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jsonSchemaDialect",
+        "strictSchemaModeRequired",
+        "duplicateJSONKeysRejected",
+        "digestVerificationRequired",
+        "countVerificationRequired",
+        "inventoryClosureRequired",
+        "lfLineEndingsRequired",
+        "finalNewlineRequired",
+        "sourceSnapshotsByteExact",
+        "runtimeProjectionByteEqualityRequired",
+        "companionSemanticValidationRequired",
+        "companionSemanticChecks"
+      ],
+      "properties": {
+        "jsonSchemaDialect": {
+          "type": "string",
+          "const": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "strictSchemaModeRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "duplicateJSONKeysRejected": {
+          "type": "boolean",
+          "const": true
+        },
+        "digestVerificationRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "countVerificationRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "inventoryClosureRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "lfLineEndingsRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "finalNewlineRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "sourceSnapshotsByteExact": {
+          "type": "boolean",
+          "const": true
+        },
+        "runtimeProjectionByteEqualityRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "companionSemanticValidationRequired": {
+          "type": "boolean",
+          "const": true
+        },
+        "companionSemanticChecks": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "prefixItems": [
+            {
+              "const": "duplicate-json-key-rejection"
+            },
+            {
+              "const": "manifest-inventory-closure"
+            },
+            {
+              "const": "file-identity-and-format"
+            },
+            {
+              "const": "source-registry-revision-and-counts"
+            },
+            {
+              "const": "deterministic-projection-regeneration"
+            },
+            {
+              "const": "prefix-normalization-and-order"
+            },
+            {
+              "const": "record-identity-uniqueness"
+            },
+            {
+              "const": "declared-count-coherence"
+            },
+            {
+              "const": "package-runtime-projection-byte-equality"
+            }
+          ],
+          "items": false
+        }
+      }
+    },
+    "fileIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pathBase",
+        "path",
+        "mediaType",
+        "encoding",
+        "byteCount",
+        "sha256",
+        "lineEnding",
+        "physicalLineCount",
+        "finalNewline"
+      ],
+      "properties": {
+        "pathBase": {
+          "type": "string",
+          "enum": [
+            "package-relative",
+            "repository-relative"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+        },
+        "mediaType": {
+          "type": "string",
+          "enum": [
+            "application/json",
+            "application/schema+json",
+            "application/xml",
+            "text/html",
+            "text/markdown",
+            "text/plain"
+          ]
+        },
+        "encoding": {
+          "type": "string",
+          "const": "UTF-8"
+        },
+        "byteCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "lineEnding": {
+          "type": "string",
+          "const": "LF"
+        },
+        "physicalLineCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "finalNewline": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "sourceRegistry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "family",
+        "kind",
+        "file",
+        "source",
+        "sourceRecordCount",
+        "projectedRecordCount",
+        "transformation"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "family": {
+          "type": "string",
+          "enum": [
+            "ipv4",
+            "ipv6"
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "special-purpose",
+            "address-space"
+          ]
+        },
+        "file": {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        "source": {
+          "$ref": "#/$defs/sourceIdentity"
+        },
+        "sourceRecordCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "projectedRecordCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "transformation": {
+          "type": "string",
+          "const": "byte-for-byte-copy-with-repository-filename-only"
+        }
+      }
+    },
+    "sourceIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publisher",
+        "sourceURL",
+        "revision",
+        "retrievedOn",
+        "licenseSpdx"
+      ],
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "const": "Internet Assigned Numbers Authority"
+        },
+        "sourceURL": {
+          "type": "string",
+          "pattern": "^https://www\\.iana\\.org/assignments/"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "retrievedOn": {
+          "type": "string",
+          "const": "2026-08-11"
+        },
+        "licenseSpdx": {
+          "type": "string",
+          "const": "CC0-1.0"
+        }
+      }
+    },
+    "ipv4SpecialSource": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceRegistry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "iana-ipv4-special-purpose"
+            },
+            "family": {
+              "const": "ipv4"
+            },
+            "kind": {
+              "const": "special-purpose"
+            },
+            "file": {
+              "$ref": "#/$defs/ipv4SpecialFile"
+            },
+            "source": {
+              "$ref": "#/$defs/ipv4SpecialIdentity"
+            },
+            "sourceRecordCount": {
+              "const": 25
+            },
+            "projectedRecordCount": {
+              "const": 26
+            }
+          }
+        }
+      ]
+    },
+    "ipv6SpecialSource": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceRegistry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "iana-ipv6-special-purpose"
+            },
+            "family": {
+              "const": "ipv6"
+            },
+            "kind": {
+              "const": "special-purpose"
+            },
+            "file": {
+              "$ref": "#/$defs/ipv6SpecialFile"
+            },
+            "source": {
+              "$ref": "#/$defs/ipv6SpecialIdentity"
+            },
+            "sourceRecordCount": {
+              "const": 25
+            },
+            "projectedRecordCount": {
+              "const": 25
+            }
+          }
+        }
+      ]
+    },
+    "ipv4AddressSpaceSource": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceRegistry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "iana-ipv4-address-space"
+            },
+            "family": {
+              "const": "ipv4"
+            },
+            "kind": {
+              "const": "address-space"
+            },
+            "file": {
+              "$ref": "#/$defs/ipv4AddressSpaceFile"
+            },
+            "source": {
+              "$ref": "#/$defs/ipv4AddressSpaceIdentity"
+            },
+            "sourceRecordCount": {
+              "const": 256
+            },
+            "projectedRecordCount": {
+              "const": 256
+            }
+          }
+        }
+      ]
+    },
+    "ipv6AddressSpaceSource": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceRegistry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "iana-ipv6-address-space"
+            },
+            "family": {
+              "const": "ipv6"
+            },
+            "kind": {
+              "const": "address-space"
+            },
+            "file": {
+              "$ref": "#/$defs/ipv6AddressSpaceFile"
+            },
+            "source": {
+              "$ref": "#/$defs/ipv6AddressSpaceIdentity"
+            },
+            "sourceRecordCount": {
+              "const": 20
+            },
+            "projectedRecordCount": {
+              "const": 20
+            }
+          }
+        }
+      ]
+    },
+    "licensing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spdxIdentifier",
+        "applicability",
+        "evidence",
+        "legalCode"
+      ],
+      "properties": {
+        "spdxIdentifier": {
+          "type": "string",
+          "const": "CC0-1.0"
+        },
+        "applicability": {
+          "type": "string",
+          "const": "iana-ietf-protocol-registry-data"
+        },
+        "evidence": {
+          "$ref": "#/$defs/licenseEvidence"
+        },
+        "legalCode": {
+          "$ref": "#/$defs/licenseLegalCode"
+        }
+      }
+    },
+    "licenseEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "sourceURL",
+        "sourceRevision",
+        "transformation"
+      ],
+      "properties": {
+        "file": {
+          "$ref": "#/$defs/licenseEvidenceFile"
+        },
+        "sourceURL": {
+          "type": "string",
+          "const": "https://www.iana.org/help/licensing-terms"
+        },
+        "sourceRevision": {
+          "type": "string",
+          "const": "2021-11-10"
+        },
+        "transformation": {
+          "type": "string",
+          "const": "byte-for-byte-copy-with-repository-filename-only"
+        }
+      }
+    },
+    "licenseLegalCode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "sourceURL",
+        "sourceRevision",
+        "transformation"
+      ],
+      "properties": {
+        "file": {
+          "$ref": "#/$defs/licenseLegalCodeFile"
+        },
+        "sourceURL": {
+          "type": "string",
+          "const": "https://creativecommons.org/publicdomain/zero/1.0/legalcode.txt"
+        },
+        "sourceRevision": {
+          "type": "string",
+          "const": "CC0 1.0 Universal"
+        },
+        "transformation": {
+          "type": "string",
+          "const": "byte-for-byte-copy-with-repository-filename-only"
+        }
+      }
+    },
+    "runtimeProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profileId",
+        "profileVersion",
+        "packageFile",
+        "runtimeResourceFile",
+        "counts",
+        "transformation"
+      ],
+      "properties": {
+        "profileId": {
+          "type": "string",
+          "const": "iana-address-profile-v1"
+        },
+        "profileVersion": {
+          "type": "string",
+          "const": "iana-2025-10-23-hezo-overlay-v1"
+        },
+        "packageFile": {
+          "$ref": "#/$defs/packageProjectionFile"
+        },
+        "runtimeResourceFile": {
+          "$ref": "#/$defs/runtimeProjectionFile"
+        },
+        "counts": {
+          "$ref": "#/$defs/profileCounts"
+        },
+        "transformation": {
+          "type": "string",
+          "const": "deterministic-normalization-and-byte-for-byte-runtime-copy"
+        }
+      }
+    },
+    "profileCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceRegistryCount",
+        "policyOverlayCount",
+        "recordCount",
+        "familyRecords",
+        "registryRecords",
+        "ipv4StatusCounts",
+        "ipv6AddressSpaceNameCounts"
+      ],
+      "properties": {
+        "sourceRegistryCount": {
+          "type": "integer",
+          "const": 4
+        },
+        "policyOverlayCount": {
+          "type": "integer",
+          "const": 2
+        },
+        "recordCount": {
+          "type": "integer",
+          "const": 329
+        },
+        "familyRecords": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ipv4",
+            "ipv6"
+          ],
+          "properties": {
+            "ipv4": {
+              "const": 283
+            },
+            "ipv6": {
+              "const": 46
+            }
+          }
+        },
+        "registryRecords": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "iana-ipv4-special-purpose",
+            "iana-ipv6-special-purpose",
+            "iana-ipv4-address-space",
+            "iana-ipv6-address-space",
+            "hezo-ipv4-multicast-overlay",
+            "hezo-ipv6-multicast-overlay"
+          ],
+          "properties": {
+            "iana-ipv4-special-purpose": {
+              "const": 26
+            },
+            "iana-ipv6-special-purpose": {
+              "const": 25
+            },
+            "iana-ipv4-address-space": {
+              "const": 256
+            },
+            "iana-ipv6-address-space": {
+              "const": 20
+            },
+            "hezo-ipv4-multicast-overlay": {
+              "const": 1
+            },
+            "hezo-ipv6-multicast-overlay": {
+              "const": 1
+            }
+          }
+        },
+        "ipv4StatusCounts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ALLOCATED",
+            "LEGACY",
+            "RESERVED"
+          ],
+          "properties": {
+            "ALLOCATED": {
+              "const": 129
+            },
+            "LEGACY": {
+              "const": 92
+            },
+            "RESERVED": {
+              "const": 35
+            }
+          }
+        },
+        "ipv6AddressSpaceNameCounts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Reserved by IETF",
+            "Global Unicast",
+            "Unique Local Unicast",
+            "Link-Scoped Unicast",
+            "Multicast"
+          ],
+          "properties": {
+            "Reserved by IETF": {
+              "const": 16
+            },
+            "Global Unicast": {
+              "const": 1
+            },
+            "Unique Local Unicast": {
+              "const": 1
+            },
+            "Link-Scoped Unicast": {
+              "const": 1
+            },
+            "Multicast": {
+              "const": 1
+            }
+          }
+        }
+      }
+    },
+    "schemaArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "dialect",
+        "file"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "manifest-schema",
+            "runtime-profile-schema"
+          ]
+        },
+        "dialect": {
+          "type": "string",
+          "const": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "file": {
+          "$ref": "#/$defs/fileIdentity"
+        }
+      }
+    },
+    "manifestSchemaArtifact": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/schemaArtifact"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "const": "manifest-schema"
+            },
+            "file": {
+              "$ref": "#/$defs/manifestSchemaFile"
+            }
+          }
+        }
+      ]
+    },
+    "profileSchemaArtifact": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/schemaArtifact"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "const": "runtime-profile-schema"
+            },
+            "file": {
+              "$ref": "#/$defs/profileSchemaFile"
+            }
+          }
+        }
+      ]
+    },
+    "documentationArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "file"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "const": "package-readme"
+        },
+        "file": {
+          "$ref": "#/$defs/readmeFile"
+        }
+      }
+    },
+    "ipv4SpecialFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "upstream/iana/iana-ipv4-special-registry-2025-10-09.xml"
+            },
+            "mediaType": {
+              "const": "application/xml"
+            }
+          }
+        }
+      ]
+    },
+    "ipv6SpecialFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "upstream/iana/iana-ipv6-special-registry-2025-10-09.xml"
+            },
+            "mediaType": {
+              "const": "application/xml"
+            }
+          }
+        }
+      ]
+    },
+    "ipv4AddressSpaceFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "upstream/iana/ipv4-address-space-2025-10-10.xml"
+            },
+            "mediaType": {
+              "const": "application/xml"
+            }
+          }
+        }
+      ]
+    },
+    "ipv6AddressSpaceFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "upstream/iana/ipv6-address-space-2025-10-23.xml"
+            },
+            "mediaType": {
+              "const": "application/xml"
+            }
+          }
+        }
+      ]
+    },
+    "licenseEvidenceFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "upstream/licensing/iana-ietf-protocol-registry-licensing-terms-2021-11-10.html"
+            },
+            "mediaType": {
+              "const": "text/html"
+            }
+          }
+        }
+      ]
+    },
+    "licenseLegalCodeFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "upstream/licensing/CC0-1.0-legalcode.txt"
+            },
+            "mediaType": {
+              "const": "text/plain"
+            }
+          }
+        }
+      ]
+    },
+    "packageProjectionFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "projection/iana-address-profile-v1.json"
+            },
+            "mediaType": {
+              "const": "application/json"
+            }
+          }
+        }
+      ]
+    },
+    "runtimeProjectionFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "repository-relative"
+            },
+            "path": {
+              "const": "Sources/HezoLinkCore/Resources/AddressRegistry/iana-address-profile-v1.json"
+            },
+            "mediaType": {
+              "const": "application/json"
+            }
+          }
+        }
+      ]
+    },
+    "manifestSchemaFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "manifest.schema.json"
+            },
+            "mediaType": {
+              "const": "application/schema+json"
+            }
+          }
+        }
+      ]
+    },
+    "profileSchemaFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "schemas/iana-address-profile-v1.schema.json"
+            },
+            "mediaType": {
+              "const": "application/schema+json"
+            }
+          }
+        }
+      ]
+    },
+    "readmeFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pathBase": {
+              "const": "package-relative"
+            },
+            "path": {
+              "const": "README.md"
+            },
+            "mediaType": {
+              "const": "text/markdown"
+            }
+          }
+        }
+      ]
+    },
+    "ipv4SpecialIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sourceURL": {
+              "const": "https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xml"
+            },
+            "revision": {
+              "const": "2025-10-09"
+            }
+          }
+        }
+      ]
+    },
+    "ipv6SpecialIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sourceURL": {
+              "const": "https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xml"
+            },
+            "revision": {
+              "const": "2025-10-09"
+            }
+          }
+        }
+      ]
+    },
+    "ipv4AddressSpaceIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sourceURL": {
+              "const": "https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xml"
+            },
+            "revision": {
+              "const": "2025-10-10"
+            }
+          }
+        }
+      ]
+    },
+    "ipv6AddressSpaceIdentity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceIdentity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sourceURL": {
+              "const": "https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xml"
+            },
+            "revision": {
+              "const": "2025-10-23"
+            }
+          }
+        }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

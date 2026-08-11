@@ -1,0 +1,914 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:iana-address-profile:v1",
+  "title": "Hezo Link IANA address profile V1",
+  "description": "Strict schema for the deterministic, offline IANA address-registry projection bundled by Hezo Link.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "profileId",
+    "profileVersion",
+    "projectionAlgorithmVersion",
+    "purpose",
+    "sourceRegistries",
+    "policyOverlays",
+    "counts",
+    "records"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "profileId": {
+      "type": "string",
+      "const": "iana-address-profile-v1"
+    },
+    "profileVersion": {
+      "type": "string",
+      "const": "iana-2025-10-23-hezo-overlay-v1"
+    },
+    "projectionAlgorithmVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "purpose": {
+      "type": "string",
+      "const": "offline-address-classification"
+    },
+    "sourceRegistries": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/ipv4SpecialRegistry"
+        },
+        {
+          "$ref": "#/$defs/ipv6SpecialRegistry"
+        },
+        {
+          "$ref": "#/$defs/ipv4AddressSpaceRegistry"
+        },
+        {
+          "$ref": "#/$defs/ipv6AddressSpaceRegistry"
+        }
+      ],
+      "items": false
+    },
+    "policyOverlays": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/ipv4MulticastOverlay"
+        },
+        {
+          "$ref": "#/$defs/ipv6MulticastOverlay"
+        }
+      ],
+      "items": false
+    },
+    "counts": {
+      "$ref": "#/$defs/counts"
+    },
+    "records": {
+      "type": "array",
+      "minItems": 329,
+      "maxItems": 329,
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    }
+  },
+  "$defs": {
+    "sourceRegistry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "family",
+        "kind",
+        "revision",
+        "sourceURL",
+        "snapshotPath",
+        "snapshotSha256",
+        "sourceRecordCount",
+        "projectedRecordCount"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "family": {
+          "type": "string",
+          "enum": [
+            "ipv4",
+            "ipv6"
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "special-purpose",
+            "address-space"
+          ]
+        },
+        "revision": {
+          "$ref": "#/$defs/revisionDate"
+        },
+        "sourceURL": {
+          "type": "string",
+          "pattern": "^https://www\\.iana\\.org/assignments/"
+        },
+        "snapshotPath": {
+          "type": "string",
+          "pattern": "^upstream/iana/[A-Za-z0-9._-]+\\.xml$"
+        },
+        "snapshotSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sourceRecordCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "projectedRecordCount": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "ipv4SpecialRegistry": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceRegistry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "iana-ipv4-special-purpose"
+            },
+            "family": {
+              "const": "ipv4"
+            },
+            "kind": {
+              "const": "special-purpose"
+            },
+            "revision": {
+              "const": "2025-10-09"
+            },
+            "sourceURL": {
+              "const": "https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xml"
+            },
+            "snapshotPath": {
+              "const": "upstream/iana/iana-ipv4-special-registry-2025-10-09.xml"
+            },
+            "snapshotSha256": {
+              "const": "cf24e11f41b7d42c68debe2d18b97cac815084ec413ebb3b244f704028a16f20"
+            },
+            "sourceRecordCount": {
+              "const": 25
+            },
+            "projectedRecordCount": {
+              "const": 26
+            }
+          }
+        }
+      ]
+    },
+    "ipv6SpecialRegistry": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceRegistry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "iana-ipv6-special-purpose"
+            },
+            "family": {
+              "const": "ipv6"
+            },
+            "kind": {
+              "const": "special-purpose"
+            },
+            "revision": {
+              "const": "2025-10-09"
+            },
+            "sourceURL": {
+              "const": "https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xml"
+            },
+            "snapshotPath": {
+              "const": "upstream/iana/iana-ipv6-special-registry-2025-10-09.xml"
+            },
+            "snapshotSha256": {
+              "const": "c17f4380ba84fb2160dae82ebfd8bd155a5853cfab624ed3a9fd251638a8be02"
+            },
+            "sourceRecordCount": {
+              "const": 25
+            },
+            "projectedRecordCount": {
+              "const": 25
+            }
+          }
+        }
+      ]
+    },
+    "ipv4AddressSpaceRegistry": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceRegistry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "iana-ipv4-address-space"
+            },
+            "family": {
+              "const": "ipv4"
+            },
+            "kind": {
+              "const": "address-space"
+            },
+            "revision": {
+              "const": "2025-10-10"
+            },
+            "sourceURL": {
+              "const": "https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xml"
+            },
+            "snapshotPath": {
+              "const": "upstream/iana/ipv4-address-space-2025-10-10.xml"
+            },
+            "snapshotSha256": {
+              "const": "8ca3774374c81e4a673bb12d0eb415e7ac9970c6f5a6ceb14106de64b2cb3dcd"
+            },
+            "sourceRecordCount": {
+              "const": 256
+            },
+            "projectedRecordCount": {
+              "const": 256
+            }
+          }
+        }
+      ]
+    },
+    "ipv6AddressSpaceRegistry": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceRegistry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "iana-ipv6-address-space"
+            },
+            "family": {
+              "const": "ipv6"
+            },
+            "kind": {
+              "const": "address-space"
+            },
+            "revision": {
+              "const": "2025-10-23"
+            },
+            "sourceURL": {
+              "const": "https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xml"
+            },
+            "snapshotPath": {
+              "const": "upstream/iana/ipv6-address-space-2025-10-23.xml"
+            },
+            "snapshotSha256": {
+              "const": "15481d1e549b481f3bd0321c5cd2c0327a00cbd3d5a6fc35fc7b53b51e70b1cb"
+            },
+            "sourceRecordCount": {
+              "const": 20
+            },
+            "projectedRecordCount": {
+              "const": 20
+            }
+          }
+        }
+      ]
+    },
+    "policyOverlay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "family",
+        "revision",
+        "sourceURL",
+        "prefix"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "family": {
+          "type": "string",
+          "enum": [
+            "ipv4",
+            "ipv6"
+          ]
+        },
+        "revision": {
+          "type": "string"
+        },
+        "sourceURL": {
+          "type": "string",
+          "pattern": "^https://www\\.rfc-editor\\.org/rfc/"
+        },
+        "prefix": {
+          "type": "string"
+        }
+      }
+    },
+    "ipv4MulticastOverlay": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/policyOverlay"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "hezo-ipv4-multicast-overlay"
+            },
+            "family": {
+              "const": "ipv4"
+            },
+            "revision": {
+              "const": "RFC 1112, Section 4"
+            },
+            "sourceURL": {
+              "const": "https://www.rfc-editor.org/rfc/rfc1112.html#section-4"
+            },
+            "prefix": {
+              "const": "224.0.0.0/4"
+            }
+          }
+        }
+      ]
+    },
+    "ipv6MulticastOverlay": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/policyOverlay"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "hezo-ipv6-multicast-overlay"
+            },
+            "family": {
+              "const": "ipv6"
+            },
+            "revision": {
+              "const": "RFC 4291, Section 2.7"
+            },
+            "sourceURL": {
+              "const": "https://www.rfc-editor.org/rfc/rfc4291.html#section-2.7"
+            },
+            "prefix": {
+              "const": "ff00::/8"
+            }
+          }
+        }
+      ]
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceRegistryCount",
+        "policyOverlayCount",
+        "recordCount",
+        "familyRecords",
+        "registryRecords"
+      ],
+      "properties": {
+        "sourceRegistryCount": {
+          "type": "integer",
+          "const": 4
+        },
+        "policyOverlayCount": {
+          "type": "integer",
+          "const": 2
+        },
+        "recordCount": {
+          "type": "integer",
+          "const": 329
+        },
+        "familyRecords": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ipv4",
+            "ipv6"
+          ],
+          "properties": {
+            "ipv4": {
+              "type": "integer",
+              "const": 283
+            },
+            "ipv6": {
+              "type": "integer",
+              "const": 46
+            }
+          }
+        },
+        "registryRecords": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "iana-ipv4-special-purpose",
+            "iana-ipv6-special-purpose",
+            "iana-ipv4-address-space",
+            "iana-ipv6-address-space",
+            "hezo-ipv4-multicast-overlay",
+            "hezo-ipv6-multicast-overlay"
+          ],
+          "properties": {
+            "iana-ipv4-special-purpose": {
+              "type": "integer",
+              "const": 26
+            },
+            "iana-ipv6-special-purpose": {
+              "type": "integer",
+              "const": 25
+            },
+            "iana-ipv4-address-space": {
+              "type": "integer",
+              "const": 256
+            },
+            "iana-ipv6-address-space": {
+              "type": "integer",
+              "const": 20
+            },
+            "hezo-ipv4-multicast-overlay": {
+              "type": "integer",
+              "const": 1
+            },
+            "hezo-ipv6-multicast-overlay": {
+              "type": "integer",
+              "const": 1
+            }
+          }
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registryId",
+        "sourceRecordIndex",
+        "family",
+        "prefixLength",
+        "networkBytesHex",
+        "name",
+        "status",
+        "allocationDate",
+        "terminationDate",
+        "flags"
+      ],
+      "properties": {
+        "registryId": {
+          "type": "string",
+          "enum": [
+            "iana-ipv4-special-purpose",
+            "iana-ipv6-special-purpose",
+            "iana-ipv4-address-space",
+            "iana-ipv6-address-space",
+            "hezo-ipv4-multicast-overlay",
+            "hezo-ipv6-multicast-overlay"
+          ]
+        },
+        "sourceRecordIndex": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "family": {
+          "type": "string",
+          "enum": [
+            "ipv4",
+            "ipv6"
+          ]
+        },
+        "prefixLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 128
+        },
+        "networkBytesHex": {
+          "type": "string",
+          "pattern": "^[0-9a-f]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "status": {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "ALLOCATED",
+                "LEGACY",
+                "RESERVED",
+                "POLICY-OVERLAY"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "allocationDate": {
+          "$ref": "#/$defs/nullableRegistryDate"
+        },
+        "terminationDate": {
+          "$ref": "#/$defs/nullableRegistryDate"
+        },
+        "flags": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/specialPurposeFlags"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "ipv4"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "prefixLength": {
+                "type": "integer",
+                "maximum": 32
+              },
+              "networkBytesHex": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}$"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "prefixLength": {
+                "type": "integer",
+                "maximum": 128
+              },
+              "networkBytesHex": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{32}$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "registryId": {
+                "const": "iana-ipv4-special-purpose"
+              }
+            },
+            "required": [
+              "registryId"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/specialIpv4Record"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "registryId": {
+                "const": "iana-ipv6-special-purpose"
+              }
+            },
+            "required": [
+              "registryId"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/specialIpv6Record"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "registryId": {
+                "const": "iana-ipv4-address-space"
+              }
+            },
+            "required": [
+              "registryId"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/addressSpaceIpv4Record"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "registryId": {
+                "const": "iana-ipv6-address-space"
+              }
+            },
+            "required": [
+              "registryId"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/addressSpaceIpv6Record"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "registryId": {
+                "const": "hezo-ipv4-multicast-overlay"
+              }
+            },
+            "required": [
+              "registryId"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/overlayIpv4Record"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "registryId": {
+                "const": "hezo-ipv6-multicast-overlay"
+              }
+            },
+            "required": [
+              "registryId"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/overlayIpv6Record"
+          }
+        }
+      ]
+    },
+    "specialIpv4Record": {
+      "type": "object",
+      "properties": {
+        "sourceRecordIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "family": {
+          "const": "ipv4"
+        },
+        "status": {
+          "type": "null"
+        },
+        "allocationDate": {
+          "$ref": "#/$defs/registryDate"
+        },
+        "flags": {
+          "$ref": "#/$defs/specialPurposeFlags"
+        }
+      }
+    },
+    "specialIpv6Record": {
+      "type": "object",
+      "properties": {
+        "sourceRecordIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "family": {
+          "const": "ipv6"
+        },
+        "status": {
+          "type": "null"
+        },
+        "allocationDate": {
+          "$ref": "#/$defs/registryDate"
+        },
+        "flags": {
+          "$ref": "#/$defs/specialPurposeFlags"
+        }
+      }
+    },
+    "addressSpaceIpv4Record": {
+      "type": "object",
+      "properties": {
+        "sourceRecordIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "family": {
+          "const": "ipv4"
+        },
+        "prefixLength": {
+          "const": 8
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ALLOCATED",
+            "LEGACY",
+            "RESERVED"
+          ]
+        },
+        "allocationDate": {
+          "$ref": "#/$defs/registryDate"
+        },
+        "terminationDate": {
+          "type": "null"
+        },
+        "flags": {
+          "type": "null"
+        }
+      }
+    },
+    "addressSpaceIpv6Record": {
+      "type": "object",
+      "properties": {
+        "sourceRecordIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 19
+        },
+        "family": {
+          "const": "ipv6"
+        },
+        "status": {
+          "type": "null"
+        },
+        "allocationDate": {
+          "type": "null"
+        },
+        "terminationDate": {
+          "type": "null"
+        },
+        "flags": {
+          "type": "null"
+        }
+      }
+    },
+    "overlayIpv4Record": {
+      "type": "object",
+      "properties": {
+        "sourceRecordIndex": {
+          "type": "null"
+        },
+        "family": {
+          "const": "ipv4"
+        },
+        "prefixLength": {
+          "const": 4
+        },
+        "networkBytesHex": {
+          "const": "e0000000"
+        },
+        "name": {
+          "const": "Multicast"
+        },
+        "status": {
+          "const": "POLICY-OVERLAY"
+        },
+        "allocationDate": {
+          "type": "null"
+        },
+        "terminationDate": {
+          "type": "null"
+        },
+        "flags": {
+          "type": "null"
+        }
+      }
+    },
+    "overlayIpv6Record": {
+      "type": "object",
+      "properties": {
+        "sourceRecordIndex": {
+          "type": "null"
+        },
+        "family": {
+          "const": "ipv6"
+        },
+        "prefixLength": {
+          "const": 8
+        },
+        "networkBytesHex": {
+          "const": "ff000000000000000000000000000000"
+        },
+        "name": {
+          "const": "Multicast"
+        },
+        "status": {
+          "const": "POLICY-OVERLAY"
+        },
+        "allocationDate": {
+          "type": "null"
+        },
+        "terminationDate": {
+          "type": "null"
+        },
+        "flags": {
+          "type": "null"
+        }
+      }
+    },
+    "specialPurposeFlags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "destination",
+        "forwardable",
+        "globallyReachable",
+        "reservedByProtocol"
+      ],
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/flagValue"
+        },
+        "destination": {
+          "$ref": "#/$defs/flagValue"
+        },
+        "forwardable": {
+          "$ref": "#/$defs/flagValue"
+        },
+        "globallyReachable": {
+          "$ref": "#/$defs/flagValue"
+        },
+        "reservedByProtocol": {
+          "$ref": "#/$defs/flagValue"
+        }
+      }
+    },
+    "flagValue": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false",
+        "not-applicable",
+        "unspecified"
+      ]
+    },
+    "revisionDate": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "registryDate": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}(?:-[0-9]{2})?$"
+    },
+    "nullableRegistryDate": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/registryDate"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
