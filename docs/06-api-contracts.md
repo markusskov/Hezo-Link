@@ -173,6 +173,17 @@ No aliases such as `safe`, `likely_safe`, `allow`, `warn`, `block`, `malicious`,
 
 `recommended_action` is separate and may be `allow`, `warn`, `avoid`, or `retry`. `allow` means proceed with ordinary care after `no_known_danger`; it never promises safety. The check response does not expose automatic block eligibility. That is a separately versioned internal decision.
 
+V1 admits only these label/action pairs:
+
+| `label` | Allowed `recommended_action` | Rule |
+|---|---|---|
+| `unknown` | `warn`, `retry` | Use `warn` for terminal uncertainty; use `retry` only when surrounding operational state says another attempt may help. |
+| `no_known_danger` | `allow` | Proceed with ordinary care; never a safety promise. |
+| `caution` | `warn` | Present the bounded warning without upgrading the result to Dangerous. |
+| `dangerous` | `avoid` | Recommend avoiding the target; this is not automatic-block authority. |
+
+Every other label/action pair is invalid. The standalone Verdict object enforces this admission matrix but cannot choose `warn` versus `retry` for Unknown without the surrounding operational/completeness state.
+
 `confidence` is a bounded category such as `low`, `medium`, or `high`, not an internal score or consumer probability. Reasons use stable codes and localization keys, the grammar above, and a maximum of five items. Server fallback copy is bounded and derived only from approved reason data.
 
 The primitive label, action, and reason models do not by themselves authorize a complete verdict. The completed-check envelope must validate label/action coherence and may serialize `no_known_danger` only when the selected profile's completeness and freshness requirements are satisfied. A standalone primitive must never be treated as that evidence-bearing authorization.

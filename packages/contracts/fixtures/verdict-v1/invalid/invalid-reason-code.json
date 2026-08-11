@@ -1,0 +1,16 @@
+{
+  "label": "caution",
+  "recommended_action": "warn",
+  "confidence": "medium",
+  "evaluated_scope": "exact_url",
+  "reasons": [
+    {
+      "code": "Synthetic_reason",
+      "family": "synthetic_evidence",
+      "severity": "low",
+      "summary_key": "verdict.reason.synthetic_reason_one",
+      "observed_at": "2000-01-01T00:00:01Z",
+      "freshness": "current"
+    }
+  ]
+}

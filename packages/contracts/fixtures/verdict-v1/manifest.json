@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "contract": "verdict-v1",
+  "contract_schema": "../../schemas/verdict-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-unknown-warn",
+      "path": "valid/unknown-warn.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-unknown-retry",
+      "path": "valid/unknown-retry.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-no-known-danger-allow",
+      "path": "valid/no-known-danger-allow.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-caution-warn",
+      "path": "valid/caution-warn.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-dangerous-avoid",
+      "path": "valid/dangerous-avoid.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-pair-unknown-allow",
+      "path": "invalid/pair-unknown-allow.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "enum",
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-unknown-avoid",
+      "path": "invalid/pair-unknown-avoid.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "enum",
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-no-known-danger-warn",
+      "path": "invalid/pair-no-known-danger-warn.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-no-known-danger-avoid",
+      "path": "invalid/pair-no-known-danger-avoid.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "enum",
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-no-known-danger-retry",
+      "path": "invalid/pair-no-known-danger-retry.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-caution-allow",
+      "path": "invalid/pair-caution-allow.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "enum",
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-caution-avoid",
+      "path": "invalid/pair-caution-avoid.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "enum",
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-caution-retry",
+      "path": "invalid/pair-caution-retry.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-dangerous-allow",
+      "path": "invalid/pair-dangerous-allow.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "enum",
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-dangerous-warn",
+      "path": "invalid/pair-dangerous-warn.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-pair-dangerous-retry",
+      "path": "invalid/pair-dangerous-retry.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-block-eligible-field",
+      "path": "invalid/block-eligible-field.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-missing-reasons",
+      "path": "invalid/missing-reasons.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-wrong-top-level-type",
+      "path": "invalid/wrong-top-level-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-label-alias-safe",
+      "path": "invalid/label-alias-safe.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "enum",
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-action-alias-block",
+      "path": "invalid/action-alias-block.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "enum",
+        "const",
+        "oneOf"
+      ]
+    },
+    {
+      "id": "reject-confidence-uppercase",
+      "path": "invalid/confidence-uppercase.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-evaluated-scope-uppercase",
+      "path": "invalid/evaluated-scope-uppercase.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-null-reasons",
+      "path": "invalid/null-reasons.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-too-many-reasons",
+      "path": "invalid/too-many-reasons.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxItems"
+    },
+    {
+      "id": "reject-invalid-reason-code",
+      "path": "invalid/invalid-reason-code.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-reason-unknown-field",
+      "path": "invalid/reason-unknown-field.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    }
+  ]
+}

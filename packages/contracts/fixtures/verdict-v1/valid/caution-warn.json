@@ -1,0 +1,40 @@
+{
+  "label": "caution",
+  "recommended_action": "warn",
+  "confidence": "medium",
+  "evaluated_scope": "exact_url",
+  "reasons": [
+    {
+      "code": "synthetic_reason_two",
+      "family": "synthetic_evidence",
+      "severity": "medium",
+      "summary_key": "verdict.reason.synthetic_reason_two",
+      "observed_at": "2000-01-01T00:00:02Z",
+      "freshness": "recent"
+    },
+    {
+      "code": "synthetic_reason_one",
+      "family": "synthetic_evidence",
+      "severity": "low",
+      "summary_key": "verdict.reason.synthetic_reason_one",
+      "observed_at": "2000-01-01T00:00:01Z",
+      "freshness": "current"
+    },
+    {
+      "code": "synthetic_reason_two",
+      "family": "synthetic_evidence",
+      "severity": "medium",
+      "summary_key": "verdict.reason.synthetic_reason_two",
+      "observed_at": "2000-01-01T00:00:02Z",
+      "freshness": "recent"
+    },
+    {
+      "code": "synthetic_reason_three",
+      "family": "synthetic_evidence",
+      "severity": "high",
+      "summary_key": "verdict.reason.synthetic_reason_three",
+      "observed_at": "2000-01-01T00:00:03Z",
+      "freshness": "current"
+    }
+  ]
+}

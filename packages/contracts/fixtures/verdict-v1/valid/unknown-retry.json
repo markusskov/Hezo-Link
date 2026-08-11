@@ -1,0 +1,7 @@
+{
+  "label": "unknown",
+  "recommended_action": "retry",
+  "confidence": "low",
+  "evaluated_scope": "exact_url",
+  "reasons": []
+}
