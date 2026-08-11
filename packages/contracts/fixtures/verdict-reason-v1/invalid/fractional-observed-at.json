@@ -1,0 +1,8 @@
+{
+  "code": "brand_impersonation_unrelated_domain",
+  "family": "identity_impersonation",
+  "severity": "high",
+  "summary_key": "verdict.reason.brand_impersonation_unrelated_domain",
+  "observed_at": "2000-02-29T23:59:59.001Z",
+  "freshness": "current"
+}

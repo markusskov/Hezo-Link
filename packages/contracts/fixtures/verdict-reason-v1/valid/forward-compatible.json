@@ -1,0 +1,8 @@
+{
+  "code": "synthetic_signal_v2",
+  "family": "future_analysis",
+  "severity": "advisory",
+  "summary_key": "verdict.reason.synthetic_signal_v2",
+  "observed_at": "2001-01-01T00:00:00Z",
+  "freshness": "recently_observed"
+}

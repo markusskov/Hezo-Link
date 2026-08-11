@@ -1,6 +1,6 @@
 # Hezo Link contract components
 
-This directory is the public, offline source of truth for the first check-input and problem wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
+This directory is the public, offline source of truth for the first check-input, problem, and verdict-reason wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
 
 ## Artifacts
 
@@ -9,10 +9,12 @@ This directory is the public, offline source of truth for the first check-input 
 - `fixtures/check-request-v1/manifest.json` lists deterministic, reserved-domain valid and invalid examples and their expected schema result.
 - `schemas/problem-v1.schema.json` is the strict Draft 2020-12 RFC 9457-style problem schema.
 - `fixtures/problem-v1/manifest.json` lists deterministic problem examples and the schema keyword or keyword set each invalid example exercises.
+- `schemas/verdict-reason-v1.schema.json` is the strict Draft 2020-12 public verdict-reason schema.
+- `fixtures/verdict-reason-v1/manifest.json` lists deterministic verdict-reason boundary examples and the exact schema keyword or keyword set each invalid example exercises.
 
 The OpenAPI components reference the standalone JSON Schemas so there is one definition of each public shape to keep current.
 
-`CheckRequestContractAssetTests` and `ProblemContractAssetTests` run in both SwiftPM and the shared Xcode scheme. They pin the exact V1 schema surfaces, resolve the OpenAPI and manifest references, check complete unique fixture coverage, and independently evaluate every declared fixture result and failure keyword set. These tests are deliberately limited to the frozen contract subsets; they are not a general JSON Schema implementation. Expanding the schema vocabulary requires a versioned contract change and selected strict Draft 2020-12 validation tooling rather than silently widening the local evaluators.
+`CheckRequestContractAssetTests`, `ProblemContractAssetTests`, and `VerdictReasonContractAssetTests` run in both SwiftPM and the shared Xcode scheme. They pin the exact V1 schema surfaces, resolve the OpenAPI and manifest references, check complete unique fixture coverage, and independently evaluate every declared fixture result and failure keyword set. These tests are deliberately limited to the frozen contract subsets; they are not a general JSON Schema implementation. Expanding the schema vocabulary requires a versioned contract change and selected strict Draft 2020-12 validation tooling rather than silently widening the local evaluators.
 
 ## Check request V1
 
@@ -50,6 +52,23 @@ Draft 2020-12 `minLength` and `maxLength` count Unicode code points, not UTF-8 b
 
 The schema uses the standard `uri-reference` format for `type`. Strict validation of the fixture manifest therefore requires a Draft 2020-12 validator configured to assert formats, not one that treats `format` as annotation only. The accompanying ASCII pattern is an independent allowed-character constraint; it does not replace RFC 3986 syntax validation.
 
+## Verdict reason V1
+
+Every verdict reason is a JSON object with exactly these required fields:
+
+- `code`: a forward-compatible stable reason code.
+- `family`: a forward-compatible reason family.
+- `severity`: a forward-compatible reason severity.
+- `summary_key`: a dot-separated localization key for approved copy.
+- `observed_at`: the canonical UTC whole-second instant when the supporting fact was observed.
+- `freshness`: a forward-compatible evidence-freshness category.
+
+`code`, `family`, `severity`, and `freshness` use the lower-snake-case ASCII grammar: one through 128 bytes, beginning with a lowercase letter, with no doubled or trailing underscore. They are deliberately not enums so new valid stable values remain additive. Each `summary_key` segment uses the same grammar and one-through-128-byte bound; the complete dot-separated key is at most 256 bytes. Unknown fields are rejected by the public server schema.
+
+`observed_at` has the exact `YYYY-MM-DDTHH:mm:ssZ` wire shape. Strict validation must assert the standard `date-time` format as well as the exact pattern: the pattern rejects fractions, offsets, and lowercase `z`, while format validation rejects impossible calendar instants. All bounded string grammars are ASCII, so the schema's code-point limits equal their UTF-8 byte limits.
+
+This standalone reason primitive does not define or authorize a complete verdict or check-response envelope.
+
 ## Explicit exclusions
 
-These artifacts contain only request and problem shapes with reserved-domain examples. They define no endpoint, deployment, I/O behavior, identity material, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
+These artifacts contain only request, problem, and verdict-reason shapes with reserved or synthetic examples. They define no endpoint, deployment, I/O behavior, identity material, complete verdict envelope, check-response envelope, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
