@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:check-response-status:v1",
+  "title": "Hezo Link check response status V1",
+  "description": "Exact standalone check-response status primitive. This value alone defines no endpoint, response branch, HTTP status, token, retry behavior, or check-response envelope.",
+  "type": "string",
+  "enum": [
+    "complete",
+    "pending"
+  ]
+}
