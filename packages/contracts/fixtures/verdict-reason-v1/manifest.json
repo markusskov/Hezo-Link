@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "contract": "verdict-reason-v1",
+  "contract_schema": "../../schemas/verdict-reason-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-documented",
+      "path": "valid/documented.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-forward-compatible",
+      "path": "valid/forward-compatible.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-maximum-boundaries",
+      "path": "valid/maximum-boundaries.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-unknown-field",
+      "path": "invalid/unknown-field.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-missing-observed-at",
+      "path": "invalid/missing-observed-at.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-null-family",
+      "path": "invalid/null-family.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-wrong-type-severity",
+      "path": "invalid/wrong-type-severity.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-empty-code",
+      "path": "invalid/empty-code.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "minLength",
+        "pattern"
+      ]
+    },
+    {
+      "id": "reject-code-uppercase",
+      "path": "invalid/code-uppercase.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-family-leading-digit",
+      "path": "invalid/family-leading-digit.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-severity-double-underscore",
+      "path": "invalid/severity-double-underscore.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-freshness-trailing-underscore",
+      "path": "invalid/freshness-trailing-underscore.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-oversized-code",
+      "path": "invalid/oversized-code.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    },
+    {
+      "id": "reject-summary-key-double-dot",
+      "path": "invalid/summary-key-double-dot.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-summary-key-uppercase-segment",
+      "path": "invalid/summary-key-uppercase-segment.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-summary-key-oversized-segment",
+      "path": "invalid/summary-key-oversized-segment.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-summary-key-oversized-total",
+      "path": "invalid/summary-key-oversized-total.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    },
+    {
+      "id": "reject-fractional-observed-at",
+      "path": "invalid/fractional-observed-at.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-offset-observed-at",
+      "path": "invalid/offset-observed-at.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-lowercase-z-observed-at",
+      "path": "invalid/lowercase-z-observed-at.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-impossible-observed-at",
+      "path": "invalid/impossible-observed-at.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-wrong-type-observed-at",
+      "path": "invalid/wrong-type-observed-at.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    }
+  ]
+}

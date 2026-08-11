@@ -26,13 +26,13 @@ struct CheckRequestContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.1.0")
+    #expect(info["version"] as? String == "1.2.0")
     #expect(try requireString(info["description"]).isEmpty == false)
 
     let components = try requireObject(openAPI["components"])
     #expect(Set(components.keys) == ["schemas"])
     let schemas = try requireObject(components["schemas"])
-    #expect(Set(schemas.keys) == ["CheckRequestV1", "ProblemV1"])
+    #expect(Set(schemas.keys) == ["CheckRequestV1", "ProblemV1", "VerdictReasonV1"])
     let checkRequest = try requireObject(schemas["CheckRequestV1"])
     #expect(Set(checkRequest.keys) == ["$ref"])
     #expect(checkRequest["$ref"] as? String == "./schemas/check-request-v1.schema.json")
@@ -40,6 +40,12 @@ struct CheckRequestContractAssetTests {
     let problem = try requireObject(schemas["ProblemV1"])
     #expect(Set(problem.keys) == ["$ref"])
     #expect(problem["$ref"] as? String == "./schemas/problem-v1.schema.json")
+
+    let verdictReason = try requireObject(schemas["VerdictReasonV1"])
+    #expect(Set(verdictReason.keys) == ["$ref"])
+    #expect(
+      verdictReason["$ref"] as? String == "./schemas/verdict-reason-v1.schema.json"
+    )
 
     let openAPIURL = repositoryRoot.appendingPathComponent(
       "packages/contracts/openapi-components.json"
@@ -61,6 +67,15 @@ struct CheckRequestContractAssetTests {
     ).standardizedFileURL
     #expect(referencedProblemSchemaURL == problemSchemaURL)
     #expect(FileManager.default.fileExists(atPath: referencedProblemSchemaURL.path))
+
+    let referencedVerdictReasonSchemaURL = openAPIURL.deletingLastPathComponent()
+      .appendingPathComponent("schemas/verdict-reason-v1.schema.json")
+      .standardizedFileURL
+    let verdictReasonSchemaURL = repositoryRoot.appendingPathComponent(
+      "packages/contracts/schemas/verdict-reason-v1.schema.json"
+    ).standardizedFileURL
+    #expect(referencedVerdictReasonSchemaURL == verdictReasonSchemaURL)
+    #expect(FileManager.default.fileExists(atPath: referencedVerdictReasonSchemaURL.path))
 
     #expect(
       Set(schema.keys)
@@ -477,6 +492,273 @@ struct ProblemContractAssetTests {
   }
 }
 
+struct VerdictReasonContractAssetTests {
+  @Test func schemaAndOpenAPIKeepTheFrozenVerdictReasonV1Surface() throws {
+    let openAPI = try loadObject("packages/contracts/openapi-components.json")
+    let schema = try loadObject("packages/contracts/schemas/verdict-reason-v1.schema.json")
+
+    let info = try requireObject(openAPI["info"])
+    #expect(info["title"] as? String == "Hezo Link public contract components")
+    #expect(info["version"] as? String == "1.2.0")
+    #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
+    #expect(openAPI["servers"] == nil)
+    #expect(openAPI["security"] == nil)
+
+    let components = try requireObject(openAPI["components"])
+    let schemas = try requireObject(components["schemas"])
+    #expect(Set(schemas.keys) == ["CheckRequestV1", "ProblemV1", "VerdictReasonV1"])
+    let verdictReason = try requireObject(schemas["VerdictReasonV1"])
+    #expect(Set(verdictReason.keys) == ["$ref"])
+    #expect(
+      verdictReason["$ref"] as? String == "./schemas/verdict-reason-v1.schema.json"
+    )
+
+    let openAPIURL = repositoryRoot.appendingPathComponent(
+      "packages/contracts/openapi-components.json"
+    )
+    let referencedSchemaURL = openAPIURL.deletingLastPathComponent()
+      .appendingPathComponent("schemas/verdict-reason-v1.schema.json")
+      .standardizedFileURL
+    let schemaURL = repositoryRoot.appendingPathComponent(
+      "packages/contracts/schemas/verdict-reason-v1.schema.json"
+    ).standardizedFileURL
+    #expect(referencedSchemaURL == schemaURL)
+    #expect(FileManager.default.fileExists(atPath: referencedSchemaURL.path))
+
+    #expect(
+      Set(schema.keys)
+        == [
+          "$schema", "$id", "title", "description", "type", "additionalProperties",
+          "required", "properties",
+        ]
+    )
+    #expect(schema["$schema"] as? String == "https://json-schema.org/draft/2020-12/schema")
+    #expect(schema["$id"] as? String == "urn:hezo-link:contract:verdict-reason:v1")
+    #expect(schema["title"] as? String == "Hezo Link verdict reason V1")
+    #expect(try requireString(schema["description"]).isEmpty == false)
+    #expect(schema["type"] as? String == "object")
+    #expect(try requireBool(schema["additionalProperties"]) == false)
+
+    let expectedFields: Set<String> = [
+      "code", "family", "severity", "summary_key", "observed_at", "freshness",
+    ]
+    let required = try requireStringArray(schema["required"])
+    #expect(required.count == expectedFields.count)
+    #expect(Set(required) == expectedFields)
+
+    let properties = try requireObject(schema["properties"])
+    #expect(Set(properties.keys) == expectedFields)
+    for field in ["code", "family", "severity", "freshness"] {
+      try expectStableVerdictReasonProperty(properties[field])
+    }
+
+    let summaryKey = try requireObject(properties["summary_key"])
+    #expect(
+      Set(summaryKey.keys)
+        == ["type", "minLength", "maxLength", "pattern", "description"]
+    )
+    #expect(summaryKey["type"] as? String == "string")
+    #expect(integerValue(summaryKey["minLength"]) == 1)
+    #expect(integerValue(summaryKey["maxLength"]) == 256)
+    #expect(summaryKey["pattern"] as? String == verdictReasonSummaryKeyPattern)
+    #expect(try requireString(summaryKey["description"]).isEmpty == false)
+
+    let observedAt = try requireObject(properties["observed_at"])
+    #expect(Set(observedAt.keys) == ["type", "pattern", "format", "description"])
+    #expect(observedAt["type"] as? String == "string")
+    #expect(observedAt["pattern"] as? String == verdictReasonObservedAtPattern)
+    #expect(observedAt["format"] as? String == "date-time")
+    #expect(try requireString(observedAt["description"]).isEmpty == false)
+  }
+
+  @Test func manifestHasCompleteUniqueVerdictReasonFixtureCoverage() throws {
+    let manifest = try loadObject(
+      "packages/contracts/fixtures/verdict-reason-v1/manifest.json"
+    )
+    #expect(Set(manifest.keys) == ["schema_version", "contract", "contract_schema", "cases"])
+    #expect(integerValue(manifest["schema_version"]) == 1)
+    #expect(manifest["contract"] as? String == "verdict-reason-v1")
+    #expect(
+      manifest["contract_schema"] as? String
+        == "../../schemas/verdict-reason-v1.schema.json"
+    )
+
+    let cases = try requireObjectArray(manifest["cases"])
+    #expect(cases.count == expectedVerdictReasonFixturePaths.count)
+
+    let pairs = try cases.map { fixtureCase in
+      (try requireString(fixtureCase["id"]), try requireString(fixtureCase["path"]))
+    }
+    let ids = pairs.map(\.0)
+    let paths = pairs.map(\.1)
+    #expect(Set(ids).count == ids.count)
+    #expect(Set(paths).count == paths.count)
+    #expect(Dictionary(uniqueKeysWithValues: pairs) == expectedVerdictReasonFixturePaths)
+    #expect(
+      Set(expectedVerdictReasonFailureKeywords.keys)
+        == Set(ids).subtracting(
+          ["valid-documented", "valid-forward-compatible", "valid-maximum-boundaries"]
+        )
+    )
+
+    let fixtureRoot = repositoryRoot.appendingPathComponent(
+      "packages/contracts/fixtures/verdict-reason-v1"
+    ).standardizedFileURL
+    #expect(try fixturePathsOnDisk(relativeTo: fixtureRoot) == Set(paths))
+
+    let manifestURL = fixtureRoot.appendingPathComponent("manifest.json")
+    let contractSchemaURL = manifestURL.deletingLastPathComponent()
+      .appendingPathComponent("../../schemas/verdict-reason-v1.schema.json")
+      .standardizedFileURL
+    let expectedSchemaURL = repositoryRoot.appendingPathComponent(
+      "packages/contracts/schemas/verdict-reason-v1.schema.json"
+    ).standardizedFileURL
+    #expect(contractSchemaURL == expectedSchemaURL)
+  }
+
+  @Test func everyVerdictReasonFixtureMatchesItsDeclaredExpectation() throws {
+    let manifest = try loadObject(
+      "packages/contracts/fixtures/verdict-reason-v1/manifest.json"
+    )
+    let cases = try requireObjectArray(manifest["cases"])
+    let fixtureRoot = "packages/contracts/fixtures/verdict-reason-v1"
+    var validCount = 0
+    var invalidCount = 0
+
+    for fixtureCase in cases {
+      let fixtureID = try requireString(fixtureCase["id"])
+      let relativePath = try requireString(fixtureCase["path"])
+      let expectedValid = try requireBool(fixtureCase["expected_schema_valid"])
+      let fixture = try loadObject("\(fixtureRoot)/\(relativePath)")
+      let failures = verdictReasonSchemaFailures(in: fixture)
+
+      #expect(
+        try verdictReasonFixtureMatchesExpectedPurpose(id: fixtureID, object: fixture),
+        "Verdict Reason fixture payload drifted from its declared purpose: \(fixtureID)"
+      )
+
+      if expectedValid {
+        validCount += 1
+        #expect(
+          Set(fixtureCase.keys) == ["id", "path", "expected_schema_valid"]
+        )
+        #expect(failures.isEmpty)
+      } else {
+        invalidCount += 1
+        let expectedKeywords: Set<String>
+        if let keyword = fixtureCase["expected_failure_keyword"] {
+          #expect(
+            Set(fixtureCase.keys)
+              == ["id", "path", "expected_schema_valid", "expected_failure_keyword"]
+          )
+          expectedKeywords = [try requireString(keyword)]
+        } else {
+          #expect(
+            Set(fixtureCase.keys)
+              == ["id", "path", "expected_schema_valid", "expected_failure_keywords"]
+          )
+          let keywords = try requireStringArray(fixtureCase["expected_failure_keywords"])
+          #expect(keywords.isEmpty == false)
+          #expect(Set(keywords).count == keywords.count)
+          expectedKeywords = Set(keywords)
+        }
+        #expect(expectedKeywords == expectedVerdictReasonFailureKeywords[fixtureID])
+        #expect(failures == expectedKeywords)
+      }
+    }
+
+    #expect(validCount == 3)
+    #expect(invalidCount == 19)
+  }
+
+  @Test func validVerdictReasonFixturesRoundTripThroughTheSwiftReader() throws {
+    let manifest = try loadObject(
+      "packages/contracts/fixtures/verdict-reason-v1/manifest.json"
+    )
+    let cases = try requireObjectArray(manifest["cases"])
+
+    for fixtureCase in cases where try requireBool(fixtureCase["expected_schema_valid"]) {
+      let path = try requireString(fixtureCase["path"])
+      let relativePath = "packages/contracts/fixtures/verdict-reason-v1/\(path)"
+      let fixtureData = try loadData(relativePath)
+      let fixtureObject = try loadObject(relativePath)
+      let reason = try HezoJSON.makeResponseDecoder().decode(
+        VerdictReason.self,
+        from: fixtureData
+      )
+      let encodedData = try HezoJSON.makeEncoder().encode(reason)
+      let encodedObject = try jsonObject(from: encodedData)
+
+      #expect(NSDictionary(dictionary: encodedObject).isEqual(to: fixtureObject))
+    }
+  }
+
+  @Test func invalidKnownVerdictReasonFieldsFailTheSwiftReader() throws {
+    let manifest = try loadObject(
+      "packages/contracts/fixtures/verdict-reason-v1/manifest.json"
+    )
+    let cases = try requireObjectArray(manifest["cases"])
+
+    for fixtureCase in cases {
+      let expectedValid = try requireBool(fixtureCase["expected_schema_valid"])
+      let id = try requireString(fixtureCase["id"])
+      guard expectedValid == false, id != "reject-unknown-field" else {
+        continue
+      }
+      let path = try requireString(fixtureCase["path"])
+      do {
+        _ = try HezoJSON.makeResponseDecoder().decode(
+          VerdictReason.self,
+          from: loadData("packages/contracts/fixtures/verdict-reason-v1/\(path)")
+        )
+        Issue.record("A declared invalid Verdict Reason V1 fixture was accepted: \(id)")
+      } catch is DecodingError {
+        // Expected. The safe fixture ID is enough context; never render the rejected payload.
+      } catch {
+        Issue.record("Verdict Reason V1 decoding used an unexpected error category: \(id)")
+      }
+    }
+  }
+
+  @Test func schemaStrictnessAndResponseReaderToleranceStayDistinctForVerdictReason() throws {
+    let relativePath =
+      "packages/contracts/fixtures/verdict-reason-v1/invalid/unknown-field.json"
+    let fixture = try loadObject(relativePath)
+    #expect(verdictReasonSchemaFailures(in: fixture) == ["additionalProperties"])
+
+    let reason = try HezoJSON.makeResponseDecoder().decode(
+      VerdictReason.self,
+      from: loadData(relativePath)
+    )
+    let encoded = try HezoJSON.makeEncoder().encode(reason)
+    let encodedObject = try jsonObject(from: encoded)
+    #expect(encodedObject["future_optional"] == nil)
+    #expect(reason.code.rawValue.isEmpty == false)
+  }
+
+  @Test(
+    arguments: ["code", "family", "severity", "summary_key", "observed_at", "freshness"]
+  )
+  func readerErrorsDoNotReflectRejectedVerdictReasonContent(field: String) throws {
+    var fixture = try loadObject(
+      "packages/contracts/fixtures/verdict-reason-v1/valid/documented.json"
+    )
+    let rejectedCandidate = "PRIVATE_SENTINEL_\(field.uppercased())"
+    fixture[field] = rejectedCandidate
+    let data = try JSONSerialization.data(withJSONObject: fixture, options: [.sortedKeys])
+
+    do {
+      _ = try HezoJSON.makeResponseDecoder().decode(VerdictReason.self, from: data)
+      Issue.record("A privacy-canary Verdict Reason field was accepted: \(field)")
+    } catch let error as DecodingError {
+      #expect(String(describing: error).contains(rejectedCandidate) == false)
+      #expect(String(reflecting: error).contains(rejectedCandidate) == false)
+    } catch {
+      Issue.record("Verdict Reason privacy canary used an unexpected error category: \(field)")
+    }
+  }
+}
+
 private enum ContractAssetTestError: Error {
   case invalidAsset
   case unreadableAsset
@@ -486,6 +768,61 @@ private let repositoryRoot = URL(fileURLWithPath: #filePath)
   .deletingLastPathComponent()
   .deletingLastPathComponent()
   .deletingLastPathComponent()
+
+private let verdictReasonStableValuePattern = "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+
+private let verdictReasonSummaryKeyPattern =
+  #"^(?=.{1,128}(?:\.|$))[a-z][a-z0-9]*(?:_[a-z0-9]+)*(?:\.(?=.{1,128}(?:\.|$))[a-z][a-z0-9]*(?:_[a-z0-9]+)*)*$"#
+
+private let verdictReasonObservedAtPattern =
+  "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
+
+private let expectedVerdictReasonFixturePaths: [String: String] = [
+  "valid-documented": "valid/documented.json",
+  "valid-forward-compatible": "valid/forward-compatible.json",
+  "valid-maximum-boundaries": "valid/maximum-boundaries.json",
+  "reject-unknown-field": "invalid/unknown-field.json",
+  "reject-missing-observed-at": "invalid/missing-observed-at.json",
+  "reject-null-family": "invalid/null-family.json",
+  "reject-wrong-type-severity": "invalid/wrong-type-severity.json",
+  "reject-empty-code": "invalid/empty-code.json",
+  "reject-code-uppercase": "invalid/code-uppercase.json",
+  "reject-family-leading-digit": "invalid/family-leading-digit.json",
+  "reject-severity-double-underscore": "invalid/severity-double-underscore.json",
+  "reject-freshness-trailing-underscore": "invalid/freshness-trailing-underscore.json",
+  "reject-oversized-code": "invalid/oversized-code.json",
+  "reject-summary-key-double-dot": "invalid/summary-key-double-dot.json",
+  "reject-summary-key-uppercase-segment": "invalid/summary-key-uppercase-segment.json",
+  "reject-summary-key-oversized-segment": "invalid/summary-key-oversized-segment.json",
+  "reject-summary-key-oversized-total": "invalid/summary-key-oversized-total.json",
+  "reject-fractional-observed-at": "invalid/fractional-observed-at.json",
+  "reject-offset-observed-at": "invalid/offset-observed-at.json",
+  "reject-lowercase-z-observed-at": "invalid/lowercase-z-observed-at.json",
+  "reject-impossible-observed-at": "invalid/impossible-observed-at.json",
+  "reject-wrong-type-observed-at": "invalid/wrong-type-observed-at.json",
+]
+
+private let expectedVerdictReasonFailureKeywords: [String: Set<String>] = [
+  "reject-unknown-field": ["additionalProperties"],
+  "reject-missing-observed-at": ["required"],
+  "reject-null-family": ["type"],
+  "reject-wrong-type-severity": ["type"],
+  "reject-empty-code": ["minLength", "pattern"],
+  "reject-code-uppercase": ["pattern"],
+  "reject-family-leading-digit": ["pattern"],
+  "reject-severity-double-underscore": ["pattern"],
+  "reject-freshness-trailing-underscore": ["pattern"],
+  "reject-oversized-code": ["maxLength"],
+  "reject-summary-key-double-dot": ["pattern"],
+  "reject-summary-key-uppercase-segment": ["pattern"],
+  "reject-summary-key-oversized-segment": ["pattern"],
+  "reject-summary-key-oversized-total": ["maxLength"],
+  "reject-fractional-observed-at": ["pattern"],
+  "reject-offset-observed-at": ["pattern"],
+  "reject-lowercase-z-observed-at": ["pattern"],
+  "reject-impossible-observed-at": ["format"],
+  "reject-wrong-type-observed-at": ["type"],
+]
 
 private let expectedProblemFixturePaths: [String: String] = [
   "valid-non-retryable": "valid/non-retryable.json",
@@ -817,6 +1154,115 @@ private func expectedProblemFixture(
   return object
 }
 
+private func verdictReasonFixtureMatchesExpectedPurpose(
+  id: String,
+  object: [String: Any]
+) throws -> Bool {
+  let expected: [String: Any]
+  switch id {
+  case "valid-documented":
+    expected = expectedVerdictReasonFixture()
+  case "valid-forward-compatible":
+    expected = expectedVerdictReasonFixture(
+      code: "synthetic_signal_v2",
+      family: "future_analysis",
+      severity: "advisory",
+      summaryKey: "verdict.reason.synthetic_signal_v2",
+      observedAt: "2001-01-01T00:00:00Z",
+      freshness: "recently_observed"
+    )
+  case "valid-maximum-boundaries":
+    expected = expectedVerdictReasonFixture(
+      code: String(repeating: "a", count: 128),
+      family: String(repeating: "b", count: 128),
+      severity: String(repeating: "c", count: 128),
+      summaryKey: String(repeating: "d", count: 128) + "."
+        + String(repeating: "e", count: 127),
+      observedAt: "2000-02-29T23:59:59Z",
+      freshness: String(repeating: "f", count: 128)
+    )
+  case "reject-unknown-field":
+    expected = expectedVerdictReasonFixture(additionalProperties: ["future_optional": true])
+  case "reject-missing-observed-at":
+    expected = expectedVerdictReasonFixture(omittedProperties: ["observed_at"])
+  case "reject-null-family":
+    expected = expectedVerdictReasonFixture(family: NSNull())
+  case "reject-wrong-type-severity":
+    expected = expectedVerdictReasonFixture(severity: 1)
+  case "reject-empty-code":
+    expected = expectedVerdictReasonFixture(code: "")
+  case "reject-code-uppercase":
+    expected = expectedVerdictReasonFixture(code: "Brand_impersonation")
+  case "reject-family-leading-digit":
+    expected = expectedVerdictReasonFixture(family: "1identity_impersonation")
+  case "reject-severity-double-underscore":
+    expected = expectedVerdictReasonFixture(severity: "very__high")
+  case "reject-freshness-trailing-underscore":
+    expected = expectedVerdictReasonFixture(freshness: "current_")
+  case "reject-oversized-code":
+    expected = expectedVerdictReasonFixture(code: String(repeating: "a", count: 129))
+  case "reject-summary-key-double-dot":
+    expected = expectedVerdictReasonFixture(summaryKey: "verdict..reason")
+  case "reject-summary-key-uppercase-segment":
+    expected = expectedVerdictReasonFixture(summaryKey: "verdict.Reason.signal")
+  case "reject-summary-key-oversized-segment":
+    expected = expectedVerdictReasonFixture(
+      summaryKey: String(repeating: "a", count: 129) + ".reason"
+    )
+  case "reject-summary-key-oversized-total":
+    expected = expectedVerdictReasonFixture(
+      summaryKey: String(repeating: "a", count: 128) + "."
+        + String(repeating: "b", count: 128)
+    )
+  case "reject-fractional-observed-at":
+    expected = expectedVerdictReasonFixture(observedAt: "2000-02-29T23:59:59.001Z")
+  case "reject-offset-observed-at":
+    expected = expectedVerdictReasonFixture(observedAt: "2000-03-01T00:59:59+01:00")
+  case "reject-lowercase-z-observed-at":
+    expected = expectedVerdictReasonFixture(observedAt: "2000-02-29T23:59:59z")
+  case "reject-impossible-observed-at":
+    expected = expectedVerdictReasonFixture(observedAt: "2001-02-29T23:59:59Z")
+  case "reject-wrong-type-observed-at":
+    expected = expectedVerdictReasonFixture(observedAt: 946_684_800)
+  default:
+    throw ContractAssetTestError.invalidAsset
+  }
+
+  do {
+    let options: JSONSerialization.WritingOptions = [.sortedKeys, .withoutEscapingSlashes]
+    let actualData = try JSONSerialization.data(withJSONObject: object, options: options)
+    let expectedData = try JSONSerialization.data(withJSONObject: expected, options: options)
+    return actualData == expectedData
+  } catch {
+    throw ContractAssetTestError.invalidAsset
+  }
+}
+
+private func expectedVerdictReasonFixture(
+  code: Any = "brand_impersonation_unrelated_domain",
+  family: Any = "identity_impersonation",
+  severity: Any = "high",
+  summaryKey: Any = "verdict.reason.brand_impersonation_unrelated_domain",
+  observedAt: Any = "2026-08-11T10:15:00Z",
+  freshness: Any = "current",
+  additionalProperties: [String: Any] = [:],
+  omittedProperties: Set<String> = []
+) -> [String: Any] {
+  var object: [String: Any] = [
+    "code": code,
+    "family": family,
+    "severity": severity,
+    "summary_key": summaryKey,
+    "observed_at": observedAt,
+    "freshness": freshness,
+  ]
+  object.merge(additionalProperties) { _, newValue in newValue }
+  for property in omittedProperties {
+    object.removeValue(forKey: property)
+  }
+  return object
+}
+
 private func loadObject(_ relativePath: String) throws -> [String: Any] {
   let data = try loadData(relativePath)
 
@@ -1084,6 +1530,18 @@ private func expectBoundedTextProperty(
   #expect(integerValue(property["minLength"]) == 1)
   #expect(integerValue(property["maxLength"]) == maximumLength)
   #expect(property["pattern"] as? String == expectedPattern)
+}
+
+private func expectStableVerdictReasonProperty(_ value: Any?) throws {
+  let property = try requireObject(value)
+  #expect(
+    Set(property.keys) == ["type", "minLength", "maxLength", "pattern", "description"]
+  )
+  #expect(property["type"] as? String == "string")
+  #expect(integerValue(property["minLength"]) == 1)
+  #expect(integerValue(property["maxLength"]) == 128)
+  #expect(property["pattern"] as? String == verdictReasonStableValuePattern)
+  #expect(try requireString(property["description"]).isEmpty == false)
 }
 
 // This is intentionally an independent evaluator for the frozen Problem V1 subset, not a
@@ -1381,4 +1839,155 @@ private func checkProblemRetryDelay(
   if (try? requireBool(retryable)) != true {
     failures.insert("const")
   }
+}
+
+// This is intentionally an independent evaluator for the frozen Verdict Reason V1 subset, not a
+// general JSON Schema Draft 2020-12 or RFC 3339 implementation.
+private func verdictReasonSchemaFailures(in object: [String: Any]) -> Set<String> {
+  let expectedKeys: Set<String> = [
+    "code", "family", "severity", "summary_key", "observed_at", "freshness",
+  ]
+  var failures = Set<String>()
+
+  if Set(object.keys).subtracting(expectedKeys).isEmpty == false {
+    failures.insert("additionalProperties")
+  }
+  if expectedKeys.subtracting(object.keys).isEmpty == false {
+    failures.insert("required")
+  }
+
+  for field in ["code", "family", "severity", "freshness"] {
+    checkVerdictReasonStableValue(object[field], failures: &failures)
+  }
+  checkVerdictReasonSummaryKey(object["summary_key"], failures: &failures)
+  checkVerdictReasonObservedAt(object["observed_at"], failures: &failures)
+  return failures
+}
+
+private func checkVerdictReasonStableValue(
+  _ value: Any?,
+  failures: inout Set<String>
+) {
+  guard let string = value as? String else {
+    if value != nil {
+      failures.insert("type")
+    }
+    return
+  }
+
+  if string.unicodeScalars.isEmpty {
+    failures.insert("minLength")
+  }
+  if string.unicodeScalars.count > 128 {
+    failures.insert("maxLength")
+  }
+  if isValidVerdictReasonStableValue(string) == false {
+    failures.insert("pattern")
+  }
+}
+
+private func isValidVerdictReasonStableValue(_ value: String) -> Bool {
+  let bytes = value.utf8
+  guard let first = bytes.first, (0x61...0x7A).contains(first) else {
+    return false
+  }
+
+  var previousWasUnderscore = false
+  for byte in bytes.dropFirst() {
+    let isUnderscore = byte == 0x5F
+    guard (0x61...0x7A).contains(byte) || (0x30...0x39).contains(byte) || isUnderscore,
+      previousWasUnderscore == false || isUnderscore == false
+    else {
+      return false
+    }
+    previousWasUnderscore = isUnderscore
+  }
+  return bytes.last != 0x5F
+}
+
+private func checkVerdictReasonSummaryKey(
+  _ value: Any?,
+  failures: inout Set<String>
+) {
+  guard let string = value as? String else {
+    if value != nil {
+      failures.insert("type")
+    }
+    return
+  }
+
+  if string.unicodeScalars.isEmpty {
+    failures.insert("minLength")
+  }
+  if string.unicodeScalars.count > 256 {
+    failures.insert("maxLength")
+  }
+  let segments = string.split(separator: ".", omittingEmptySubsequences: false)
+  if segments.isEmpty
+    || segments.contains(where: {
+      $0.utf8.count > 128 || isValidVerdictReasonStableValue(String($0)) == false
+    })
+  {
+    failures.insert("pattern")
+  }
+}
+
+private func checkVerdictReasonObservedAt(
+  _ value: Any?,
+  failures: inout Set<String>
+) {
+  guard let string = value as? String else {
+    if value != nil {
+      failures.insert("type")
+    }
+    return
+  }
+
+  if string.range(of: verdictReasonObservedAtPattern, options: .regularExpression) == nil {
+    failures.insert("pattern")
+  }
+  if isRealVerdictReasonDateTime(string) == false {
+    failures.insert("format")
+  }
+}
+
+private func isRealVerdictReasonDateTime(_ value: String) -> Bool {
+  let pattern =
+    #"^([0-9]{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(?:\.[0-9]+)?(?:[Zz]|[+-](?:[01][0-9]|2[0-3]):[0-5][0-9])$"#
+  guard let expression = try? NSRegularExpression(pattern: pattern) else {
+    return false
+  }
+  let fullRange = NSRange(value.startIndex..<value.endIndex, in: value)
+  guard let match = expression.firstMatch(in: value, range: fullRange), match.range == fullRange,
+    let year = integerCapture(1, from: match, in: value),
+    let month = integerCapture(2, from: match, in: value),
+    let day = integerCapture(3, from: match, in: value)
+  else {
+    return false
+  }
+
+  let maximumDay: Int
+  switch month {
+  case 2:
+    let isLeapYear =
+      year.isMultiple(of: 400)
+      || (year.isMultiple(of: 4) && year.isMultiple(of: 100) == false)
+    maximumDay = isLeapYear ? 29 : 28
+  case 4, 6, 9, 11:
+    maximumDay = 30
+  default:
+    maximumDay = 31
+  }
+  return (1...maximumDay).contains(day)
+}
+
+private func integerCapture(
+  _ index: Int,
+  from match: NSTextCheckingResult,
+  in value: String
+) -> Int? {
+  guard let range = Range(match.range(at: index), in: value) else {
+    return nil
+  }
+  return Int(value[range])
 }
