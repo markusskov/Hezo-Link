@@ -1,0 +1,17 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hezo Link check-input components",
+    "version": "1.0.0",
+    "description": "Reusable check-input schemas only. This document declares no deployed service or operation."
+  },
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "paths": {},
+  "components": {
+    "schemas": {
+      "CheckRequestV1": {
+        "$ref": "./schemas/check-request-v1.schema.json"
+      }
+    }
+  }
+}

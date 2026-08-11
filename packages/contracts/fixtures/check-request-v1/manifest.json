@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "contract": "check-request-v1",
+  "contract_schema": "../../schemas/check-request-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-standard",
+      "path": "valid/standard.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-zero-wait-budget",
+      "path": "valid/zero-wait-budget.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-maximum-wait-budget",
+      "path": "valid/maximum-wait-budget.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-unknown-field",
+      "path": "invalid/unknown-field.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-missing-url",
+      "path": "invalid/missing-url.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    },
+    {
+      "id": "reject-schema-version",
+      "path": "invalid/schema-version.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-analysis-profile",
+      "path": "invalid/analysis-profile.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-negative-wait-budget",
+      "path": "invalid/negative-wait-budget.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "minimum"
+    },
+    {
+      "id": "reject-fractional-wait-budget",
+      "path": "invalid/fractional-wait-budget.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-oversized-wait-budget",
+      "path": "invalid/oversized-wait-budget.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maximum"
+    },
+    {
+      "id": "reject-reason-schema-version",
+      "path": "invalid/reason-schema-version.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-non-http-url",
+      "path": "invalid/non-http-url.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    }
+  ]
+}
