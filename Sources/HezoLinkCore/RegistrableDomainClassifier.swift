@@ -495,7 +495,7 @@ private struct RuleSet: Sendable {
       rawBody.contains("*") == false,
       rawBody.hasPrefix(".") == false,
       rawBody.hasSuffix(".") == false,
-      let asciiBody = ManualURLInputValidator.normalizedDomainNameASCII(rawBody),
+      let asciiBody = Self.normalizedRuleBodyASCII(rawBody),
       RegistrableDomainClassifier.isCanonicalASCIIHost(asciiBody)
     else {
       throw SnapshotParseError.invalid
@@ -508,6 +508,48 @@ private struct RuleSet: Sendable {
     }
 
     return ParsedRule(kind: kind, asciiBody: asciiBody, section: section)
+  }
+
+  private static func normalizedRuleBodyASCII(_ rawBody: String) -> String? {
+    guard rawBody.precomposedStringWithCanonicalMapping.utf8.elementsEqual(rawBody.utf8),
+      rawBody.precomposedStringWithCompatibilityMapping.utf8.elementsEqual(rawBody.utf8),
+      rawBody.unicodeScalars.allSatisfy(isAllowedRuleScalar),
+      rawBody.unicodeScalars.contains(where: isUnicodeDotVariant) == false,
+      let url = URL(string: "https://\(rawBody)"),
+      URLComponents(url: url, resolvingAgainstBaseURL: false)?.host != nil,
+      let host = url.host
+    else {
+      return nil
+    }
+
+    let normalized = host.lowercased()
+    guard normalized.isEmpty == false,
+      normalized.utf8.allSatisfy({ $0 < 0x80 }),
+      normalized.contains(":") == false
+    else {
+      return nil
+    }
+    return normalized
+  }
+
+  private static func isUnicodeDotVariant(_ scalar: Unicode.Scalar) -> Bool {
+    scalar.value == 0x3002 || scalar.value == 0xFF0E || scalar.value == 0xFF61
+  }
+
+  private static func isAllowedRuleScalar(_ scalar: Unicode.Scalar) -> Bool {
+    guard scalar.isASCII == false else {
+      return true
+    }
+    guard scalar.properties.isDefaultIgnorableCodePoint == false else {
+      return false
+    }
+    switch scalar.properties.generalCategory {
+    case .uppercaseLetter, .lowercaseLetter, .titlecaseLetter, .modifierLetter, .otherLetter,
+      .nonspacingMark, .spacingMark, .decimalNumber:
+      return true
+    default:
+      return false
+    }
   }
 
   private static func longer(_ candidate: PrevailingMatch, than current: PrevailingMatch?)

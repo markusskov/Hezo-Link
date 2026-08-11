@@ -6,7 +6,7 @@ import Testing
 struct RegistrableDomainClassifierTests {
   struct HostKindExpectation: Sendable {
     let asciiHost: String
-    let kind: ValidatedURLHostKind
+    let kind: ValidatedURLHost.Kind
   }
 
   @Test(
