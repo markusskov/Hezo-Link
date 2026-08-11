@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "contract": "evaluated-scope-v1",
+  "contract_schema": "../../schemas/evaluated-scope-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-documented-exact-url",
+      "path": "valid/documented-exact-url.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-forward-compatible",
+      "path": "valid/forward-compatible.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-lower-boundary",
+      "path": "valid/lower-boundary.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-upper-boundary",
+      "path": "valid/upper-boundary.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-wrong-type",
+      "path": "invalid/wrong-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-empty",
+      "path": "invalid/empty.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "minLength",
+        "pattern"
+      ]
+    },
+    {
+      "id": "reject-uppercase",
+      "path": "invalid/uppercase.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-leading-digit",
+      "path": "invalid/leading-digit.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-double-underscore",
+      "path": "invalid/double-underscore.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-trailing-underscore",
+      "path": "invalid/trailing-underscore.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-hyphen",
+      "path": "invalid/hyphen.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-non-ascii",
+      "path": "invalid/non-ascii.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-oversized",
+      "path": "invalid/oversized.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    }
+  ]
+}

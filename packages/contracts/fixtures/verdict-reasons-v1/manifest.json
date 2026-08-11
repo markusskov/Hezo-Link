@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "contract": "verdict-reasons-v1",
+  "contract_schema": "../../schemas/verdict-reasons-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-zero",
+      "path": "valid/zero.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-one",
+      "path": "valid/one.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-two",
+      "path": "valid/two.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-three",
+      "path": "valid/three.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-four",
+      "path": "valid/four.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-five",
+      "path": "valid/five.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-duplicate-items",
+      "path": "valid/duplicate-items.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-too-many",
+      "path": "invalid/too-many.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxItems"
+    },
+    {
+      "id": "reject-wrong-top-level-type",
+      "path": "invalid/wrong-top-level-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-wrong-item-type",
+      "path": "invalid/wrong-item-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-invalid-item-code",
+      "path": "invalid/invalid-item-code.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-item-unknown-field",
+      "path": "invalid/item-unknown-field.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "additionalProperties"
+    },
+    {
+      "id": "reject-item-missing-observed-at",
+      "path": "invalid/item-missing-observed-at.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "required"
+    }
+  ]
+}
