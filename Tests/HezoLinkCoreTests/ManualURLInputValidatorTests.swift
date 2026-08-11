@@ -551,6 +551,108 @@ struct ManualURLInputValidatorTests {
     #expect(allRenderingsAreSafe, "Validation diagnostics must never reveal submitted content.")
   }
 
+  @Test func manualEntrySessionProjectsEveryFiniteStatus() {
+    let cases: [(String, ManualURLInputStatus)] = [
+      ("https://session.test/path", .syntaxAccepted),
+      ("https://session.test:81/path", .unsupportedPort),
+      ("not a URL", .invalidURL),
+      ("ftp://session.test/path", .unsupportedScheme),
+    ]
+    let validator = ManualURLInputValidator.isolatedTestFixture
+
+    for (input, expectedStatus) in cases {
+      var session = ManualURLInputSession()
+      session.updateSubmission(input)
+      session.validate(using: validator)
+      #expect(session.status == expectedStatus)
+    }
+
+    var overLimitSession = ManualURLInputSession()
+    let overLimitInput = String(repeating: "a", count: SubmittedURL.maximumUTF8ByteCount + 1)
+    overLimitSession.updateSubmission(overLimitInput)
+    #expect(overLimitSession.submittedValue.isEmpty)
+    #expect(overLimitSession.status == .urlTooLong)
+    overLimitSession.validate(using: validator)
+    #expect(
+      overLimitSession.status == .urlTooLong,
+      "Submitting after an oversized edit must preserve the accurate finite result."
+    )
+    #expect(
+      ManualURLInputStatus.allCases
+        == [.syntaxAccepted, .unsupportedPort, .invalidURL, .unsupportedScheme, .urlTooLong]
+    )
+  }
+
+  @Test func manualEntrySessionInvalidatesEditsAndClearsWithoutRestoration() {
+    let validator = ManualURLInputValidator.isolatedTestFixture
+    var session = ManualURLInputSession()
+    session.updateSubmission("https://session.test/first")
+    session.validate(using: validator)
+    #expect(session.status == .syntaxAccepted)
+
+    session.validate(using: validator)
+    #expect(session.status == .syntaxAccepted, "Repeated validation must remain deterministic.")
+
+    session.updateSubmission("not a URL")
+    #expect(session.status == nil, "Editing must invalidate the prior submission result.")
+    session.validate(using: validator)
+    #expect(session.status == .invalidURL)
+
+    session.clear()
+    #expect(session.submittedValue.isEmpty)
+    #expect(session.status == nil)
+
+    let recreatedSession = ManualURLInputSession()
+    #expect(recreatedSession.submittedValue.isEmpty)
+    #expect(recreatedSession.status == nil)
+  }
+
+  @Test func manualEntrySessionRenderingNeverRevealsSubmittedContent() {
+    let canary = "MANUAL_ENTRY_PRIVATE_CANARY_70a6"
+    var session = ManualURLInputSession()
+    session.updateSubmission("https://session.test/path?token=\(canary)#private")
+    session.validate(using: .isolatedTestFixture)
+
+    let renderings =
+      [
+        session.description,
+        session.debugDescription,
+        String(describing: session),
+        String(reflecting: session),
+      ] + session.customMirror.children.map { String(describing: $0.value) }
+
+    #expect(session.status == .syntaxAccepted)
+    #expect(
+      renderings.allSatisfy { $0.contains(canary) == false },
+      "Session diagnostics and reflection must never reveal submitted content."
+    )
+  }
+
+  @Test func manualEntrySessionAcceptsExactASCIIAndMultibyteCaps() {
+    let validator = ManualURLInputValidator.isolatedTestFixture
+    let prefix = "https://boundary.test/"
+    let remainingByteCount = SubmittedURL.maximumUTF8ByteCount - prefix.utf8.count
+    let exactASCII = prefix + String(repeating: "a", count: remainingByteCount)
+    let exactMultibyte =
+      prefix
+      + String(repeating: "é", count: remainingByteCount / 2)
+      + (remainingByteCount.isMultiple(of: 2) ? "" : "a")
+
+    var asciiSession = ManualURLInputSession()
+    asciiSession.updateSubmission(exactASCII)
+    #expect(asciiSession.submittedValue.utf8.count == SubmittedURL.maximumUTF8ByteCount)
+    #expect(asciiSession.status == nil)
+    asciiSession.validate(using: validator)
+    #expect(asciiSession.status == .syntaxAccepted)
+
+    var multibyteSession = ManualURLInputSession()
+    multibyteSession.updateSubmission(exactMultibyte)
+    #expect(multibyteSession.submittedValue.utf8.count == SubmittedURL.maximumUTF8ByteCount)
+    #expect(multibyteSession.status == nil)
+    multibyteSession.validate(using: validator)
+    #expect(multibyteSession.status == .invalidURL)
+  }
+
   @Test func concurrentValidationIsDeterministic() async {
     let validator = ManualURLInputValidator.isolatedTestFixture
     let input = "https://deterministic.test/path?one=1&one=%2F#fragment"
