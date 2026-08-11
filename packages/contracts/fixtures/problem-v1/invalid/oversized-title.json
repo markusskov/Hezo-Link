@@ -1,0 +1,9 @@
+{
+  "type": "https://errors.example.test/invalid-title",
+  "title": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "status": 422,
+  "code": "invalid_request",
+  "detail": "Synthetic invalid fixture.",
+  "request_id": "fixture-request-title-long",
+  "retryable": false
+}

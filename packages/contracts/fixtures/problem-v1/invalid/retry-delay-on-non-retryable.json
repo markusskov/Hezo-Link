@@ -1,0 +1,10 @@
+{
+  "type": "https://errors.example.test/invalid-retry-delay",
+  "title": "Invalid retry delay",
+  "status": 422,
+  "code": "invalid_request",
+  "detail": "Synthetic invalid fixture.",
+  "request_id": "fixture-request-retry-not-allowed",
+  "retryable": false,
+  "retry_after_seconds": 30
+}

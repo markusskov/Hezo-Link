@@ -1,0 +1,9 @@
+{
+  "type": "https://errors.example.test/analysis-capacity-unavailable",
+  "title": "Analysis capacity unavailable",
+  "status": 503,
+  "code": "analysis_capacity_unavailable",
+  "detail": "The check cannot be accepted right now.",
+  "request_id": "fixture-request-03",
+  "retryable": true
+}

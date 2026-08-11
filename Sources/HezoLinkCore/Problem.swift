@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 
 /// A bounded failure category for a public problem value.
@@ -91,7 +92,9 @@ public struct ProblemType: RawRepresentable, Codable, Hashable, Sendable {
 
   private static func isValidURIReference(_ value: String) -> Bool {
     let bytes = Array(value.utf8)
-    guard bytes.allSatisfy(isAllowedURIByte), hasValidPercentEscapes(bytes) else {
+    guard bytes.allSatisfy(isAllowedURIByte), hasValidPercentEscapes(bytes),
+      hasValidIPLiteral(bytes)
+    else {
       return false
     }
 
@@ -106,6 +109,86 @@ public struct ProblemType: RawRepresentable, Codable, Hashable, Sendable {
     }
 
     return URL(string: value, encodingInvalidCharacters: false) != nil
+  }
+
+  private static func hasValidIPLiteral(_ bytes: [UInt8]) -> Bool {
+    let openings = bytes.indices.filter { bytes[$0] == 0x5B }
+    let closings = bytes.indices.filter { bytes[$0] == 0x5D }
+    guard openings.count == closings.count else {
+      return false
+    }
+    guard let open = openings.first, let close = closings.first else {
+      return true
+    }
+    guard openings.count == 1, open < close, close > open + 1 else {
+      return false
+    }
+
+    let firstDelimiter =
+      bytes.firstIndex { byte in byte == 0x2F || byte == 0x3F || byte == 0x23 }
+      ?? bytes.endIndex
+    let referenceStart: Int
+    if let colon = bytes[..<firstDelimiter].firstIndex(of: 0x3A) {
+      referenceStart = colon + 1
+    } else {
+      referenceStart = bytes.startIndex
+    }
+    guard referenceStart + 1 < bytes.endIndex,
+      bytes[referenceStart] == 0x2F,
+      bytes[referenceStart + 1] == 0x2F
+    else {
+      return false
+    }
+
+    let authorityStart = referenceStart + 2
+    let authorityEnd =
+      bytes[authorityStart...].firstIndex { byte in
+        byte == 0x2F || byte == 0x3F || byte == 0x23
+      } ?? bytes.endIndex
+    guard open >= authorityStart, close < authorityEnd else {
+      return false
+    }
+    let beforeLiteral = bytes[authorityStart..<open]
+    guard beforeLiteral.isEmpty || beforeLiteral.last == 0x40 else {
+      return false
+    }
+    if close + 1 < authorityEnd {
+      let port = bytes[(close + 1)..<authorityEnd]
+      guard port.first == 0x3A,
+        port.dropFirst().allSatisfy({ (0x30...0x39).contains($0) })
+      else {
+        return false
+      }
+    }
+
+    let literal = String(decoding: bytes[(open + 1)..<close], as: UTF8.self)
+    return isIPv6Address(literal) || isIPvFuture(literal)
+  }
+
+  private static func isIPv6Address(_ value: String) -> Bool {
+    var address = in6_addr()
+    return value.withCString { inet_pton(AF_INET6, $0, &address) } == 1
+  }
+
+  private static func isIPvFuture(_ value: String) -> Bool {
+    let bytes = Array(value.utf8)
+    guard let first = bytes.first, first == 0x56 || first == 0x76,
+      let dot = bytes.dropFirst().firstIndex(of: 0x2E),
+      dot > 1,
+      dot + 1 < bytes.endIndex,
+      bytes[1..<dot].allSatisfy(isHexDigit)
+    else {
+      return false
+    }
+    return bytes[(dot + 1)...].allSatisfy(isIPvFutureAddressByte)
+  }
+
+  private static func isIPvFutureAddressByte(_ byte: UInt8) -> Bool {
+    isASCIIAlpha(byte) || (0x30...0x39).contains(byte)
+      || [
+        0x21, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x3A,
+        0x3B, 0x3D, 0x5F, 0x7E,
+      ].contains(byte)
   }
 
   private static func isAllowedURIByte(_ byte: UInt8) -> Bool {
@@ -157,7 +240,7 @@ public struct ProblemType: RawRepresentable, Codable, Hashable, Sendable {
 
 /// A public RFC 9457-style problem value with bounded, stable contract fields.
 public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
-  CustomDebugStringConvertible
+  CustomDebugStringConvertible, CustomReflectable
 {
   private enum CodingKeys: String, CodingKey {
     case type
@@ -251,6 +334,12 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
   /// Decodes and validates every public problem invariant.
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
+    let retryAfterSeconds: Int?
+    if container.contains(.retryAfterSeconds) {
+      retryAfterSeconds = try container.decode(Int.self, forKey: .retryAfterSeconds)
+    } else {
+      retryAfterSeconds = nil
+    }
     do {
       try self.init(
         type: container.decode(String.self, forKey: .type),
@@ -260,7 +349,7 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
         detail: container.decode(String.self, forKey: .detail),
         requestID: container.decode(String.self, forKey: .requestID),
         retryable: container.decode(Bool.self, forKey: .retryable),
-        retryAfterSeconds: container.decodeIfPresent(Int.self, forKey: .retryAfterSeconds)
+        retryAfterSeconds: retryAfterSeconds
       )
     } catch let error as DecodingError {
       throw error
@@ -282,6 +371,11 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
   /// A log-safe debug summary identical to `description`.
   public var debugDescription: String {
     description
+  }
+
+  /// A bounded reflection surface that omits type, title, detail, and request identifier.
+  public var customMirror: Mirror {
+    Mirror(self, children: ["value": description])
   }
 
   private static func validateText(_ value: String, maximumUTF8ByteCount: Int) throws {

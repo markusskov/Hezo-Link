@@ -1,0 +1,10 @@
+{
+  "type": "https://errors.example.test/upper-boundaries",
+  "title": "Upper numeric boundaries",
+  "status": 599,
+  "code": "future_problem_2",
+  "detail": "Synthetic upper numeric-boundary example.",
+  "request_id": "fixture-request-upper",
+  "retryable": true,
+  "retry_after_seconds": 86400
+}

@@ -1,0 +1,10 @@
+{
+  "type": "a",
+  "title": "a",
+  "status": 400,
+  "code": "a",
+  "detail": "a",
+  "request_id": "a",
+  "retryable": true,
+  "retry_after_seconds": 0
+}

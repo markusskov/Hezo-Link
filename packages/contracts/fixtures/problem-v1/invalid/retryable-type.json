@@ -1,0 +1,9 @@
+{
+  "type": "https://errors.example.test/invalid-retryable",
+  "title": "Invalid retryable value",
+  "status": 422,
+  "code": "invalid_request",
+  "detail": "Synthetic invalid fixture.",
+  "request_id": "fixture-request-retryable-type",
+  "retryable": "false"
+}

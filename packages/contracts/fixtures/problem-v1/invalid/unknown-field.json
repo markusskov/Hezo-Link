@@ -1,0 +1,10 @@
+{
+  "type": "https://errors.example.test/invalid-url",
+  "title": "Invalid URL",
+  "status": 422,
+  "code": "invalid_url",
+  "detail": "Synthetic invalid fixture.",
+  "request_id": "fixture-request-unknown",
+  "retryable": false,
+  "debug_context": "not allowed"
+}

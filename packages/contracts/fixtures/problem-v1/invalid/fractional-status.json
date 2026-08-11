@@ -1,0 +1,9 @@
+{
+  "type": "https://errors.example.test/invalid-status",
+  "title": "Invalid status",
+  "status": 422.5,
+  "code": "invalid_request",
+  "detail": "Synthetic invalid fixture.",
+  "request_id": "fixture-request-status-fractional",
+  "retryable": false
+}
