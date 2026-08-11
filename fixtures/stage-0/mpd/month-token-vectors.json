@@ -1,0 +1,620 @@
+{
+  "schema_version": 1,
+  "fixture_type": "mpd_v1_vector_set",
+  "fixture_id": "mpd-v1-month-token-vectors-1",
+  "safety": {
+    "classification": "public_synthetic",
+    "test_only": true,
+    "production_secret_material": false,
+    "captured_measurement_material": false,
+    "contains_real_identifier": false,
+    "contains_operational_tokens": false,
+    "contains_protocol_shaped_public_test_values": true,
+    "historical_months_only": true,
+    "operational_use_forbidden": true,
+    "offline_only": true
+  },
+  "contract": {
+    "version": "hezo-link/mpd/v1",
+    "install_secret_length_bytes": 32,
+    "salt_label_ascii": "hezo-link/mpd/v1",
+    "salt_label_hex": "68657a6f2d6c696e6b2f6d70642f7631",
+    "salt_sha256_hex": "2b31a802667ab8e4fc0c152364673f89a140cd1c9c8290b6a201ae3854eb2519",
+    "hkdf": {
+      "hash": "sha256",
+      "info_prefix_ascii": "month:",
+      "output_length_bytes": 32
+    },
+    "token_hmac": {
+      "hash": "sha256",
+      "message_ascii": "qualified-protected-installation",
+      "output_length_bytes": 32
+    },
+    "wire_encoding": {
+      "name": "base64url",
+      "padding": "forbidden",
+      "canonical_reencoding_required": true,
+      "encoded_length_characters": 43
+    },
+    "server_digest": {
+      "hash": "sha256",
+      "pepper_length_bytes": 32,
+      "message_representation": "raw_token_bytes",
+      "output_length_bytes": 32
+    }
+  },
+  "derivation_cases": [
+    {
+      "case_id": "derive-sequential-2000-01",
+      "synthetic_install_secret_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "utc_month": "2000-01",
+      "hkdf_info_ascii": "month:2000-01",
+      "hkdf_prk_hex": "41549b49cdd84f9d02b5e75455f4e338f8806192c0e5a97dbfabc2d2c56618d6",
+      "expected_month_key_hex": "9d71f488e2f47862384418d89c39a5e5f303805e6e95f47da703e51ed6114dfd",
+      "expected_token_hex": "46db3a8331da1a8541b3dde8780b596484463e3b718e2e9975fdf0614b492636",
+      "expected_token_base64url_unpadded": "Rts6gzHaGoVBs93oeAtZZIRGPjtxji6Zdf3wYUtJJjY"
+    },
+    {
+      "case_id": "derive-sequential-2000-02",
+      "synthetic_install_secret_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "utc_month": "2000-02",
+      "hkdf_info_ascii": "month:2000-02",
+      "hkdf_prk_hex": "41549b49cdd84f9d02b5e75455f4e338f8806192c0e5a97dbfabc2d2c56618d6",
+      "expected_month_key_hex": "4652995cd31b7be25750e373cd6d262f65d7dcaddbad5f58814b1b9ee51e21e3",
+      "expected_token_hex": "f61a936323112eedddff9f91357f221b409ff6039552c04dc02a3df706ca4da7",
+      "expected_token_base64url_unpadded": "9hqTYyMRLu3d_5-RNX8iG0Cf9gOVUsBNwCo99wbKTac"
+    },
+    {
+      "case_id": "derive-offset-2000-02",
+      "synthetic_install_secret_hex": "202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+      "utc_month": "2000-02",
+      "hkdf_info_ascii": "month:2000-02",
+      "hkdf_prk_hex": "47c7e24c8dcc28f0acb02edebd59c7ddc6a5ed161d182f406b6f55760bcfb321",
+      "expected_month_key_hex": "e6da32acb3407e23898e3bc36cf37b9b56acca2b1c088cd085f5ddfa536aebbb",
+      "expected_token_hex": "262a8ac3f2de4472b61a540ff1398ad29c1a3eaffb4d1b18ef41c007d89716d9",
+      "expected_token_base64url_unpadded": "JiqKw_LeRHK2GlQP8TmK0pwaPq_7TRsY70HAB9iXFtk"
+    }
+  ],
+  "server_digest_cases": [
+    {
+      "case_id": "digest-sequential-2000-01-pepper-40",
+      "token_case_ref": "derive-sequential-2000-01",
+      "synthetic_month_pepper_hex": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+      "hmac_message_representation": "raw_token_bytes",
+      "expected_token_digest_hex": "cbde20bb55a311f34894bf00a672cbe5b699d38b68335cf6969c1e0d0024fb9a"
+    },
+    {
+      "case_id": "digest-sequential-2000-01-pepper-60",
+      "token_case_ref": "derive-sequential-2000-01",
+      "synthetic_month_pepper_hex": "606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f",
+      "hmac_message_representation": "raw_token_bytes",
+      "expected_token_digest_hex": "570e1cbab3bb2e2693ff6fb3aa8ea688a6714d78cc98793d2d22412ba0f959d3"
+    }
+  ],
+  "utc_month_cases": [
+    {
+      "case_id": "utc-before-january-year-boundary",
+      "utc_instant": "1999-12-31T23:59:59.999999999Z",
+      "expected_utc_month": "1999-12"
+    },
+    {
+      "case_id": "utc-at-january-year-boundary",
+      "utc_instant": "2000-01-01T00:00:00Z",
+      "expected_utc_month": "2000-01"
+    },
+    {
+      "case_id": "utc-before-february-boundary",
+      "utc_instant": "2000-01-31T23:59:59.999999999Z",
+      "expected_utc_month": "2000-01"
+    },
+    {
+      "case_id": "utc-at-february-boundary",
+      "utc_instant": "2000-02-01T00:00:00Z",
+      "expected_utc_month": "2000-02"
+    }
+  ],
+  "wire_validation_cases": {
+    "binary_length_cases": [
+      {
+        "case_id": "install-secret-31-bytes",
+        "target": "install_secret",
+        "supplied_length_bytes": 31,
+        "expected_semantic_code": "install_secret_length_invalid"
+      },
+      {
+        "case_id": "install-secret-33-bytes",
+        "target": "install_secret",
+        "supplied_length_bytes": 33,
+        "expected_semantic_code": "install_secret_length_invalid"
+      },
+      {
+        "case_id": "month-pepper-31-bytes",
+        "target": "month_pepper",
+        "supplied_length_bytes": 31,
+        "expected_semantic_code": "month_pepper_length_invalid"
+      },
+      {
+        "case_id": "month-pepper-33-bytes",
+        "target": "month_pepper",
+        "supplied_length_bytes": 33,
+        "expected_semantic_code": "month_pepper_length_invalid"
+      }
+    ],
+    "derivation_mutation_cases": [
+      {
+        "case_id": "derive-raw-salt-label",
+        "base_case_ref": "derive-sequential-2000-01",
+        "mutation": "raw_ascii_salt_instead_of_label_digest",
+        "incorrect_month_key_hex": "fe3103f20ba7d43b827457bba2e0ff3f8a60533977f4fd23ae897f0a7258f445",
+        "incorrect_token_hex": "b6d5f797582af13100c030fe1b6e7a820c595bc664271b2db1e3c3ac738d8137",
+        "expected_semantic_code": "must_not_equal_reference"
+      },
+      {
+        "case_id": "derive-info-prefix-omitted",
+        "base_case_ref": "derive-sequential-2000-01",
+        "mutation": "hkdf_info_without_month_prefix",
+        "incorrect_month_key_hex": "67b09713260bc4e3a05a4eed9392ffa666a84f939f43b7af998b2743808e031b",
+        "incorrect_token_hex": "45e73e14838c3e5d0792d806b82925ebde479e561ad02d14d5bf1e7a08570d53",
+        "expected_semantic_code": "must_not_equal_reference"
+      },
+      {
+        "case_id": "derive-token-message-trailing-lf",
+        "base_case_ref": "derive-sequential-2000-01",
+        "mutation": "token_message_with_trailing_lf",
+        "incorrect_token_hex": "f30171ea6f8e3d7ca0d1fc02b802660bc60c34b66c04a023c898be1c25fe0715",
+        "expected_semantic_code": "must_not_equal_reference"
+      },
+      {
+        "case_id": "derive-token-message-trailing-nul",
+        "base_case_ref": "derive-sequential-2000-01",
+        "mutation": "token_message_with_trailing_nul",
+        "incorrect_token_hex": "0639605d1f987f114603d7854ea7f872743794d7d0240eb21272db2445c20e98",
+        "expected_semantic_code": "must_not_equal_reference"
+      }
+    ],
+    "month_cases": [
+      {
+        "case_id": "month-unpadded",
+        "candidate": "2000-2",
+        "expected_semantic_code": "month_invalid"
+      },
+      {
+        "case_id": "month-zero",
+        "candidate": "2000-00",
+        "expected_semantic_code": "month_invalid"
+      },
+      {
+        "case_id": "month-thirteen",
+        "candidate": "2000-13",
+        "expected_semantic_code": "month_invalid"
+      },
+      {
+        "case_id": "month-wrong-separator",
+        "candidate": "2000/02",
+        "expected_semantic_code": "month_invalid"
+      },
+      {
+        "case_id": "month-trailing-space",
+        "candidate": "2000-02 ",
+        "expected_semantic_code": "month_invalid"
+      },
+      {
+        "case_id": "month-nonascii-digits",
+        "candidate": "２０００-０２",
+        "expected_semantic_code": "month_invalid"
+      }
+    ],
+    "token_cases": [
+      {
+        "case_id": "token-padded",
+        "candidate": "Rts6gzHaGoVBs93oeAtZZIRGPjtxji6Zdf3wYUtJJjY=",
+        "expected_semantic_code": "token_padding_forbidden"
+      },
+      {
+        "case_id": "token-standard-base64-alphabet",
+        "candidate": "+ts6gzHaGoVBs93oeAtZZIRGPjtxji6Zdf3wYUtJJjY",
+        "expected_semantic_code": "token_alphabet_invalid"
+      },
+      {
+        "case_id": "token-noncanonical-pad-bits",
+        "candidate": "Rts6gzHaGoVBs93oeAtZZIRGPjtxji6Zdf3wYUtJJjZ",
+        "expected_semantic_code": "token_noncanonical"
+      },
+      {
+        "case_id": "token-decoded-31-bytes",
+        "candidate": "Rts6gzHaGoVBs93oeAtZZIRGPjtxji6Zdf3wYUtJJg",
+        "expected_semantic_code": "token_length_invalid"
+      },
+      {
+        "case_id": "token-decoded-33-bytes",
+        "candidate": "Rts6gzHaGoVBs93oeAtZZIRGPjtxji6Zdf3wYUtJJjYA",
+        "expected_semantic_code": "token_length_invalid"
+      },
+      {
+        "case_id": "token-leading-space",
+        "candidate": " Rts6gzHaGoVBs93oeAtZZIRGPjtxji6Zdf3wYUtJJjY",
+        "expected_semantic_code": "token_alphabet_invalid"
+      }
+    ],
+    "digest_input_cases": [
+      {
+        "case_id": "digest-over-ascii-wire-value",
+        "token_case_ref": "derive-sequential-2000-01",
+        "synthetic_month_pepper_hex": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+        "incorrect_message_representation": "ascii_base64url_token",
+        "incorrect_digest_hex": "d398743544f99e78375ef0cdc85422dfdedfd26804ebcc32fdb55e3372d935c7",
+        "expected_semantic_code": "digest_input_must_be_raw_token_bytes"
+      }
+    ],
+    "request_month_cases": [
+      {
+        "case_id": "request-current-month-first",
+        "purpose": "mpd_presence",
+        "month_policy_subject": "submitted_month_field",
+        "server_utc_month": "2000-02",
+        "submitted_months": ["2000-02"],
+        "token_case_ref": "derive-sequential-2000-02",
+        "acceptance_preconditions": {
+          "production_installation": true,
+          "mpd_consent_active": true,
+          "protection_enabled": true,
+          "protection_healthy": true,
+          "integrity_gate_state": "assumed_satisfied_when_required"
+        },
+        "prior_distinct_rows": 0,
+        "expected_distinct_rows": 1,
+        "expected_result_class": "non_disclosing_success",
+        "expected_policy_outcome": "presence_month_accepted"
+      },
+      {
+        "case_id": "request-current-month-duplicate",
+        "purpose": "mpd_presence",
+        "month_policy_subject": "submitted_month_field",
+        "server_utc_month": "2000-02",
+        "submitted_months": ["2000-02"],
+        "token_case_ref": "derive-sequential-2000-02",
+        "acceptance_preconditions": {
+          "production_installation": true,
+          "mpd_consent_active": true,
+          "protection_enabled": true,
+          "protection_healthy": true,
+          "integrity_gate_state": "assumed_satisfied_when_required"
+        },
+        "prior_distinct_rows": 1,
+        "expected_distinct_rows": 1,
+        "expected_result_class": "non_disclosing_success",
+        "expected_policy_outcome": "presence_month_accepted"
+      },
+      {
+        "case_id": "request-past-month",
+        "purpose": "mpd_presence",
+        "month_policy_subject": "submitted_month_field",
+        "server_utc_month": "2000-02",
+        "submitted_months": ["2000-01"],
+        "prior_distinct_rows": 0,
+        "expected_distinct_rows": 0,
+        "expected_result_class": "semantic_rejection",
+        "expected_policy_outcome": "presence_month_past_rejected"
+      },
+      {
+        "case_id": "request-future-month",
+        "purpose": "mpd_presence",
+        "month_policy_subject": "submitted_month_field",
+        "server_utc_month": "2000-02",
+        "submitted_months": ["2000-03"],
+        "prior_distinct_rows": 0,
+        "expected_distinct_rows": 0,
+        "expected_result_class": "semantic_rejection",
+        "expected_policy_outcome": "presence_month_future_rejected"
+      },
+      {
+        "case_id": "request-multiple-months",
+        "purpose": "mpd_presence",
+        "month_policy_subject": "submitted_month_field",
+        "server_utc_month": "2000-02",
+        "submitted_months": ["2000-01", "2000-02"],
+        "prior_distinct_rows": 0,
+        "expected_distinct_rows": 0,
+        "expected_result_class": "semantic_rejection",
+        "expected_policy_outcome": "presence_multiple_months_rejected"
+      }
+    ]
+  },
+  "withdrawal_cases": [
+    {
+      "case_id": "withdraw-existing-open-presence",
+      "scenario": "existing_open_presence",
+      "steps": [
+        {
+          "operation": "submit_delete",
+          "month": "2000-02",
+          "month_state": "open",
+          "token_case_ref": "derive-sequential-2000-02",
+          "expected_result_class": "non_disclosing_success"
+        }
+      ],
+      "expected_assertions": [
+        "matching_presence_absent",
+        "protection_remains_available"
+      ]
+    },
+    {
+      "case_id": "withdraw-unknown-open-presence",
+      "scenario": "unknown_open_presence",
+      "steps": [
+        {
+          "operation": "submit_delete",
+          "month": "2000-02",
+          "month_state": "open",
+          "token_case_ref": "derive-offset-2000-02",
+          "expected_result_class": "non_disclosing_success"
+        }
+      ],
+      "expected_assertions": [
+        "unknown_presence_not_disclosed",
+        "protection_remains_available"
+      ]
+    },
+    {
+      "case_id": "withdraw-existing-provisional-presence",
+      "scenario": "existing_provisional_presence",
+      "steps": [
+        {
+          "operation": "submit_delete",
+          "month": "2000-01",
+          "month_state": "provisional",
+          "token_case_ref": "derive-sequential-2000-01",
+          "expected_result_class": "non_disclosing_success"
+        }
+      ],
+      "expected_assertions": [
+        "matching_presence_absent",
+        "protection_remains_available"
+      ]
+    },
+    {
+      "case_id": "withdraw-duplicate-delete",
+      "scenario": "duplicate_delete",
+      "steps": [
+        {
+          "operation": "submit_delete",
+          "month": "2000-02",
+          "month_state": "open",
+          "token_case_ref": "derive-sequential-2000-02",
+          "expected_result_class": "non_disclosing_success"
+        },
+        {
+          "operation": "submit_delete",
+          "month": "2000-02",
+          "month_state": "open",
+          "token_case_ref": "derive-sequential-2000-02",
+          "expected_result_class": "non_disclosing_success"
+        }
+      ],
+      "expected_assertions": [
+        "duplicate_result_unchanged",
+        "matching_presence_absent"
+      ]
+    },
+    {
+      "case_id": "withdraw-two-months-independently",
+      "scenario": "two_months_independent",
+      "steps": [
+        {
+          "operation": "submit_delete",
+          "month": "2000-01",
+          "month_state": "provisional",
+          "token_case_ref": "derive-sequential-2000-01",
+          "expected_result_class": "non_disclosing_success"
+        },
+        {
+          "operation": "submit_delete",
+          "month": "2000-02",
+          "month_state": "open",
+          "token_case_ref": "derive-sequential-2000-02",
+          "expected_result_class": "non_disclosing_success"
+        }
+      ],
+      "expected_assertions": [
+        "one_request_per_month",
+        "tokens_never_batched",
+        "matching_presence_absent"
+      ]
+    },
+    {
+      "case_id": "withdraw-final-month-excluded",
+      "scenario": "final_month_excluded",
+      "steps": [
+        {
+          "operation": "persist_consent_off",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "stop_issuance",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "stop_uploads",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "remove_pending_presence_uploads",
+          "expected_result_class": "pending_uploads_deleted"
+        },
+        {
+          "operation": "destroy_seed",
+          "expected_result_class": "seed_destroyed"
+        }
+      ],
+      "excluded_months": [
+        {
+          "month": "1999-12",
+          "month_state": "final",
+          "reason": "finalized_aggregate_not_deletable",
+          "token_submission": "forbidden"
+        }
+      ],
+      "expected_assertions": [
+        "future_presence_receipts_stopped_before_network",
+        "pending_presence_uploads_deleted",
+        "seed_destroyed_after_terminal_deletions",
+        "final_month_not_submitted",
+        "protection_remains_available"
+      ]
+    },
+    {
+      "case_id": "withdraw-offline-across-boundary",
+      "scenario": "offline_consent_withdrawal",
+      "steps": [
+        {
+          "operation": "persist_consent_off",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "stop_issuance",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "stop_uploads",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "remove_pending_presence_uploads",
+          "expected_result_class": "pending_uploads_deleted"
+        },
+        {
+          "operation": "enqueue_delete",
+          "month": "2000-01",
+          "month_state": "provisional",
+          "token_case_ref": "derive-sequential-2000-01",
+          "expected_result_class": "queued_one_month"
+        },
+        {
+          "operation": "enqueue_delete",
+          "month": "2000-02",
+          "month_state": "open",
+          "token_case_ref": "derive-sequential-2000-02",
+          "expected_result_class": "queued_one_month"
+        },
+        {
+          "operation": "submit_delete",
+          "month": "2000-01",
+          "month_state": "provisional",
+          "token_case_ref": "derive-sequential-2000-01",
+          "expected_result_class": "non_disclosing_success"
+        },
+        {
+          "operation": "expire_retry",
+          "month": "2000-02",
+          "month_state": "final",
+          "token_case_ref": "derive-sequential-2000-02",
+          "expected_result_class": "retry_expired"
+        },
+        {
+          "operation": "destroy_seed",
+          "expected_result_class": "seed_destroyed"
+        }
+      ],
+      "retry_queue_contract": {
+        "one_item_per_month": true,
+        "retained_payload_fields": ["deletion_capability"],
+        "bounded_control_metadata_fields": ["attempt_state", "retry_deadline"],
+        "forbidden_persisted_fields": [
+          "app_attest_identity",
+          "consent_record",
+          "cross_plane_request_id",
+          "device_identifier",
+          "installation_secret",
+          "multi_month_payload",
+          "presence_upload",
+          "url_or_browsing_data",
+          "user_agent"
+        ]
+      },
+      "expected_assertions": [
+        "future_presence_receipts_stopped_before_network",
+        "future_uploads_stopped_before_network",
+        "pending_presence_uploads_deleted",
+        "one_retry_item_per_month",
+        "tokens_never_batched",
+        "retry_payload_is_deletion_capability_only",
+        "seed_retained_only_until_all_deletes_succeed_or_expire",
+        "seed_destroyed_after_terminal_deletions",
+        "protection_remains_available"
+      ]
+    },
+    {
+      "case_id": "withdraw-reconsent-same-month-after-reset",
+      "scenario": "reconsent_same_month_after_reset",
+      "steps": [
+        {
+          "operation": "persist_consent_off",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "stop_issuance",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "stop_uploads",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "remove_pending_presence_uploads",
+          "expected_result_class": "pending_uploads_deleted"
+        },
+        {
+          "operation": "submit_delete",
+          "month": "2000-02",
+          "month_state": "open",
+          "token_case_ref": "derive-sequential-2000-02",
+          "expected_result_class": "non_disclosing_success"
+        },
+        {
+          "operation": "destroy_seed",
+          "expected_result_class": "seed_destroyed"
+        },
+        {
+          "operation": "persist_consent_on",
+          "expected_result_class": "local_state_updated"
+        },
+        {
+          "operation": "generate_new_seed",
+          "month": "2000-02",
+          "month_state": "open",
+          "token_case_ref": "derive-offset-2000-02",
+          "expected_result_class": "seed_generated"
+        },
+        {
+          "operation": "qualify_protection",
+          "expected_result_class": "protection_qualified"
+        },
+        {
+          "operation": "emit_presence",
+          "month": "2000-02",
+          "month_state": "open",
+          "token_case_ref": "derive-offset-2000-02",
+          "expected_result_class": "non_disclosing_success"
+        }
+      ],
+      "expected_assertions": [
+        "pending_presence_uploads_deleted",
+        "withdrawn_token_presence_absent",
+        "new_token_presence_present",
+        "new_seed_generated_after_reconsent",
+        "old_seed_never_restored",
+        "same_month_recount_possible",
+        "new_token_differs_from_withdrawn_token",
+        "protection_remains_available"
+      ]
+    }
+  ],
+  "limitations": {
+    "encodes_protocol_math_and_state_contracts_only": true,
+    "does_not_validate_implementation_behavior": true,
+    "does_not_prove_installation_authenticity": true,
+    "does_not_select_anonymous_credential_protocol": true,
+    "does_not_approve_retention_or_finalization_dates": true,
+    "does_not_approve_consent_or_public_claim_wording": true
+  }
+}
