@@ -39,12 +39,19 @@ Every phase has an entry gate, deliverables, tests, and an exit gate. Stop if an
 
 ## Implementation defaults
 
-These are proposed defaults until an accepted ADR replaces them:
+[ADR 0002](docs/adr/0002-local-first-product-foundation.md) accepts these defaults for the bounded local foundation:
 
-- iOS: Swift, SwiftUI, structured concurrency, NetworkExtension, App Attest, and system QR/camera frameworks.
-- API schemas: OpenAPI 3.1 plus generated client/server contract tests.
-- Primary intelligence store: PostgreSQL 17 or later.
-- Architecture: a modular control-plane service and worker, plus separately deployed sandbox, URL-filter distribution, anti-abuse, MPD, and analytics boundaries. Do not create a microservice per table.
+- iOS product code: Swift, SwiftUI, and Swift Package Manager for pure Swift modules.
+- Backend direction: Go with Go modules; the first service slice must still decide the HTTP framework or standard-library-only approach.
+- API schemas: OpenAPI 3.1 and JSON Schema with generated client/server contract tests.
+- Primary intelligence store: PostgreSQL; exact version, UUID, migration, and persistence choices remain open until P-003 is accepted.
+- Architecture shape: a modular control-plane service plus worker, with separate deployables introduced only at security or scale boundaries. Do not create a microservice per table.
+- Repository: one public monorepo using native Swift and Go tooling unless a later ADR selects cross-language orchestration.
+
+These operational defaults remain proposed until their own decisions and gates are complete:
+
+- Apple integration: NetworkExtension, App Attest, and system QR/camera frameworks.
+- Operational topology: exact deployment boundaries, environments, networking, and managed services for sandbox, URL-filter distribution, anti-abuse, MPD, and any approved analytics plane.
 - Queue and object storage: managed products chosen by ADR; jobs must be idempotent and lease based.
 - Browser analysis: a supported Chromium build in a disposable microVM or equivalently strong isolation boundary. Never disable the Chromium sandbox.
 

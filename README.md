@@ -6,7 +6,7 @@ Hezo Link is an iPhone-first phishing, scam-link, and malicious-URL protection p
 
 The long-term company asset is not a generic “AI scam detector.” It is an evidence-backed Trust Graph that connects URLs, domains, infrastructure, brands, page artifacts, and scam campaigns. AI may extract or explain evidence; it does not get to invent the verdict.
 
-This repository contains the reviewed implementation handoff and the public governance artifacts for Stage 0 risk proofs. It deliberately contains no application code yet.
+This repository contains the reviewed implementation handoff, public governance artifacts for Stage 0 risk proofs, and the bounded offline product foundation authorized by [ADR 0002](docs/adr/0002-local-first-product-foundation.md).
 
 ## V1 in one minute
 
@@ -97,7 +97,7 @@ Codex must also follow [AGENTS.md](AGENTS.md). It converts the handoff into repo
 - Never place an App Attest key, MPD token, analytics identifier, advertising identifier, or account identifier in a security-intelligence request or record.
 - Treat every crawled URL, document, response, screenshot, and parser input as hostile.
 
-## Before implementation starts
+## Before live or externally connected implementation starts
 
 Phase 0 is a set of kill-risk validations, not product construction:
 
@@ -109,7 +109,16 @@ Phase 0 is a set of kill-risk validations, not product construction:
 - Approve the Stage 0 privacy data-flow inventory and canonical MPD definition and limitations, without accepting P-009 or closing the final O-010/O-011 launch decisions.
 - Record stack and hosting decisions in an ADR.
 
-Do not build the complete app before these risks are understood. The exact build sequence and stop gates are in the [implementation plan](docs/11-implementation-plan.md).
+Do not build the complete app or create external state before these risks are understood. Offline S1-A contract and URL-policy core work may proceed only within [ADR 0002](docs/adr/0002-local-first-product-foundation.md). The exact build sequence and stop gates are in the [implementation plan](docs/11-implementation-plan.md).
+
+## Local verification
+
+The current Swift product-core package has no third-party dependencies and performs no network access:
+
+~~~sh
+swift test
+xcrun swift-format lint --configuration .swift-format --recursive Sources Tests Package.swift
+~~~
 
 ## Future business direction
 
@@ -129,6 +138,6 @@ Documentation baseline: reviewed and merged.
 
 Stage 0: public governance and deterministic offline fixtures are established. The runnable proof harness remains paused until the repository and isolated-execution decisions are accepted; no proof is claimed complete.
 
-Application code: intentionally not started.
+Application code: the bounded local S1-A foundation is now authorized by [ADR 0002](docs/adr/0002-local-first-product-foundation.md). Initial batches are offline, dependency-light contract and URL-policy core modules with executable tests; they create no external state and make no Stage 0, release, or production-readiness claim.
 
 Project license: not yet selected. Public visibility does not imply permission to reuse; O-019 requires the owner/legal decision before external contributions or reuse are promoted.

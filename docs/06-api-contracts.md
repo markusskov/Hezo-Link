@@ -15,8 +15,8 @@ Read this with [document 02](02-privacy-and-measurement.md), [document 03](03-tr
 ## API principles
 
 - V1 has no login, account token, user profile, cloud-history endpoint, or account deletion endpoint.
-- Public request and response schemas default to rejecting unknown fields. Additive response fields remain possible through generated tolerant readers where explicitly allowed.
-- Use HTTPS, JSON encoded as UTF-8, snake-case field names, ISO 8601 UTC instants, and explicit schema versions.
+- Public request and response schemas default to rejecting unknown fields. Additive response fields remain possible through generated tolerant readers where explicitly allowed. The Swift product-core response reader is one such reader: it ignores additive unknown object members while still enforcing closed enums, field grammars, and size limits. It is not a server request validator.
+- Use HTTPS, JSON encoded as UTF-8, snake-case field names, canonical ISO 8601 UTC whole-second instants (`YYYY-MM-DDTHH:mm:ssZ`), and explicit schema versions. Fractional seconds, offsets, and impossible calendar instants are rejected at this V1 boundary.
 - Public breaking changes require a new path major such as `/v2`. Additive optional fields, new stable reason codes, and new internal policy versions do not require a major change.
 - A raw submitted URL appears only in the deliberate check or report request that needs it. It is never returned unredacted.
 - Check, report, integrity, MPD, and analytics responses use `Cache-Control: no-store`.
@@ -24,6 +24,8 @@ Read this with [document 02](02-privacy-and-measurement.md), [document 03](03-tr
 - Request, idempotency, check, report, capability, MPD, analytics, and App Attest identifiers never cross purposes.
 - Server-generated request IDs are random, plane local, short lived in logs, and unsuitable for product correlation.
 - Error detail is bounded, non-sensitive, and never echoes request bodies, URLs, page text, tokens, assertions, or provider payloads.
+
+Forward-compatible reason, problem, confidence, scope, family, severity, and freshness values use one grammar: 1 through 128 UTF-8 bytes of lower-snake-case ASCII, beginning with `a` through `z`, with no doubled or trailing underscore. Localization keys contain dot-separated segments using that grammar and are at most 256 UTF-8 bytes. These constraints are part of the V1 wire contract and must be reproduced by OpenAPI, JSON Schema, Swift, and Go.
 
 ## Origins and routing boundaries
 
@@ -171,7 +173,9 @@ No aliases such as `safe`, `likely_safe`, `allow`, `warn`, `block`, `malicious`,
 
 `recommended_action` is separate and may be `allow`, `warn`, `avoid`, or `retry`. `allow` means proceed with ordinary care after `no_known_danger`; it never promises safety. The check response does not expose automatic block eligibility. That is a separately versioned internal decision.
 
-`confidence` is a bounded category such as `low`, `medium`, or `high`, not an internal score or consumer probability. Reasons use stable codes and localization keys. Server fallback copy is bounded and derived only from approved reason data.
+`confidence` is a bounded category such as `low`, `medium`, or `high`, not an internal score or consumer probability. Reasons use stable codes and localization keys, the grammar above, and a maximum of five items. Server fallback copy is bounded and derived only from approved reason data.
+
+The primitive label, action, and reason models do not by themselves authorize a complete verdict. The completed-check envelope must validate label/action coherence and may serialize `no_known_danger` only when the selected profile's completeness and freshness requirements are satisfied. A standalone primitive must never be treated as that evidence-bearing authorization.
 
 Provider-specific attribution or advisory requirements appear in `source_notices` with stable template/link fields. Raw source records and license-forbidden provider identity are not returned.
 
@@ -564,7 +568,9 @@ Use `application/problem+json` based on RFC 9457:
 }
 ~~~
 
-The final error origin is selected by ADR. `type`, `title`, `status`, and `code` are stable contract fields. `detail` is bounded copy, not an exception string. Optional `retry_after_seconds` appears with retryable throttling/dependency failures.
+The final error origin is selected by ADR. `type`, `title`, `status`, and `code` are stable contract fields. `detail` is bounded copy, not an exception string. Optional `retry_after_seconds` appears only when `retryable` is true.
+
+V1 problem limits are: `type` is a nonempty, syntactically valid ASCII RFC 3986 URI reference of at most 256 bytes; `title` is 128 UTF-8 bytes; `detail` is 512; and `request_id` is nonempty 128-byte ASCII using letters, digits, `_`, or `-`. Status is `400...599`; `retry_after_seconds` is `0...86400`. Required text is nonempty and contains no Unicode control characters. Invalid problem values fail decoding without echoing their content.
 
 | Status | Use |
 |---:|---|

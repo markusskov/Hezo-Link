@@ -47,7 +47,7 @@ Choose this outcome when the spike will not become a supported implementation, w
 Choosing this outcome authorizes planning a supported implementation; it does not promote the spike itself and does not bypass the staged implementation order.
 
 - [ ] Link the Accepted ADRs that authorize architecture, dependencies, data flows, ownership, operations, and failure behavior.
-- [ ] Open a separate, stage-appropriate implementation plan with entry gate, tests, migration, rollback, and review. Stage 1 work remains blocked until the full Stage 0 exit gate passes.
+- [ ] Open a separate, stage-appropriate implementation plan with entry gate, tests, migration, rollback, and review. Only the bounded offline S1-A exception in [ADR 0002](../adr/0002-local-first-product-foundation.md) may overlap the incomplete Stage 0 exit; no proof resource is promoted through that exception.
 - [ ] Identify each spike component as discard, reimplement, or review for reuse. Temporary privilege, shortcuts, debug controls, synthetic assumptions, and proof-only infrastructure default to discard.
 - [ ] Review every retained dependency for purpose, data access, license, update and vulnerability policy, operational owner, and unavailable/degraded behavior.
 - [ ] Replace proof credentials, identities, endpoints, isolation, and state with least-privilege, environment-separated production designs; never copy raw proof data forward.
