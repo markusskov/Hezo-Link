@@ -50,11 +50,7 @@
       "description": "Bounded non-sensitive copy with no Unicode control or format characters. Semantic validation additionally enforces the 512 UTF-8 byte maximum."
     },
     "request_id": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 128,
-      "pattern": "^[A-Za-z0-9_-]*$",
-      "description": "Plane-local request identifier using ASCII letters, digits, underscore, or hyphen."
+      "$ref": "urn:hezo-link:contract:request-id:v1"
     },
     "retryable": {
       "type": "boolean"

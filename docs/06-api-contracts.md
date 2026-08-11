@@ -23,9 +23,20 @@ Read this with [document 02](02-privacy-and-measurement.md), [document 03](03-tr
 - Filter manifests and content-addressed artifacts use explicit immutable cache semantics, signed digests, and ETags.
 - Request, idempotency, check, report, capability, MPD, analytics, and App Attest identifiers never cross purposes.
 - Server-generated request IDs are random, plane local, short lived in logs, and unsuitable for product correlation.
+- `RequestIDV1`, where explicitly assigned below, is opaque, plane and purpose local, and unsuitable for product correlation.
 - Error detail is bounded, non-sensitive, and never echoes request bodies, URLs, page text, tokens, assertions, or provider payloads.
 
 Forward-compatible reason, problem, confidence, scope, family, severity, and freshness values use one grammar: 1 through 128 UTF-8 bytes of lower-snake-case ASCII, beginning with `a` through `z`, with no doubled or trailing underscore. Localization keys contain dot-separated segments using that grammar and are at most 256 UTF-8 bytes. These constraints are part of the V1 wire contract and must be reproduced by OpenAPI, JSON Schema, Swift, and Go.
+
+### Shared `RequestIDV1`
+
+`RequestIDV1` is the shared wire contract for exactly `PendingCheckResponseV1.request_id` and `ProblemV1.request_id`, the RFC 9457 problem field defined below. Reusing this value type shares validation only; it does not create a shared namespace. This slice does not define or approve a request ID for the proposed completed-check envelope, the report response, or any other contract or runtime behavior.
+
+After JSON string decoding, a value is valid if and only if the complete byte string matches `[A-Za-z0-9_-]{1,128}`. Because the alphabet is ASCII, the character and byte counts are identical. Invalid values fail decoding without their contents being echoed.
+
+Each value is opaque and scoped to its producing plane and immediate response purpose. A producer must not derive it from or embed a URL, domain, request-body content, token, assertion, credential, raw IP address, stable person/account/device identifier, or other sensitive or personal data. A consumer must not parse meaning from it or use it as an account, person, device, or check identity; an authorization or capability; an idempotency key; or a cross-plane or cross-purpose correlation handle.
+
+Wire conformance alone proves only that grammar. It does not itself prove entropy, randomness, uniqueness, authenticity, or which producer minted a value, and it grants no lifetime, retention, or logging permission. Equal byte strings establish no identity, continuity, or other relationship across planes or purposes. This contract does not authorize an endpoint, network I/O, or persistence.
 
 ## Origins and routing boundaries
 
@@ -203,7 +214,7 @@ Provider-specific attribution or advisory requirements appear in `source_notices
   "check_token": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "retry_after_ms": 750,
   "expires_at": "2026-08-11T10:30:00Z",
-  "request_id": "plane-local-random-id"
+  "request_id": "pending-example"
 }
 ~~~
 
@@ -212,7 +223,7 @@ Provider-specific attribution or advisory requirements appear in `source_notices
 - `check_token` is the canonical unpadded base64url encoding of exactly 32 bytes: exactly 43 ASCII characters with no `=` padding. A producer must generate exactly 32 cryptographically random bytes and encode those bytes canonically. A decoder must reject padding, noncanonical trailing bits, alternate encodings, and any value that does not decode to exactly 32 bytes and re-encode to the identical text. These checks prove only the canonical wire shape, not producer entropy or randomness.
 - `retry_after_ms` is an integer from `1` through `900000`, inclusive.
 - `expires_at` is a canonical UTC whole-second absolute instant using the common `YYYY-MM-DDTHH:mm:ssZ` grammar in years `0001` through `9999`. Fractional seconds, offsets, lowercase `z`, year `0000`, and impossible calendar instants are invalid.
-- `request_id` uses the existing request-ID grammar: 1 through 128 ASCII characters drawn only from letters, digits, `_`, or `-`.
+- `request_id` is a `RequestIDV1`.
 
 The token shown above is deliberately zero-entropy public fixture text for wire-shape illustration and is forbidden for operational use.
 
@@ -580,14 +591,14 @@ Use `application/problem+json` based on RFC 9457:
   "status": 422,
   "code": "invalid_url",
   "detail": "The submitted value is not a supported HTTP or HTTPS URL.",
-  "request_id": "plane-local-random-id",
+  "request_id": "problem-example",
   "retryable": false
 }
 ~~~
 
 The final error origin is selected by ADR. `type`, `title`, `status`, and `code` are stable contract fields. `detail` is bounded copy, not an exception string. Optional `retry_after_seconds` appears only when `retryable` is true.
 
-V1 problem limits are: `type` is a nonempty, syntactically valid ASCII RFC 3986 URI reference of at most 256 bytes; `title` is 128 UTF-8 bytes; `detail` is 512; and `request_id` is nonempty 128-byte ASCII using letters, digits, `_`, or `-`. Status is `400...599`; `retry_after_seconds` is `0...86400`. Required text is nonempty and contains no Unicode control characters. Invalid problem values fail decoding without echoing their content.
+V1 problem limits are: `type` is a nonempty, syntactically valid ASCII RFC 3986 URI reference of at most 256 bytes; `title` is 128 UTF-8 bytes; `detail` is 512; and `request_id` is a `RequestIDV1`. Status is `400...599`; `retry_after_seconds` is `0...86400`. Required text is nonempty and contains no Unicode control characters. Invalid problem values fail decoding without echoing their content.
 
 | Status | Use |
 |---:|---|

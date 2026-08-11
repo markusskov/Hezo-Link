@@ -263,7 +263,7 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
   public static let maximumDetailUTF8ByteCount = 512
 
   /// The maximum ASCII byte length of a plane-local request identifier.
-  public static let maximumRequestIDByteCount = 128
+  public static let maximumRequestIDByteCount = RequestIDV1.maximumByteCount
 
   /// The maximum public retry delay.
   public static let maximumRetryAfterSeconds = 86_400
@@ -286,6 +286,8 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
   /// A plane-local, short-lived request identifier.
   public let requestID: String
 
+  private let requestIDValue: RequestIDV1
+
   /// Whether the operation may succeed when retried.
   public let retryable: Bool
 
@@ -306,7 +308,7 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
     let validatedType = try ProblemType(validating: type)
     try Self.validateText(title, maximumUTF8ByteCount: Self.maximumTitleUTF8ByteCount)
     try Self.validateText(detail, maximumUTF8ByteCount: Self.maximumDetailUTF8ByteCount)
-    try Self.validateRequestID(requestID)
+    let validatedRequestID = try Self.validatedRequestIDForCompatibility(requestID)
 
     guard (400...599).contains(status) else {
       throw ProblemContractError.invalidStatus
@@ -327,6 +329,7 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
     self.code = code
     self.detail = detail
     self.requestID = requestID
+    self.requestIDValue = validatedRequestID
     self.retryable = retryable
     self.retryAfterSeconds = retryAfterSeconds
   }
@@ -363,6 +366,19 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
     }
   }
 
+  /// Encodes the exact public problem envelope through its validated field values.
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(type, forKey: .type)
+    try container.encode(title, forKey: .title)
+    try container.encode(status, forKey: .status)
+    try container.encode(code, forKey: .code)
+    try container.encode(detail, forKey: .detail)
+    try container.encode(requestIDValue, forKey: .requestID)
+    try container.encode(retryable, forKey: .retryable)
+    try container.encodeIfPresent(retryAfterSeconds, forKey: .retryAfterSeconds)
+  }
+
   /// A log-safe summary that omits type, title, detail, and request identifier.
   public var description: String {
     "Problem(status: \(status), code: \(code.rawValue), retryable: \(retryable))"
@@ -391,20 +407,15 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
     }
   }
 
-  private static func validateRequestID(_ value: String) throws {
-    guard value.isEmpty == false else {
+  private static func validatedRequestIDForCompatibility(_ value: String) throws -> RequestIDV1 {
+    do {
+      return try RequestIDV1(validating: value)
+    } catch RequestIDContractError.empty {
       throw ProblemContractError.emptyField
-    }
-    guard value.utf8.count <= maximumRequestIDByteCount else {
+    } catch RequestIDContractError.tooLong {
       throw ProblemContractError.fieldTooLong
-    }
-    guard value.utf8.allSatisfy(isRequestIDByte) else {
+    } catch RequestIDContractError.invalidFormat {
       throw ProblemContractError.invalidFieldFormat
     }
-  }
-
-  private static func isRequestIDByte(_ byte: UInt8) -> Bool {
-    (0x30...0x39).contains(byte) || (0x41...0x5A).contains(byte)
-      || (0x61...0x7A).contains(byte) || byte == 0x2D || byte == 0x5F
   }
 }

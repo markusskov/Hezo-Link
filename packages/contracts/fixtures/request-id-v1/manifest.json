@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "contract": "request-id-v1",
+  "contract_schema": "../../schemas/request-id-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-lower-boundary",
+      "path": "valid/lower-boundary.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-upper-boundary",
+      "path": "valid/upper-boundary.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-complete-alphabet",
+      "path": "valid/complete-alphabet.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-empty",
+      "path": "invalid/empty.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "minLength",
+        "pattern"
+      ]
+    },
+    {
+      "id": "reject-oversized",
+      "path": "invalid/oversized.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "maxLength"
+    },
+    {
+      "id": "reject-punctuation",
+      "path": "invalid/punctuation.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-whitespace",
+      "path": "invalid/whitespace.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-control",
+      "path": "invalid/control.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-non-ascii",
+      "path": "invalid/non-ascii.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-wrong-type",
+      "path": "invalid/wrong-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    }
+  ]
+}

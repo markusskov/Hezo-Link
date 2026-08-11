@@ -42,11 +42,7 @@
       "description": "Canonical real UTC whole-second instant in years 0001 through 9999. Validators must assert the date-time format; this value alone defines no TTL or retention policy."
     },
     "request_id": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 128,
-      "pattern": "^[A-Za-z0-9_-]+$",
-      "description": "Nonempty bounded ASCII request identifier shape."
+      "$ref": "urn:hezo-link:contract:request-id:v1"
     }
   }
 }
