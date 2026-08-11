@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "fixture_type": "source_rights_provider_policy_vector_set",
-  "fixture_id": "s0-f-public-synthetic-provider-policy-vectors-1",
+  "fixture_id": "s0-f-public-synthetic-provider-policy-vectors-2",
   "evaluation_reference_time": "2000-02-15T12:00:00Z",
   "safety": {
     "classification": "public_synthetic",
@@ -25,9 +25,9 @@
     "operational_use_forbidden": true
   },
   "registry": {
-    "schema_version": 1,
+    "schema_version": 2,
     "registry_type": "source_rights_registry",
-    "registry_id": "s0-f-public-synthetic-source-rights-registry-1",
+    "registry_id": "s0-f-public-synthetic-source-rights-registry-2",
     "evaluation_reference_time": "2000-02-15T12:00:00Z",
     "safety": {
       "classification": "public_synthetic",

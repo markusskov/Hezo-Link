@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:hezo-link:stage-0:source-rights:registry:v1",
+  "$id": "urn:hezo-link:stage-0:source-rights:registry:v2",
   "title": "Hezo Link S0-F public synthetic source-rights registry",
   "description": "Strict, stack-neutral contract for fictional source selection, proof, legal, runtime, rights, obligations, and operational-policy state. Cross-record, temporal, and subset invariants remain mandatory semantic-validator work.",
   "type": "object",
@@ -18,13 +18,13 @@
   ],
   "properties": {
     "schema_version": {
-      "const": 1
+      "const": 2
     },
     "registry_type": {
       "const": "source_rights_registry"
     },
     "registry_id": {
-      "const": "s0-f-public-synthetic-source-rights-registry-1"
+      "const": "s0-f-public-synthetic-source-rights-registry-2"
     },
     "evaluation_reference_time": {
       "const": "2000-02-15T12:00:00Z"

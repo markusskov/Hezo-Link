@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v1",
+  "$id": "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v2",
   "title": "Hezo Link S0-F public synthetic provider-policy vectors",
   "description": "Strict shape for deterministic, offline source enablement, rights, notice, freshness, resource-control, source-class, and withdrawal decisions.",
   "type": "object",
@@ -24,22 +24,22 @@
   ],
   "properties": {
     "schema_version": {
-      "const": 1
+      "const": 2
     },
     "fixture_type": {
       "const": "source_rights_provider_policy_vector_set"
     },
     "fixture_id": {
-      "const": "s0-f-public-synthetic-provider-policy-vectors-1"
+      "const": "s0-f-public-synthetic-provider-policy-vectors-2"
     },
     "evaluation_reference_time": {
       "const": "2000-02-15T12:00:00Z"
     },
     "safety": {
-      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/safety"
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2#/$defs/safety"
     },
     "registry": {
-      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1"
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2"
     },
     "enablement_cases": {
       "type": "array",
@@ -117,13 +117,13 @@
       "maxLength": 112
     },
     "historicalInstant": {
-      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/historicalInstant"
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2#/$defs/historicalInstant"
     },
     "rightsMatrix": {
-      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/rightsMatrix"
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2#/$defs/rightsMatrix"
     },
     "noticeRequirement": {
-      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/noticeRequirement"
+      "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2#/$defs/noticeRequirement"
     },
     "caseId": {
       "type": "string",
@@ -160,16 +160,16 @@
           ],
           "properties": {
             "selection_state": {
-              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/selectionState"
+              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2#/$defs/selectionState"
             },
             "proof_state": {
-              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/proofState"
+              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2#/$defs/proofState"
             },
             "legal_state": {
-              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/legalState"
+              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2#/$defs/legalState"
             },
             "runtime_state": {
-              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/runtimeState"
+              "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2#/$defs/runtimeState"
             },
             "terms_decision": {
               "enum": [
@@ -689,7 +689,7 @@
           "$ref": "#/$defs/caseId"
         },
         "source_class": {
-          "$ref": "urn:hezo-link:stage-0:source-rights:registry:v1#/$defs/sourceClass"
+          "$ref": "urn:hezo-link:stage-0:source-rights:registry:v2#/$defs/sourceClass"
         },
         "requested_use": {
           "enum": [

@@ -1,8 +1,8 @@
 {
-  "schema_version": 1,
-  "manifest_id": "s0-f-public-synthetic-provider-policy-vectors-1-manifest",
+  "schema_version": 2,
+  "manifest_id": "s0-f-public-synthetic-provider-policy-vectors-2-manifest",
   "fixture_type": "source_rights_provider_policy_vector_set",
-  "fixture_id": "s0-f-public-synthetic-provider-policy-vectors-1",
+  "fixture_id": "s0-f-public-synthetic-provider-policy-vectors-2",
   "artifact": {
     "path": "fixtures/stage-0/source-rights/provider-policy-vectors.json",
     "media_type": "application/json",
@@ -10,30 +10,30 @@
     "line_endings": "LF",
     "final_newline": true,
     "byte_length": 92466,
-    "sha256": "01a96b6c52f905c3dd5510960427bee4b34bf249df6655886fac43c6e3999547"
+    "sha256": "ce7cb9a006f20aef59e0b21b02a90e01e46f7215109a0ce6a5e75d1b04dff718"
   },
   "schemas": {
     "registry": {
       "path": "fixtures/stage-0/source-rights/source-rights-registry.schema.json",
-      "schema_id": "urn:hezo-link:stage-0:source-rights:registry:v1",
+      "schema_id": "urn:hezo-link:stage-0:source-rights:registry:v2",
       "dialect": "https://json-schema.org/draft/2020-12/schema",
       "strict_mode": true,
       "byte_length": 30260,
-      "sha256": "6e634ef6a3dabee668ce193b678b2a942fa5c8846a3bd608da2c622ed4d8af2f"
+      "sha256": "1687a946e24b0ce87fa610261e9d2e19933bbccd75fde93a562132002610d9ab"
     },
     "vectors": {
       "path": "fixtures/stage-0/source-rights/provider-policy-vectors.schema.json",
-      "schema_id": "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v1",
+      "schema_id": "urn:hezo-link:stage-0:source-rights:provider-policy-vectors:v2",
       "dialect": "https://json-schema.org/draft/2020-12/schema",
       "strict_mode": true,
       "byte_length": 26189,
-      "sha256": "68b9b908bf4ebbae607466d0ee919937a182025551c644c0eaed4390618241f3"
+      "sha256": "e253cba1c29ea6736a7d70f1c0774b77e2c404e46da177b7e12c2fbf8cd37c76"
     }
   },
   "provenance": {
     "source": "project_generated_public_synthetic",
     "construction_method_id": "s0-f-fictional-source-rights-policy-matrix",
-    "construction_method_version": 1,
+    "construction_method_version": 2,
     "redistribution_basis": "project_authored_public_test_data",
     "generated_from_live_or_restricted_data": false
   },

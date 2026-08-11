@@ -68,7 +68,7 @@ These are deliberate owner decisions, not invitations for Codex to guess.
 | O-007 | Exact raw-URL retention, incident-hold authority, and backup deletion windows. | Privacy/legal/security | Stage 2 |
 | O-008 | Stage 0: decide qualified exact-threat source viability, rights, and bounded proof spend. Before Stage 2: approve production procurement/contract, provider account, cost controls, and annual source budget. | Founder/legal | Stage 0 exit / before Stage 2 |
 | O-009 | Initial protected-brand registry and evidence needed to call a domain official. | Product/intelligence | Stage 3 |
-| O-010 | Public privacy policy, consent copy, App Store label, and age-rating decisions. | Product/privacy/legal | TestFlight |
+| O-010 | Public privacy policy, final consent copy, App Store label, and age-rating decisions. Restricted internal Stage 0 distribution testing still requires privacy-counsel-approved proof-scoped preliminary artifacts and all applicable platform prerequisites, but does not close this final launch decision. | Product/privacy/legal | Before external TestFlight or public beta |
 | O-011 | Exact public wording and display location for MPD. | Founder/product/privacy | Stage 8 |
 | O-012 | Support channel, analyst/reviewer roles, false-positive SLA, and on-call ownership. | Operations | Public beta |
 | O-013 | Independent penetration-test/security-review provider and budget. | Founder/security | Stage 9 |
@@ -78,6 +78,7 @@ These are deliberate owner decisions, not invitations for Codex to guess.
 | O-017 | Exact lifecycle for restricted report URL/comment/receipt, deletion-capability and idempotency digests, per-record key destruction, backups, and report-only derived support. The proposed ceiling is delete after triage/derivation and no later than 30 days, with a 24-hour replay digest. | Privacy/legal/intelligence/operations | Before Stage 6 |
 | O-018 | Exact inactivity and absolute expiry for Apple PIR `User-Identifier` digest/evaluation-key state, validated against Apple's protocol lifecycle, capacity, and recovery behavior. | iOS/security/privacy/infrastructure | Stage 0 distribution proof |
 | O-019 | Project license or explicit proprietary policy, contribution terms, and copyright owner wording. Until selected, do not imply that public visibility grants reuse rights. | Founder/legal | Before accepting external contributions or promoting reuse |
+| O-020 | Reconcile whether O-001, O-003, and O-007 are Stage 0 exit requirements or retain their table deadlines, and distinguish the Stage 0 privacy proof approval from final P-009/O-010/O-011 decisions. | Founder/technical/privacy | Before Stage 0 gate review |
 
 ## External dependencies and kill risks
 
@@ -305,7 +306,7 @@ The documentation handoff is ready when:
 - Codex can identify exactly one first work package;
 - application code has not been prematurely scaffolded.
 
-Implementation itself is not ready to pass Stage 0 until O-001 through O-007, the Stage 0 viability/rights/proof-spend portion of O-008, O-014, and O-018 have explicit owners and outcomes. The production procurement/account/annual-budget portion of O-008 may remain open through Stage 1 but must be approved before Stage 2. Stage 0 also requires a commercially permitted qualified exact-threat source suitable for the Stage 2 manual-check slice; P-011/CISA enrichment cannot satisfy that requirement. O-017 may remain open during earlier manual-check stages but must be decided before Stage 6 report intake begins.
+Implementation is not ready for a Stage 0 gate review until O-020 resolves the timing conflict between the open-decision table and the former blanket O-001-through-O-007 rule. Until that owner decision is recorded, use the conservative interpretation and treat O-001 through O-007 as unresolved Stage 0 blockers; do not use the table's later deadlines to authorize Stage 1. Independently of O-020, the Stage 0 viability/rights/proof-spend portion of O-008, O-014, O-018, the required S0-A through S0-F proof outcomes, and privacy-owner approval of the Stage 0 data inventory and canonical MPD definition/limitations must be complete. That narrow Stage 0 privacy approval does not accept P-009's proposed production retention schedule or close the final O-010/O-011 launch decisions. The production procurement/account/annual-budget portion of O-008 may remain open through Stage 1 but must be approved before Stage 2. Stage 0 also requires a commercially permitted qualified exact-threat source suitable for the Stage 2 manual-check slice; P-011/CISA enrichment cannot satisfy that requirement. O-017 may remain open during earlier manual-check stages but must be decided before Stage 6 report intake begins.
 
 ## Change policy
 
