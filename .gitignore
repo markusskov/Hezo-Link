@@ -1,0 +1,27 @@
+.DS_Store
+
+# Local environment and secret material
+.private/
+.env
+.env.*
+!.env.example
+*.p8
+*.p12
+*.pfx
+*.key
+*.mobileprovision
+*.provisionprofile
+
+# IDE-local state
+.idea/
+xcuserdata/
+*.xcuserstate
+*.xcresult/
+*.dSYM/
+*.ipa
+
+# Build and test output
+.build/
+DerivedData/
+coverage/
+tmp/

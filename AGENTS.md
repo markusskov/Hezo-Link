@@ -1,0 +1,84 @@
+# Codex implementation rules
+
+This is a public contributor and automation policy. It is intentionally committed so human contributors and coding agents follow the same safety rules. Private blocker notes, owner contact details, device/cloud evidence, contracts, budgets, credentials, and raw proof output belong outside Git or in the ignored `.private/` directory and must never be linked from public documents.
+
+This repository starts from a reviewed documentation baseline. Treat the documents in docs as requirements, not inspiration.
+
+## Precedence
+
+When instructions conflict, use this order:
+
+1. Current user instruction
+2. Security and privacy invariants in this file
+3. Accepted decisions in docs/12-risks-decisions-and-open-questions.md
+4. Concern-specific documents in docs
+5. README.md
+
+Do not silently resolve a material conflict. Record it as an ADR or ask the owner.
+
+## Work only in the active phase
+
+Follow the build order in docs/11-implementation-plan.md. Implement one reviewable vertical slice at a time. Do not scaffold future products, accounts, enterprise APIs, dashboards, machine-learning infrastructure, or global localization while building V1.
+
+Every phase has an entry gate, deliverables, tests, and an exit gate. Stop if an exit gate fails.
+
+## Architecture invariants
+
+- V1 works without an account.
+- Manual checks work without measurement consent, analytics consent, or URL Filter approval.
+- Security intelligence, protection measurement, product analytics, and anti-abuse use separate production stores, credentials, service roles, logs, queues, and retention jobs.
+- There is no general-purpose service credential that can read more than one sensitive data plane.
+- The intelligence store never receives an MPD token, analytics ID, App Attest key ID, advertising ID, account ID, or stable installation ID.
+- The MPD and analytics planes never receive URLs, domains, verdict IDs, report IDs, campaign IDs, or browsing events.
+- App Attest assertions bind a server nonce and canonical request digest and are checked for replay.
+- Raw submitted URLs are encrypted and transient. Long-term graph storage is sanitized and provenance-aware.
+- Crawlers have no path to production databases, secrets, internal networks, or other crawler sessions.
+- Derived decisions are versioned and replayable from immutable observations.
+- Enforcement scope never exceeds evidence scope.
+- URL Filter is fail open for V1 and has a remote kill switch and last-known-good rollback.
+
+## Implementation defaults
+
+These are proposed defaults until an accepted ADR replaces them:
+
+- iOS: Swift, SwiftUI, structured concurrency, NetworkExtension, App Attest, and system QR/camera frameworks.
+- API schemas: OpenAPI 3.1 plus generated client/server contract tests.
+- Primary intelligence store: PostgreSQL 17 or later.
+- Architecture: a modular control-plane service and worker, plus separately deployed sandbox, URL-filter distribution, anti-abuse, MPD, and analytics boundaries. Do not create a microservice per table.
+- Queue and object storage: managed products chosen by ADR; jobs must be idempotent and lease based.
+- Browser analysis: a supported Chromium build in a disposable microVM or equivalently strong isolation boundary. Never disable the Chromium sandbox.
+
+## Change requirements
+
+Every implementation change must include:
+
+- the smallest relevant tests;
+- migrations that are forward safe and reversible where practical;
+- structured logs that exclude URLs, query values, tokens, attestations, and page contents by default;
+- metrics with bounded-cardinality labels;
+- a threat-model note for new network or data flows;
+- documentation updates when a contract or accepted decision changes.
+
+No production dependency may be introduced without recording its purpose, data access, license, update policy, and failure behavior.
+
+## Verdict safety
+
+- Do not turn model confidence into a consumer percentage.
+- Do not let an LLM or vision model auto-block.
+- Do not count correlated facts as independent evidence.
+- Do not make shared hosting, CDNs, registrars, certificate issuers, TLDs, or domain age proxies for guilt.
+- Official-domain status suppresses impersonation evidence only; it does not create immunity from compromise.
+- Community reports trigger enrichment or review and contribute only within a capped family. They never auto-block alone.
+- Heuristic and campaign-propagated blocking remain feature-flagged until the benchmark gates are met.
+
+## Safe development
+
+- Use reserved example domains and offline fixtures in normal tests.
+- Never open live malicious URLs on the developer workstation or a normal CI runner.
+- Do not commit feed data, captured pages, raw URLs, screenshots, credentials, signing material, or Apple attestation artifacts.
+- Do not add third-party analytics, advertising, session-replay, or crash SDKs without explicit privacy review.
+- Never bypass certificate validation or ship debug trust overrides.
+
+## Definition of done
+
+A phase is done only when its documented acceptance criteria pass, its security and privacy boundaries are tested, failure behavior is exercised, and the relevant docs reflect the actual implementation.
