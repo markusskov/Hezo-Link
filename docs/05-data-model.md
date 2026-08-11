@@ -552,7 +552,7 @@ The client can derive and present one token per still-open or provisional month.
 - reproducibility query/configuration digest;
 - publication signature and correction predecessor.
 
-Primary key `(month, methodology_version, publication_revision)`. Raw token material follows P-009: current month plus the approved 45-day correction window, then deletion and destruction of that month's server pepper. Non-identifying aggregates may be retained for published history.
+Primary key `(month, methodology_version, publication_revision)`. If P-009 is approved, its proposed direction is current month plus a 45-day correction window, followed by deletion and destruction of that month's server pepper. Until privacy approval freezes the exact schedule, no migration, transition test, or finalization job may treat 45 days as approved. Non-identifying aggregates may be retained for published history after that decision.
 
 Only the aggregate publisher can read token rows and write rollups. Public/reporting roles can read finalized rollups only.
 
@@ -684,7 +684,7 @@ Proposed defaults, subject to document 02 and O-007/O-016/O-017/O-018:
 | App Attest raw registration material | Delete after verified derivation except encrypted current receipt needed for refresh |
 | Inactive App Attest derived state | Proposed 180 days, then re-attestation required |
 | Apple PIR `User-Identifier` digest/evaluation key | O-018 sets validated inactivity and absolute TTLs; delete both together |
-| MPD token digest | Current month plus approved 45-day correction window |
+| MPD token digest | Proposed: current month plus 45-day correction window; P-009 privacy approval required |
 | Optional analytics raw batch | Proposed 30 days, with a local deletion capability while raw |
 | Optional analytics aggregate | Proposed 13 months, with no contributor identifier |
 | Final MPD aggregate | May be retained as non-identifying published history |

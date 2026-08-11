@@ -25,6 +25,7 @@ The table assigns generic roles, not private individuals. External requests, con
 - [Proof-plan template](proof-plan-template.md) defines the question, prerequisites, fixtures, environment, expected cases, pass/stop gates, limitations, evidence, closure, and review for one proof.
 - [Evidence-bundle schema](evidence-bundle.schema.json) defines the public-safe evidence metadata contract. Raw evidence remains outside Git.
 - [Fixture catalog and policy](../../fixtures/stage-0/README.md) governs deterministic, synthetic, reserved, and offline inputs.
+- [MPD v1 public synthetic vectors](../../fixtures/stage-0/mpd/month-token-vectors.json) cover only the data-only, stack-neutral portion of S0-E; their manifest expressly records that no runnable proof or package pass is claimed.
 - [Repository safety](repository-safety.md) defines what may cross the public/private boundary.
 - [Teardown checklist](teardown-checklist.md) closes every spike, including failed and inconclusive ones.
 

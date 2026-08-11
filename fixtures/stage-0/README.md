@@ -25,7 +25,7 @@ Never commit:
 
 - a live or previously submitted URL, domain, address, DNS answer, redirect, page, screenshot, HAR, capture, archive, or payload;
 - a copied threat-feed row, provider response, terms snapshot, contract, private source label, or captured production observation;
-- a credential, token, signing item, attestation object, receipt, device/account identifier, analytics identifier, MPD token, or canary endpoint;
+- a credential, signing item, attestation object, receipt, device/account identifier, analytics identifier, operational or captured MPD token, or canary endpoint;
 - executable hostile content or content that needs to contact a third party to behave as expected;
 - a hash of a raw or restricted URL presented as sanitization; unkeyed URL hashes remain guessable and linkable; or
 - a generated result, log, evidence bundle, or deletion receipt that belongs in restricted proof storage.
@@ -65,6 +65,16 @@ blocked-NNNN.example.test/path/NNNN
 NNNN runs from 0001 through 1000, zero padded. The key has no scheme, user information, port, query, or fragment. The set is a canonical proof input only; it is not directly claimed to be a complete Apple Bloom or PIR artifact. The later approved proof compiler must assign integer value 1, derive Bloom and PIR inputs from the same manifest, and record the Apple tool, canonicalizer, compiler, parameter, and output digests.
 
 The fixture intentionally contains no allow-list member or Bloom false-positive construction. Those are separate expected cases and artifacts for S0-B, created only under its approved plan.
+
+## MPD v1 public synthetic vectors
+
+[month-token-vectors.json](mpd/month-token-vectors.json) is the deterministic known-answer and state-contract input for the data-only portion of S0-E. Its [payload schema](mpd/month-token-vectors.schema.json), [manifest](mpd/month-token-vectors.manifest.json), and [type-specific manifest schema](mpd/manifest.schema.json) do not apply to URL Filter fixtures.
+
+This is the narrow exception to the MPD-token prohibition above: a manifest-declared MPD vector may contain protocol-shaped outputs only when every input is project-generated public test data, every month is permanently historical, the values were never captured or accepted operationally, and operational use is explicitly forbidden. A real, current-looking, submitted, generated-at-runtime, or otherwise operational MPD value remains prohibited even if someone labels it a fixture.
+
+The vector set freezes the documented HKDF/HMAC inputs, canonical unpadded base64url representation, server HMAC over raw token bytes, UTC month boundaries, malformed input results, current-month-field policy, and stack-neutral withdrawal invariants. It does not prove installation authenticity, consent, unlinkability, deletion from backups, retention dates, or a public audience-size claim.
+
+No generator or runner is included. Before any proof gate consumes these vectors, the later S0-A semantic validator must recompute every intermediate, validate real UTC instants, resolve references, enforce unique case IDs/counts and required scenario coverage, compare reference months, couple operations to required fields/results, enforce lifecycle ordering and month/outcome/row-count relationships, prove retry payload minimization, and compare the committed bytes with the manifest. Runnable harness work still waits for an Accepted repository/execution ADR.
 
 ## Change checklist
 

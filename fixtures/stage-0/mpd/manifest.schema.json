@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:stage-0:mpd:fixture-manifest:v1",
+  "title": "Hezo Link MPD v1 vector-set manifest",
+  "description": "Type-specific manifest for the public synthetic MPD v1 JSON vector set. It is not valid for URL Filter or other fixture classes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "fixture_type",
+    "fixture_id",
+    "artifact",
+    "payload_schema",
+    "provenance",
+    "determinism",
+    "case_counts",
+    "safety",
+    "validations",
+    "scope"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "manifest_id": {
+      "const": "mpd-v1-month-token-vectors-1-manifest"
+    },
+    "fixture_type": {
+      "const": "mpd_v1_vector_set"
+    },
+    "fixture_id": {
+      "const": "mpd-v1-month-token-vectors-1"
+    },
+    "artifact": {
+      "$ref": "#/$defs/artifact"
+    },
+    "payload_schema": {
+      "$ref": "#/$defs/payloadSchema"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "determinism": {
+      "$ref": "#/$defs/determinism"
+    },
+    "case_counts": {
+      "$ref": "#/$defs/caseCounts"
+    },
+    "safety": {
+      "$ref": "#/$defs/safety"
+    },
+    "validations": {
+      "$ref": "#/$defs/validations"
+    },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "media_type",
+        "encoding",
+        "line_endings",
+        "final_newline",
+        "byte_length",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "const": "fixtures/stage-0/mpd/month-token-vectors.json"
+        },
+        "media_type": {
+          "const": "application/json"
+        },
+        "encoding": {
+          "const": "UTF-8"
+        },
+        "line_endings": {
+          "const": "LF"
+        },
+        "final_newline": {
+          "const": true
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "payloadSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "dialect", "strict_mode", "byte_length", "sha256"],
+      "properties": {
+        "path": {
+          "const": "fixtures/stage-0/mpd/month-token-vectors.schema.json"
+        },
+        "dialect": {
+          "const": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "strict_mode": {
+          "const": true
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "construction_method_id",
+        "construction_method_version",
+        "redistribution_basis",
+        "generated_from_live_or_restricted_data"
+      ],
+      "properties": {
+        "source": {
+          "const": "project_generated_public_synthetic"
+        },
+        "construction_method_id": {
+          "const": "mpd-v1-hkdf-hmac-known-answer-vectors"
+        },
+        "construction_method_version": {
+          "const": 1
+        },
+        "redistribution_basis": {
+          "const": "project_authored_public_test_data"
+        },
+        "generated_from_live_or_restricted_data": {
+          "const": false
+        }
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "randomness_used",
+        "network_independent",
+        "clock_independent",
+        "locale_independent",
+        "timezone_independent",
+        "architecture_independent",
+        "machine_state_independent"
+      ],
+      "properties": {
+        "randomness_used": {
+          "const": false
+        },
+        "network_independent": {
+          "const": true
+        },
+        "clock_independent": {
+          "const": true
+        },
+        "locale_independent": {
+          "const": true
+        },
+        "timezone_independent": {
+          "const": true
+        },
+        "architecture_independent": {
+          "const": true
+        },
+        "machine_state_independent": {
+          "const": true
+        }
+      }
+    },
+    "caseCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "derivation",
+        "server_digest",
+        "utc_month",
+        "binary_length",
+        "derivation_mutation",
+        "month_validation",
+        "token_validation",
+        "digest_input",
+        "request_month",
+        "withdrawal",
+        "total"
+      ],
+      "properties": {
+        "derivation": {
+          "const": 3
+        },
+        "server_digest": {
+          "const": 2
+        },
+        "utc_month": {
+          "const": 4
+        },
+        "binary_length": {
+          "const": 4
+        },
+        "derivation_mutation": {
+          "const": 4
+        },
+        "month_validation": {
+          "const": 6
+        },
+        "token_validation": {
+          "const": 6
+        },
+        "digest_input": {
+          "const": 1
+        },
+        "request_month": {
+          "const": 5
+        },
+        "withdrawal": {
+          "const": 8
+        },
+        "total": {
+          "const": 43
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "contains_protocol_shaped_public_test_values",
+        "contains_captured_or_operational_material",
+        "contains_real_identifier",
+        "contains_production_secret_or_pepper",
+        "historical_months_only",
+        "operational_use_forbidden",
+        "offline_only"
+      ],
+      "properties": {
+        "classification": {
+          "const": "public_synthetic"
+        },
+        "contains_protocol_shaped_public_test_values": {
+          "const": true
+        },
+        "contains_captured_or_operational_material": {
+          "const": false
+        },
+        "contains_real_identifier": {
+          "const": false
+        },
+        "contains_production_secret_or_pepper": {
+          "const": false
+        },
+        "historical_months_only": {
+          "const": true
+        },
+        "operational_use_forbidden": {
+          "const": true
+        },
+        "offline_only": {
+          "const": true
+        }
+      }
+    },
+    "validations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_schema_strict_compile",
+        "payload_schema_strict_compile",
+        "payload_schema_validation",
+        "case_counts_verified",
+        "case_ids_unique",
+        "references_resolved",
+        "cryptography_recomputed",
+        "independent_crypto_implementations",
+        "canonical_base64url_verified",
+        "utc_semantics_verified",
+        "artifact_digest_and_size_verified",
+        "public_safety_review"
+      ],
+      "properties": {
+        "manifest_schema_strict_compile": {
+          "const": true
+        },
+        "payload_schema_strict_compile": {
+          "const": true
+        },
+        "payload_schema_validation": {
+          "const": true
+        },
+        "case_counts_verified": {
+          "const": true
+        },
+        "case_ids_unique": {
+          "const": true
+        },
+        "references_resolved": {
+          "const": true
+        },
+        "cryptography_recomputed": {
+          "const": true
+        },
+        "independent_crypto_implementations": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["node_standard_crypto", "python_standard_library", "openssl_cli"]
+          }
+        },
+        "canonical_base64url_verified": {
+          "const": true
+        },
+        "utc_semantics_verified": {
+          "const": true
+        },
+        "artifact_digest_and_size_verified": {
+          "const": true
+        },
+        "public_safety_review": {
+          "const": "independent_review_complete"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runnable_harness_included",
+        "application_code_included",
+        "production_dependency_selected",
+        "proof_pass_claimed",
+        "consent_or_public_wording_approved",
+        "retention_or_finalization_policy_approved"
+      ],
+      "properties": {
+        "runnable_harness_included": {
+          "const": false
+        },
+        "application_code_included": {
+          "const": false
+        },
+        "production_dependency_selected": {
+          "const": false
+        },
+        "proof_pass_claimed": {
+          "const": false
+        },
+        "consent_or_public_wording_approved": {
+          "const": false
+        },
+        "retention_or_finalization_policy_approved": {
+          "const": false
+        }
+      }
+    }
+  }
+}

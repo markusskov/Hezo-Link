@@ -816,6 +816,7 @@ Counsel must review the public privacy policy, consent copy, age rating, process
 ### Token correctness
 
 - Fixed test vectors cover CSPRNG seed format, HKDF domain separation, HMAC output, base64url encoding, and UTC month boundaries.
+- The checked-in [public synthetic MPD v1 vectors](../fixtures/stage-0/mpd/month-token-vectors.json) encode deterministic protocol known answers and expected withdrawal invariants only; their permanently historical values are forbidden in operations and do not validate an implementation or pass the broader S0-E proof.
 - The same seed/month produces the same token.
 - Different months or seeds produce different tokens.
 - The full token is 32 bytes and malformed lengths/encodings are rejected.
