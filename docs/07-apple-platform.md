@@ -503,7 +503,7 @@ Before making either field mandatory, freeze physical-device fixtures for each s
 Receipt validation is part of accepting an attestation. The later server-to-server exchange that refreshes the receipt and obtains Apple's fraud metric is optional. For every initial receipt:
 
 - validate the receipt's PKCS #7/CMS signature and chain to Apple Root CA G3;
-- require field 2 to contain the expected app identifier, field 3 to contain the attested public key, field 4 to contain the expected client hash, and field 12 creation time to be no more than five minutes old for an initial receipt;
+- require field 2 to contain the 10-character Team ID plus `.` plus the bundle identifier, field 3 to contain the attested public key, field 4 to contain the expected client hash, and field 12 creation time to be no more than five minutes old for an initial receipt; keep this Team-ID construction distinct from the App-ID-prefix construction used for the attestation RP ID, reject cross-substitution when the values differ, and prove distinct authoritative configuration sources rather than an impossible byte-level distinction when they happen to be equal;
 - distinguish the App Attestation certificate root from the separate Apple receipt-signing root;
 - if fraud-risk refresh is enabled, keep the latest encrypted receipt in the anti-abuse store and replace it with Apple's refreshed receipt response;
 - refresh only after field 19 (`Not Before`) and before field 21 (`Expiration Time`), rather than on each user request;
@@ -616,7 +616,8 @@ Stage 0 uses reserved example domains and a synthetic 1,000-entry dataset. It mu
 - Verify attestation and assertion fixtures from an implementation independent of the production verifier.
 - Prove an issued capability contains no App Attest key ID and cannot be used for another purpose or after expiry.
 - Prove no App Attest material can reach intelligence, MPD, analytics, general logs, traces, or support tools.
-- If receipts are enabled, validate sandbox and production risk calls separately and exercise receipt refresh, expiry, invalid signature, and key rotation.
+- Validate every initial attestation receipt locally before accepting its key, including the receipt trust chain, application identifier, public key, client hash, creation time, and applicable expiry metadata.
+- If Apple's fraud-risk redemption/refresh service is enabled, validate sandbox and production risk calls separately and exercise endpoint/auth separation, receipt refresh, expiry, invalid signature, rate failure, and signing-key rotation. If it is disabled, prove zero risk-service calls and delete the raw receipt after the approved local derivation.
 
 ### 9.5 Accountless token proof
 

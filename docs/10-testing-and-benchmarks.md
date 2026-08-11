@@ -313,7 +313,7 @@ Server negative vectors include:
 - `isSupported == false`, Apple unavailability, and attestation throttling;
 - an invalid/unattested report attempting to affect a verdict or block.
 
-Also validate the attestation receipt chain, App ID, public key, client hash, creation/expiry fields, sandbox/production endpoint separation, authorization failures, rate limits, and refresh timing. Apple's approximate fraud metric is anti-abuse context only: it is not MPD, a stable device identity, or sole authority to deny protection.
+Always validate the initial attestation receipt locally before key acceptance: verify its chain, receipt application identifier (Team ID plus bundle identifier), public key, client hash, creation time, and applicable expiry fields. If Apple's fraud-risk redemption/refresh service is enabled, additionally test sandbox/production endpoint separation, authorization failures, rate limits, replacement, and refresh timing; if disabled, prove zero risk-service calls and raw-receipt deletion after approved local derivation. Apple's approximate fraud metric is anti-abuse context only: it is not MPD, a stable device identity, or sole authority to deny protection.
 
 The verifier accepts legacy iOS 26 authenticator data without later extension fields and correctly parses supported newer extension data. Validation-category or bundle-version anomalies are explicit anti-abuse signals, not an undocumented hard block.
 

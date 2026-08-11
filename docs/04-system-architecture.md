@@ -200,7 +200,7 @@ This deployable owns:
 
 Only this service knows an App Attest key ID or retained IP-derived rate key. It forwards neither value. The public request body may be streamed through an edge that computes its digest without semantic logging; the downstream service receives the body while anti-abuse receives only the digest needed for binding.
 
-App Attest is not available in the URL Filter extension. The containing app establishes narrowly scoped credentials as specified in document 07. Core manual protection must degrade safely when App Attest is unsupported or temporarily unavailable; policy may lower trust, rate-limit, defer reports, or use a more limited check path rather than falsely treating failure as fraud.
+Hezo does not invoke App Attest from, or make App Attest material available to, the URL Filter extension; only the containing app uses it. The containing app establishes narrowly scoped credentials as specified in document 07. Core manual protection must degrade safely when App Attest is unsupported or temporarily unavailable; policy may lower trust, rate-limit, defer reports, or use a more limited check path rather than falsely treating failure as fraud.
 
 ### MPD measurement plane
 
