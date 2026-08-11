@@ -6,7 +6,7 @@ Hezo Link is an iPhone-first phishing, scam-link, and malicious-URL protection p
 
 The long-term company asset is not a generic “AI scam detector.” It is an evidence-backed Trust Graph that connects URLs, domains, infrastructure, brands, page artifacts, and scam campaigns. AI may extract or explain evidence; it does not get to invent the verdict.
 
-This repository is currently a documentation-only implementation handoff. It deliberately contains no application code yet.
+This repository contains the reviewed implementation handoff and the public governance artifacts for Stage 0 risk proofs. It deliberately contains no application code yet.
 
 ## V1 in one minute
 
@@ -80,7 +80,7 @@ The implementation handoff is split by concern:
 11. [Staged implementation plan and Codex build order](docs/11-implementation-plan.md)
 12. [Decisions, risks, and open questions](docs/12-risks-decisions-and-open-questions.md)
 
-[Documentation index](docs/README.md) explains precedence and maintenance.
+[Documentation index](docs/README.md) explains precedence and maintenance. Stage 0 proof work uses the public [ADR process](docs/adr/README.md), [proof governance](docs/stage-0/README.md), and [offline fixture policy](fixtures/stage-0/README.md); owner-only decisions and raw evidence remain outside Git.
 
 Codex must also follow [AGENTS.md](AGENTS.md). It converts the handoff into repository-level implementation rules and prevents premature expansion.
 
@@ -125,7 +125,9 @@ External-source licenses must allow each commercial output. Hezo must never repa
 
 ## Repository status
 
-Documentation baseline: ready for implementation review.
+Documentation baseline: reviewed and merged.
+
+Stage 0: public governance and deterministic offline fixtures are established. The runnable proof harness remains paused until the repository and isolated-execution decisions are accepted; no proof is claimed complete.
 
 Application code: intentionally not started.
 
