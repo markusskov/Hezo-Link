@@ -189,9 +189,9 @@ jobs:
               'Zlib'
             ])
             // GitHub currently omits license metadata for Actions dependencies.
-            // Keep exceptions exact and commit-pinned; this action was reviewed as MIT.
+            // Keep exceptions PURL-exact and commit-pinned; this action was reviewed as MIT.
             const reviewedMissingLicenseMetadata = new Set([
-              'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
+              'pkg:githubactions/actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
             ])
             const violations = []
 
@@ -204,7 +204,7 @@ jobs:
               const licenseIsAllowed = allowedLicenses.has(change.license ?? '')
               const missingLicenseWasReviewed =
                 change.license == null &&
-                reviewedMissingLicenseMetadata.has(dependency)
+                reviewedMissingLicenseMetadata.has(change.package_url ?? '')
               if (!licenseIsAllowed && !missingLicenseWasReviewed) {
                 violations.push(
                   `${dependency}: license is absent or outside the reviewed allowlist`
