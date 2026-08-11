@@ -253,7 +253,7 @@ public struct ManualURLInputValidator: Sendable {
       return nil
     }
 
-    guard isHostAllowed(authority.asciiHost, isIPLiteral: authority.isIPLiteral) else {
+    guard isHostAllowed(authority.host) else {
       return nil
     }
 
@@ -274,7 +274,7 @@ public struct ManualURLInputValidator: Sendable {
       syntaxProfileVersion: Self.syntaxProfileVersion,
       submittedURL: submittedURL,
       scheme: scheme,
-      asciiHost: authority.asciiHost,
+      host: authority.host,
       explicitPort: authority.explicitPort,
       effectivePort: effectivePort,
       portDisposition: Self.supportedPorts.contains(effectivePort) ? .supported : .unsupported,
@@ -299,16 +299,19 @@ public struct ManualURLInputValidator: Sendable {
   }
 
   private struct ParsedAuthority {
-    let asciiHost: String
+    let host: ValidatedURLHost
     let explicitPort: UInt16?
-    let isIPLiteral: Bool
+
+    var asciiHost: String {
+      host.asciiValue
+    }
 
     var strictURLAuthority: String {
-      let host = isIPLiteral && asciiHost.contains(":") ? "[\(asciiHost)]" : asciiHost
+      let hostValue = host.kind == .ipv6Literal ? "[\(asciiHost)]" : asciiHost
       if let explicitPort {
-        return "\(host):\(explicitPort)"
+        return "\(hostValue):\(explicitPort)"
       }
-      return host
+      return hostValue
     }
   }
 
@@ -335,7 +338,7 @@ public struct ManualURLInputValidator: Sendable {
       let hostStart = rawAuthority.index(after: rawAuthority.startIndex)
       let rawHost = String(rawAuthority[hostStart..<closingBracket])
       guard rawHost.contains("%") == false,
-        let asciiHost = normalizedHost(rawHost, isBracketedIPLiteral: true)
+        let host = normalizedIPv6Host(rawHost)
       else {
         return nil
       }
@@ -343,7 +346,7 @@ public struct ManualURLInputValidator: Sendable {
       guard remainder.isEmpty || port != nil else {
         return nil
       }
-      return ParsedAuthority(asciiHost: asciiHost, explicitPort: port, isIPLiteral: true)
+      return ParsedAuthority(host: host, explicitPort: port)
     }
 
     guard rawAuthority.contains("[") == false, rawAuthority.contains("]") == false else {
@@ -373,42 +376,37 @@ public struct ManualURLInputValidator: Sendable {
 
     guard rawHost.isEmpty == false, rawHost.contains("%") == false,
       rawHost.hasSuffix(".") == false,
-      let asciiHost = normalizedHost(rawHost, isBracketedIPLiteral: false)
+      let asciiHost = normalizedUnbracketedHost(rawHost)
     else {
       return nil
     }
 
     if asciiHost.utf8.allSatisfy({ byte in (0x30...0x39).contains(byte) || byte == 0x2E }) {
-      guard rawHost == asciiHost, isCanonicalIPv4(asciiHost) else {
+      guard rawHost == asciiHost,
+        let packedAddressBytes = canonicalIPv4Bytes(asciiHost),
+        let host = ValidatedURLHost(ipv4PackedAddressBytes: packedAddressBytes),
+        host.asciiValue == asciiHost
+      else {
         return nil
       }
-      return ParsedAuthority(
-        asciiHost: asciiHost,
-        explicitPort: explicitPort,
-        isIPLiteral: true
-      )
+      return ParsedAuthority(host: host, explicitPort: explicitPort)
     }
 
     guard resemblesAlternateIPv4(asciiHost) == false,
-      hasIPv4CandidateFinalLabel(asciiHost) == false,
-      isValidDNSHost(asciiHost)
+      let host = ValidatedURLHost(domainNameASCIIValue: asciiHost)
     else {
       return nil
     }
-    return ParsedAuthority(asciiHost: asciiHost, explicitPort: explicitPort, isIPLiteral: false)
+    return ParsedAuthority(host: host, explicitPort: explicitPort)
   }
 
-  private func normalizedHost(_ rawHost: String, isBracketedIPLiteral: Bool) -> String? {
+  private func normalizedUnbracketedHost(_ rawHost: String) -> String? {
     guard rawHost.precomposedStringWithCanonicalMapping.utf8.elementsEqual(rawHost.utf8),
       rawHost.precomposedStringWithCompatibilityMapping.utf8.elementsEqual(rawHost.utf8),
       rawHost.unicodeScalars.allSatisfy(Self.isAllowedRawHostScalar),
       rawHost.unicodeScalars.contains(where: Self.isUnicodeDotVariant) == false
     else {
       return nil
-    }
-
-    if isBracketedIPLiteral {
-      return normalizedIPv6Host(rawHost)
     }
 
     guard let url = URL(string: "https://\(rawHost)"),
@@ -427,8 +425,13 @@ public struct ManualURLInputValidator: Sendable {
     return normalized
   }
 
-  private func normalizedIPv6Host(_ rawHost: String) -> String? {
-    guard hasWellFormedRawIPv6Segments(rawHost) else {
+  private func normalizedIPv6Host(_ rawHost: String) -> ValidatedURLHost? {
+    guard rawHost.precomposedStringWithCanonicalMapping.utf8.elementsEqual(rawHost.utf8),
+      rawHost.precomposedStringWithCompatibilityMapping.utf8.elementsEqual(rawHost.utf8),
+      rawHost.unicodeScalars.allSatisfy(Self.isAllowedRawHostScalar),
+      rawHost.unicodeScalars.contains(where: Self.isUnicodeDotVariant) == false,
+      hasWellFormedRawIPv6Segments(rawHost)
+    else {
       return nil
     }
 
@@ -438,14 +441,7 @@ public struct ManualURLInputValidator: Sendable {
     }
 
     let bytes = withUnsafeBytes(of: address) { Array($0) }
-    let isIPv4Mapped =
-      bytes[0..<10].allSatisfy { $0 == 0 }
-      && bytes[10] == 0xFF && bytes[11] == 0xFF
-    if isIPv4Mapped {
-      return "\(bytes[12]).\(bytes[13]).\(bytes[14]).\(bytes[15])"
-    }
-
-    return renderRFC5952IPv6(bytes)
+    return ValidatedURLHost(ipv6PackedAddressBytes: bytes)
   }
 
   private func hasWellFormedRawIPv6Segments(_ rawHost: String) -> Bool {
@@ -453,7 +449,7 @@ public struct ManualURLInputValidator: Sendable {
     for (index, segment) in segments.enumerated() where segment.isEmpty == false {
       if segment.contains(".") {
         guard index == segments.index(before: segments.endIndex),
-          isCanonicalIPv4(String(segment))
+          canonicalIPv4Bytes(String(segment)) != nil
         else {
           return false
         }
@@ -464,51 +460,6 @@ public struct ManualURLInputValidator: Sendable {
       }
     }
     return true
-  }
-
-  private func renderRFC5952IPv6(_ bytes: [UInt8]) -> String? {
-    guard bytes.count == 16 else {
-      return nil
-    }
-    let words = stride(from: 0, to: bytes.count, by: 2).map { index in
-      (UInt16(bytes[index]) << 8) | UInt16(bytes[index + 1])
-    }
-
-    var bestStart: Int?
-    var bestLength = 0
-    var index = 0
-    while index < words.count {
-      guard words[index] == 0 else {
-        index += 1
-        continue
-      }
-      let runStart = index
-      while index < words.count, words[index] == 0 {
-        index += 1
-      }
-      let runLength = index - runStart
-      if runLength >= 2, runLength > bestLength {
-        bestStart = runStart
-        bestLength = runLength
-      }
-    }
-
-    guard let bestStart else {
-      return words.map { String($0, radix: 16) }.joined(separator: ":")
-    }
-    let prefix = words[..<bestStart].map { String($0, radix: 16) }.joined(separator: ":")
-    let suffixStart = bestStart + bestLength
-    let suffix = words[suffixStart...].map { String($0, radix: 16) }.joined(separator: ":")
-    if prefix.isEmpty, suffix.isEmpty {
-      return "::"
-    }
-    if prefix.isEmpty {
-      return "::\(suffix)"
-    }
-    if suffix.isEmpty {
-      return "\(prefix)::"
-    }
-    return "\(prefix)::\(suffix)"
   }
 
   private func parsePort(_ rawPort: String) -> UInt16? {
@@ -523,17 +474,23 @@ public struct ManualURLInputValidator: Sendable {
     return port
   }
 
-  private func isHostAllowed(_ host: String, isIPLiteral: Bool) -> Bool {
-    guard isIPLiteral == false else {
+  private func isHostAllowed(_ host: ValidatedURLHost) -> Bool {
+    guard host.kind == .domainName else {
       return true
     }
-    if specialUsePolicy == .isolatedTestFixture, matchesDomain(host, suffix: "test") {
+    if specialUsePolicy == .isolatedTestFixture,
+      matchesDomain(host.asciiValue, suffix: "test")
+    {
       return true
     }
-    if Self.specialUseDomainSuffixes.contains(where: { matchesDomain(host, suffix: $0) }) {
+    if Self.specialUseDomainSuffixes.contains(
+      where: { matchesDomain(host.asciiValue, suffix: $0) }
+    ) {
       return false
     }
-    if matchesDomain(host, suffix: "internal") || host == "metadata.google.internal" {
+    if matchesDomain(host.asciiValue, suffix: "internal")
+      || host.asciiValue == "metadata.google.internal"
+    {
       return false
     }
     return true
@@ -627,21 +584,25 @@ public struct ManualURLInputValidator: Sendable {
     }
   }
 
-  private func isCanonicalIPv4(_ host: String) -> Bool {
+  private func canonicalIPv4Bytes(_ host: String) -> [UInt8]? {
     let components = host.split(separator: ".", omittingEmptySubsequences: false)
     guard components.count == 4 else {
-      return false
+      return nil
     }
-    return components.allSatisfy { component in
+    var bytes: [UInt8] = []
+    bytes.reserveCapacity(4)
+    for component in components {
       guard component.isEmpty == false,
         component.utf8.allSatisfy({ (0x30...0x39).contains($0) }),
         (component.count == 1 || component.first != "0"),
-        let value = UInt8(component)
+        let value = UInt8(component),
+        String(value) == component
       else {
-        return false
+        return nil
       }
-      return String(value) == component
+      bytes.append(value)
     }
+    return bytes
   }
 
   private func resemblesAlternateIPv4(_ host: String) -> Bool {
@@ -660,58 +621,8 @@ public struct ManualURLInputValidator: Sendable {
     }
   }
 
-  private func hasIPv4CandidateFinalLabel(_ host: String) -> Bool {
-    guard let finalLabel = host.split(separator: ".", omittingEmptySubsequences: false).last,
-      finalLabel.isEmpty == false
-    else {
-      return false
-    }
-    let lowercased = finalLabel.lowercased()
-    return finalLabel.utf8.allSatisfy { (0x30...0x39).contains($0) }
-      || lowercased.hasPrefix("0x")
-  }
-
-  private func isValidDNSHost(_ host: String) -> Bool {
-    guard host.utf8.count <= 253 else {
-      return false
-    }
-    let labels = host.split(separator: ".", omittingEmptySubsequences: false)
-    guard labels.count >= 2 else {
-      return false
-    }
-    return labels.allSatisfy { label in
-      guard (1...63).contains(label.utf8.count),
-        let first = label.utf8.first,
-        let last = label.utf8.last,
-        isASCIIAlphaNumeric(first),
-        isASCIIAlphaNumeric(last),
-        hasValidIDNAHyphenForm(label)
-      else {
-        return false
-      }
-      return label.utf8.allSatisfy { byte in
-        isASCIIAlphaNumeric(byte) || byte == 0x2D
-      }
-    }
-  }
-
-  private func hasValidIDNAHyphenForm(_ label: Substring) -> Bool {
-    let bytes = Array(label.utf8)
-    guard bytes.count >= 4, bytes[2] == 0x2D, bytes[3] == 0x2D else {
-      return true
-    }
-    return bytes.count > 4
-      && bytes[0] == 0x78
-      && bytes[1] == 0x6E
-      && bytes[4] != 0x2D
-  }
-
   private func isASCIIAlpha(_ byte: UInt8) -> Bool {
     (0x41...0x5A).contains(byte) || (0x61...0x7A).contains(byte)
-  }
-
-  private func isASCIIAlphaNumeric(_ byte: UInt8) -> Bool {
-    isASCIIAlpha(byte) || (0x30...0x39).contains(byte)
   }
 
   private func isASCIIHexDigit(_ byte: UInt8) -> Bool {

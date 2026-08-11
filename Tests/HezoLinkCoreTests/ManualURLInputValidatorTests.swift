@@ -12,6 +12,32 @@ struct ManualURLInputValidatorTests {
     let path: String
     let query: String?
     let fragment: String?
+    let hostKind: ValidatedURLHost.Kind
+    let packedAddressBytes: [UInt8]?
+
+    init(
+      scheme: WebScheme,
+      host: String,
+      explicitPort: UInt16?,
+      effectivePort: UInt16,
+      portDisposition: PortDisposition,
+      path: String,
+      query: String?,
+      fragment: String?,
+      hostKind: ValidatedURLHost.Kind = .domainName,
+      packedAddressBytes: [UInt8]? = nil
+    ) {
+      self.scheme = scheme
+      self.host = host
+      self.explicitPort = explicitPort
+      self.effectivePort = effectivePort
+      self.portDisposition = portDisposition
+      self.path = path
+      self.query = query
+      self.fragment = fragment
+      self.hostKind = hostKind
+      self.packedAddressBytes = packedAddressBytes
+    }
   }
 
   @Test(
@@ -98,7 +124,9 @@ struct ManualURLInputValidatorTests {
           portDisposition: .supported,
           path: "/",
           query: nil,
-          fragment: nil
+          fragment: nil,
+          hostKind: .ipv4Literal,
+          packedAddressBytes: [192, 0, 2, 1]
         )
       ),
       SafeURLCase(
@@ -112,7 +140,12 @@ struct ManualURLInputValidatorTests {
           portDisposition: .supported,
           path: "/",
           query: nil,
-          fragment: nil
+          fragment: nil,
+          hostKind: .ipv6Literal,
+          packedAddressBytes: [
+            0x20, 0x01, 0x0D, 0xB8, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 1,
+          ]
         )
       ),
       SafeURLCase(
@@ -126,7 +159,12 @@ struct ManualURLInputValidatorTests {
           portDisposition: .supported,
           path: "/",
           query: nil,
-          fragment: nil
+          fragment: nil,
+          hostKind: .ipv6Literal,
+          packedAddressBytes: [
+            0x20, 0x01, 0x0D, 0xB8, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 1,
+          ]
         )
       ),
       SafeURLCase(
@@ -140,7 +178,9 @@ struct ManualURLInputValidatorTests {
           portDisposition: .supported,
           path: "/",
           query: nil,
-          fragment: nil
+          fragment: nil,
+          hostKind: .ipv4Literal,
+          packedAddressBytes: [192, 0, 2, 1]
         )
       ),
       SafeURLCase(
@@ -226,6 +266,10 @@ struct ManualURLInputValidatorTests {
     let componentsMatch =
       value.scheme == expected.scheme
       && value.asciiHost == expected.host
+      && value.host.asciiValue == expected.host
+      && value.host.kind == expected.hostKind
+      && value.hostKind == expected.hostKind
+      && value.host.packedAddressBytes == expected.packedAddressBytes
       && value.explicitPort == expected.explicitPort
       && value.effectivePort == expected.effectivePort
       && value.portDisposition == expected.portDisposition
@@ -549,6 +593,60 @@ struct ManualURLInputValidatorTests {
     }
 
     #expect(allRenderingsAreSafe, "Validation diagnostics must never reveal submitted content.")
+  }
+
+  @Test func validatedHostRenderingAndReflectionAreContentFree() {
+    let canary = "validated-host-canary.test"
+    let outcome = ManualURLInputValidator.isolatedTestFixture.validate("https://\(canary)/")
+    guard case .accepted(let value) = outcome else {
+      Issue.record("The reserved host canary must pass fixture-profile validation.")
+      return
+    }
+
+    let host = value.host
+    let mirror = Mirror(reflecting: host)
+    let rendered =
+      [
+        host.description,
+        host.debugDescription,
+        String(describing: host),
+        String(reflecting: host),
+      ] + mirror.children.map { String(describing: $0.value) }
+
+    #expect(host.asciiValue == canary)
+    #expect(mirror.children.count == 1)
+    #expect(
+      rendered.allSatisfy {
+        $0 == LogSafeURLRedactor.replacement && $0.contains(canary) == false
+      },
+      "Ordinary host rendering must expose only the shared redaction constant."
+    )
+  }
+
+  @Test func validatedHostFactoriesPreserveKindAndPackedByteInvariants() throws {
+    let domain = try #require(ValidatedURLHost(domainNameASCIIValue: "factory.test"))
+    let ipv4 = try #require(
+      ValidatedURLHost(ipv4PackedAddressBytes: [192, 0, 2, 1])
+    )
+    let mappedIPv6 = try #require(
+      ValidatedURLHost(
+        ipv6PackedAddressBytes: [
+          0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0xFF, 0xFF, 192, 0, 2, 1,
+        ]
+      )
+    )
+
+    #expect(domain.kind == .domainName)
+    #expect(domain.packedAddressBytes == nil)
+    #expect(ipv4.kind == .ipv4Literal)
+    #expect(ipv4.asciiValue == "192.0.2.1")
+    #expect(ipv4.packedAddressBytes == [192, 0, 2, 1])
+    #expect(mappedIPv6 == ipv4)
+    #expect(ValidatedURLHost(domainNameASCIIValue: "invalid") == nil)
+    #expect(ValidatedURLHost(domainNameASCIIValue: "invalid..test") == nil)
+    #expect(ValidatedURLHost(ipv4PackedAddressBytes: [192, 0, 2]) == nil)
+    #expect(ValidatedURLHost(ipv6PackedAddressBytes: Array(repeating: 0, count: 15)) == nil)
   }
 
   @Test func manualEntrySessionProjectsEveryFiniteStatus() {
