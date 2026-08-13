@@ -35,6 +35,7 @@
 		20000000000000000000001B /* EvaluatedScopeV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000001C /* EvaluatedScopeV1Tests.swift */; };
 		20000000000000000000001C /* ConfidenceCategoryV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000001D /* ConfidenceCategoryV1Tests.swift */; };
 		20000000000000000000001D /* VerdictReasonV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000001E /* VerdictReasonV1Tests.swift */; };
+		20000000000000000000001E /* VerdictReasonsV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000001F /* VerdictReasonsV1Tests.swift */; };
 		8CB53578DD05D68A51E50D96 /* AddressRegistryClassifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C538A73E9CA9458C912B26 /* AddressRegistryClassifierTests.swift */; };
 		03E35C6C43CBF72FFE453CA9 /* IANAAddressRegistryAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0644C83465D71BD819ED2279 /* IANAAddressRegistryAssetTests.swift */; };
 		200000000000000000000008 /* URLPolicyTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000009 /* URLPolicyTestSupport.swift */; };
@@ -63,6 +64,7 @@
 		810000000000000000000015 /* EvaluatedScopeV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000015 /* EvaluatedScopeV1.swift */; };
 		810000000000000000000016 /* ConfidenceCategoryV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000016 /* ConfidenceCategoryV1.swift */; };
 		810000000000000000000017 /* VerdictReasonV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000017 /* VerdictReasonV1.swift */; };
+		810000000000000000000018 /* VerdictReasonsV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000018 /* VerdictReasonsV1.swift */; };
 		F084A386B928A6324548CB3E /* AddressRegistryClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9552005C21001B0116D010 /* AddressRegistryClassifier.swift */; };
 		8A0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat in Resources */ = {isa = PBXBuildFile; fileRef = 8B0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat */; };
 		8A0000000000000000000002 /* LICENSE-MPL-2.0.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8B0000000000000000000002 /* LICENSE-MPL-2.0.txt */; };
@@ -102,6 +104,7 @@
 		10000000000000000000001C /* EvaluatedScopeV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluatedScopeV1Tests.swift; sourceTree = "<group>"; };
 		10000000000000000000001D /* ConfidenceCategoryV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceCategoryV1Tests.swift; sourceTree = "<group>"; };
 		10000000000000000000001E /* VerdictReasonV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictReasonV1Tests.swift; sourceTree = "<group>"; };
+		10000000000000000000001F /* VerdictReasonsV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictReasonsV1Tests.swift; sourceTree = "<group>"; };
 		B4C538A73E9CA9458C912B26 /* AddressRegistryClassifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRegistryClassifierTests.swift; sourceTree = "<group>"; };
 		0644C83465D71BD819ED2279 /* IANAAddressRegistryAssetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IANAAddressRegistryAssetTests.swift; sourceTree = "<group>"; };
 		100000000000000000000009 /* URLPolicyTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyTestSupport.swift; sourceTree = "<group>"; };
@@ -133,6 +136,7 @@
 		800000000000000000000015 /* EvaluatedScopeV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluatedScopeV1.swift; sourceTree = "<group>"; };
 		800000000000000000000016 /* ConfidenceCategoryV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceCategoryV1.swift; sourceTree = "<group>"; };
 		800000000000000000000017 /* VerdictReasonV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictReasonV1.swift; sourceTree = "<group>"; };
+		800000000000000000000018 /* VerdictReasonsV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictReasonsV1.swift; sourceTree = "<group>"; };
 		0D9552005C21001B0116D010 /* AddressRegistryClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRegistryClassifier.swift; sourceTree = "<group>"; };
 		8B0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat */ = {isa = PBXFileReference; lastKnownFileType = text; path = "hezolink-public-suffix-list-e1b8015c.dat"; sourceTree = "<group>"; };
 		8B0000000000000000000002 /* LICENSE-MPL-2.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "LICENSE-MPL-2.0.txt"; sourceTree = "<group>"; };
@@ -224,6 +228,7 @@
 				100000000000000000000009 /* URLPolicyTestSupport.swift */,
 				10000000000000000000001A /* VerdictLabelV1Tests.swift */,
 				10000000000000000000001E /* VerdictReasonV1Tests.swift */,
+				10000000000000000000001F /* VerdictReasonsV1Tests.swift */,
 				100000000000000000000003 /* VerdictTests.swift */,
 			);
 			path = HezoLinkCoreTests;
@@ -270,6 +275,7 @@
 				80000000000000000000000B /* ValidatedManualURL.swift */,
 				800000000000000000000013 /* VerdictLabelV1.swift */,
 				800000000000000000000017 /* VerdictReasonV1.swift */,
+				800000000000000000000018 /* VerdictReasonsV1.swift */,
 				800000000000000000000004 /* Verdict.swift */,
 			);
 			path = HezoLinkCore;
@@ -486,6 +492,7 @@
 				200000000000000000000008 /* URLPolicyTestSupport.swift in Sources */,
 				200000000000000000000019 /* VerdictLabelV1Tests.swift in Sources */,
 				20000000000000000000001D /* VerdictReasonV1Tests.swift in Sources */,
+				20000000000000000000001E /* VerdictReasonsV1Tests.swift in Sources */,
 				200000000000000000000003 /* VerdictTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -515,6 +522,7 @@
 				81000000000000000000000B /* ValidatedManualURL.swift in Sources */,
 				810000000000000000000013 /* VerdictLabelV1.swift in Sources */,
 				810000000000000000000017 /* VerdictReasonV1.swift in Sources */,
+				810000000000000000000018 /* VerdictReasonsV1.swift in Sources */,
 				810000000000000000000004 /* Verdict.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
