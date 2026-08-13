@@ -2,7 +2,8 @@ import Foundation
 
 /// Creates fresh, concurrency-safe JSON coders for Hezo public contracts.
 public enum HezoJSON {
-  /// Creates a deterministic encoder using explicit keys and canonical UTC whole-second instants.
+  /// Creates a deterministic encoder using explicit keys and the authoritative proleptic-Gregorian
+  /// mapping for canonical UTC whole-second instants.
   public static func makeEncoder() -> JSONEncoder {
     let encoder = JSONEncoder()
     encoder.dateEncodingStrategy = .custom { date, encoder in
@@ -17,11 +18,10 @@ public enum HezoJSON {
         )
       }
 
-      let formatter = canonicalUTCFormatter()
-      let candidate = formatter.string(from: date)
-      guard candidate.utf8.count == 20, let roundTrip = formatter.date(from: candidate),
-        roundTrip == date
-      else {
+      let instant: CanonicalInstantV1
+      do {
+        instant = try CanonicalInstantV1(validating: date)
+      } catch {
         throw EncodingError.invalidValue(
           date,
           EncodingError.Context(
@@ -31,8 +31,7 @@ public enum HezoJSON {
         )
       }
 
-      var container = encoder.singleValueContainer()
-      try container.encode(candidate)
+      try instant.encode(to: encoder)
     }
     encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
     return encoder
@@ -47,25 +46,16 @@ public enum HezoJSON {
     decoder.dateDecodingStrategy = .custom { decoder in
       let container = try decoder.singleValueContainer()
       let candidate = try container.decode(String.self)
-      let formatter = canonicalUTCFormatter()
 
-      guard candidate.utf8.count == 20, candidate.last == "Z",
-        let date = formatter.date(from: candidate), formatter.string(from: date) == candidate
-      else {
+      do {
+        return try CanonicalInstantV1(validating: candidate).date
+      } catch {
         throw DecodingError.dataCorruptedError(
           in: container,
           debugDescription: "Invalid canonical UTC contract instant."
         )
       }
-      return date
     }
     return decoder
-  }
-
-  private static func canonicalUTCFormatter() -> ISO8601DateFormatter {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = [.withInternetDateTime]
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    return formatter
   }
 }

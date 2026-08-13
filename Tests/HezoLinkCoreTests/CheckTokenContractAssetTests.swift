@@ -26,14 +26,14 @@ struct CheckTokenContractAssetTests {
     let info = try requireCheckTokenObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.9.0")
+    #expect(info["version"] as? String == "1.10.0")
     #expect(info["description"] as? String == checkTokenOpenAPIDescription)
 
     let components = try requireCheckTokenObject(openAPI["components"])
     #expect(Set(components.keys) == ["schemas"])
     let schemas = try requireCheckTokenObject(components["schemas"])
     #expect(Set(schemas.keys) == checkTokenExpectedOpenAPIComponents)
-    #expect(schemas.count == 13)
+    #expect(schemas.count == 14)
 
     let component = try requireCheckTokenObject(schemas["CheckTokenV1"])
     #expect(Set(component.keys) == ["$ref"])
@@ -467,7 +467,7 @@ private let standaloneManifestSHA256 =
 private let checkTokenSchemaDescription =
   "Strict standalone canonical unpadded base64url shape for one Check Token V1 representing exactly 32 bytes. This schema validates syntax only and proves no entropy, randomness, uniqueness, secrecy, issuance, ownership, authority, purpose, lifetime, retention, logging permission, storage, replay resistance, or relationship to another token."
 private let checkTokenOpenAPIDescription =
-  "Reusable offline check-input, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+  "Reusable offline check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
 private let checkTokenREADMEGrammarSentence =
   "`CheckTokenV1` is the canonical unpadded base64url encoding of exactly 32 bytes: exactly 43 ASCII characters, with letters, digits, `_`, or `-` in the first 42 positions and one of `AEIMQUYcgkosw048` in the final position so the unused base64 bits are zero. A conforming semantic decoder must decode exactly 32 bytes and re-encode to the identical text. The two valid fixtures are intentionally obvious, low-entropy public controls and are forbidden for operational use."
 private let checkTokenREADMEPurposeSentence =
@@ -481,10 +481,11 @@ private let checkTokenAPINonclaimsSentence =
 private let checkTokenAPINoninterchangeabilitySentence =
   "A `CheckTokenV1` is not interchangeable with an MPD presence or withdrawal token, request ID, idempotency key, report receipt, deletion capability, integrity capability, or any other token or identifier. Matching bytes establish no identity, continuity, linkage, or authority across purposes."
 private let checkTokenExplicitExclusionsSentence =
-  "These artifacts contain only request, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, lifetime, retention or logging permission, storage, network or other I/O behavior, cross-plane identity, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only."
+  "These artifacts contain only request, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, clock, freshness, TTL, lifetime, retention or logging permission, storage, persistence, network or other I/O behavior, cross-plane identity, complete check-response envelope, completed-response or report semantics, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only."
 
 private let checkTokenExpectedOpenAPIComponents: Set<String> = [
-  "CheckRequestV1", "RequestIDV1", "CheckTokenV1", "ProblemV1", "VerdictReasonV1",
+  "CheckRequestV1", "RequestIDV1", "CheckTokenV1", "CanonicalInstantV1", "ProblemV1",
+  "VerdictReasonV1",
   "VerdictLabelV1", "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
   "VerdictReasonsV1", "CheckResponseStatusV1", "PendingCheckResponseV1", "VerdictV1",
 ]

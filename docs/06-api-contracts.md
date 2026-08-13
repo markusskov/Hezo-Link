@@ -16,7 +16,7 @@ Read this with [document 02](02-privacy-and-measurement.md), [document 03](03-tr
 
 - V1 has no login, account token, user profile, cloud-history endpoint, or account deletion endpoint.
 - Public request and response schemas default to rejecting unknown fields. Additive response fields remain possible through generated tolerant readers where explicitly allowed. The Swift product-core response reader is one such reader: it ignores additive unknown object members while still enforcing closed enums, field grammars, and size limits. It is not a server request validator.
-- Use HTTPS, JSON encoded as UTF-8, snake-case field names, canonical ISO 8601 UTC whole-second instants (`YYYY-MM-DDTHH:mm:ssZ`), and explicit schema versions. Fractional seconds, offsets, and impossible calendar instants are rejected at this V1 boundary.
+- Use HTTPS, JSON encoded as UTF-8, snake-case field names, explicit schema versions, and the shared `CanonicalInstantV1` wire semantics below for canonical UTC whole-second instant fields.
 - Public breaking changes require a new path major such as `/v2`. Additive optional fields, new stable reason codes, and new internal policy versions do not require a major change.
 - A raw submitted URL appears only in the deliberate check or report request that needs it. It is never returned unredacted.
 - Check, report, integrity, MPD, and analytics responses use `Cache-Control: no-store`.
@@ -47,6 +47,18 @@ After JSON string decoding, a value is valid if and only if it is the canonical 
 This is a syntax contract and a purpose boundary, not proof of producer behavior. Conformance proves no entropy, randomness, uniqueness, secrecy, issuance, authenticity, ownership, authority, lifetime, expiry, retention or logging permission, digesting, storage, replay resistance, report linkage, polling behavior, authentication, or network behavior. It does not authorize accepting a token at any endpoint.
 
 A `CheckTokenV1` is not interchangeable with an MPD presence or withdrawal token, request ID, idempotency key, report receipt, deletion capability, integrity capability, or any other token or identifier. Matching bytes establish no identity, continuity, linkage, or authority across purposes.
+
+### Shared `CanonicalInstantV1`
+
+`CanonicalInstantV1` is the shared wire contract for exactly `PendingCheckResponseV1.expires_at` and `VerdictReasonV1.observed_at`. This extraction consolidates their UTC grammar and closes prior schema drift around the lower year boundary; it does not approve another consumer or any enclosing runtime behavior.
+
+After JSON string decoding, a value is valid if and only if it is exactly 20 ASCII bytes in `YYYY-MM-DDTHH:mm:ssZ` form and denotes a real proleptic-Gregorian calendar instant in years `0001` through `9999`, at UTC whole-second precision. The month-specific day and leap-year rules apply uniformly across the full range, and seconds run from `00` through `59`. Fractional seconds, offsets, lowercase `t` or `z`, year `0000`, impossible calendar dates, and every other shape are invalid.
+
+Implementations apply the proleptic-Gregorian rules uniformly and do not insert a historical calendar-reform gap or switch to Julian leap-year rules for earlier dates.
+
+The Swift core's shared `Date` strategy adopts this mapping as a contract-conformance correction. It intentionally does not preserve Foundation formatter behavior that applied a historical calendar cutover before 1582; modern dates and all pre-existing contract fixture bytes remain unchanged.
+
+This standalone primitive validates wire syntax and calendar reality only. It does not read or authorize use of a clock, compare instants, define a TTL, decide freshness or retention, authorize network I/O or persistence, or approve a completed-check or report contract or behavior. The names `expires_at` and `observed_at` add no such authority.
 
 ## Origins and routing boundaries
 
@@ -207,7 +219,7 @@ V1 admits only these label/action pairs:
 
 Every other label/action pair is invalid. The standalone Verdict object enforces this admission matrix but cannot choose `warn` versus `retry` for Unknown without the surrounding operational/completeness state.
 
-`confidence` is a bounded category such as `low`, `medium`, or `high`, not an internal score or consumer probability. Reasons use stable codes and localization keys, the grammar above, and a maximum of five items. Server fallback copy is bounded and derived only from approved reason data.
+`confidence` is a bounded category such as `low`, `medium`, or `high`, not an internal score or consumer probability. Reasons use stable codes and localization keys, the grammar above, and a maximum of five items. `VerdictReasonV1.observed_at` is a `CanonicalInstantV1`; the timestamp alone does not decide evidence freshness. Server fallback copy is bounded and derived only from approved reason data.
 
 The primitive label, action, and reason models do not by themselves authorize a complete verdict. The completed-check envelope must validate label/action coherence and may serialize `no_known_danger` only when the selected profile's completeness and freshness requirements are satisfied. A standalone primitive must never be treated as that evidence-bearing authorization.
 
@@ -232,7 +244,7 @@ Provider-specific attribution or advisory requirements appear in `source_notices
 - `status` is the string `pending`.
 - `check_token` is a `CheckTokenV1`. A future producer must generate exactly 32 cryptographically random bytes and encode those bytes canonically, but accepting the standalone syntax does not prove that behavior.
 - `retry_after_ms` is an integer from `1` through `900000`, inclusive.
-- `expires_at` is a canonical UTC whole-second absolute instant using the common `YYYY-MM-DDTHH:mm:ssZ` grammar in years `0001` through `9999`. Fractional seconds, offsets, lowercase `z`, year `0000`, and impossible calendar instants are invalid.
+- `expires_at` is a `CanonicalInstantV1`. It is the envelope's absolute expiry field, but wire conformance alone applies no clock or TTL policy.
 - `request_id` is a `RequestIDV1`.
 
 The token shown above is deliberately zero-entropy public fixture text for wire-shape illustration and is forbidden for operational use.

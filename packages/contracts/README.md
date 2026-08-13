@@ -1,6 +1,6 @@
 # Hezo Link contract components
 
-This directory is the public, offline source of truth for the first check-input, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
+This directory is the public, offline source of truth for the first check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
 
 ## Artifacts
 
@@ -11,6 +11,8 @@ This directory is the public, offline source of truth for the first check-input,
 - `fixtures/request-id-v1/manifest.json` lists the exact length and alphabet boundaries plus deterministic invalid punctuation, whitespace, control, non-ASCII, null, and type examples with their exact schema failure keyword sets.
 - `schemas/check-token-v1.schema.json` is the strict Draft 2020-12 standalone check-token scalar schema.
 - `fixtures/check-token-v1/manifest.json` lists two visibly low-entropy valid syntax controls plus deterministic invalid length, character, padding, canonical-final-bit, whitespace, control, non-ASCII, null, and type examples with their exact schema failure keyword sets.
+- `schemas/canonical-instant-v1.schema.json` is the strict Draft 2020-12 standalone canonical-instant scalar schema.
+- `fixtures/canonical-instant-v1/manifest.json` lists exact year, leap-day, length, grammar, calendar, control, non-ASCII, null, and non-string boundaries with their exact schema failure keyword sets.
 - `schemas/check-response-status-v1.schema.json` is the strict Draft 2020-12 standalone check-response-status enum schema.
 - `fixtures/check-response-status-v1/manifest.json` lists both valid statuses and deterministic invalid aliases, cross-vocabulary values, types, and spellings with their exact schema failure keyword sets.
 - `schemas/pending-check-response-v1.schema.json` is the strict Draft 2020-12 Pending Check Response V1 object schema.
@@ -68,6 +70,18 @@ The current executable contract assigns this standalone scalar only to `PendingC
 
 Acceptance proves syntax only. It proves no producer entropy, randomness, uniqueness, secrecy, issuance, authenticity, ownership, authority, purpose, lifetime, expiry, retention or logging permission, digesting, storage, replay resistance, report linkage, polling behavior, authentication, or network behavior.
 
+## Canonical instant V1
+
+`CanonicalInstantV1` is a string containing exactly 20 ASCII characters in the `YYYY-MM-DDTHH:mm:ssZ` shape. Its year is from `0001` through `9999`, its suffix is uppercase `Z`, and it permits neither a fractional second nor a numeric offset. Strict validation must assert the Draft 2020-12 `date-time` format as well as the exact pattern: the pattern fixes the representation, while format validation rejects impossible proleptic-Gregorian calendar instants. Valid controls cover the lower and upper years, divisible-by-400 leap days before and after the historical Gregorian reform, a proleptic-Gregorian reform-gap date, and a representative instant; invalid controls prove that years divisible by 100 but not 400 are not leap years.
+
+Implementations use those proleptic-Gregorian rules across the entire supported year range; they do not introduce a historical reform gap or switch earlier dates to Julian calendar rules.
+
+The Swift core's shared `Date` strategy uses that mapping as a contract-conformance correction rather than preserving Foundation formatter behavior that applied a historical cutover before 1582. Modern dates and all pre-existing contract fixture bytes remain unchanged.
+
+The current executable contracts use this standalone scalar in exactly two places: `PendingCheckResponseV1.expires_at` and `VerdictReasonV1.observed_at`. The absolute references reuse the syntax without making expiry and observation interchangeable concepts or establishing any relationship between their values.
+
+Acceptance proves syntax and calendar validity only. It defines no clock source, clock trust, ordering, freshness decision, TTL, lifetime, expiry behavior, retention policy, polling schedule, storage, persistence, network behavior, completed-response envelope, or report semantics.
+
 ## Pending check response V1
 
 Every pending check response is a JSON object with exactly these required fields:
@@ -76,14 +90,14 @@ Every pending check response is a JSON object with exactly these required fields
 - `status`: the absolute `CheckResponseStatusV1` reference further constrained to the string constant `pending`.
 - `check_token`: the absolute `CheckTokenV1` reference, accepting exactly the canonical unpadded base64url encoding of 32 bytes without widening that standalone syntax.
 - `retry_after_ms`: an integer from `1` through `900000` inclusive. The upper bound is a wire-value cap only, not a polling schedule or duration policy.
-- `expires_at`: a real UTC whole-second instant in the exact `YYYY-MM-DDTHH:mm:ssZ` wire shape, with a year from `0001` through `9999`.
+- `expires_at`: the absolute `CanonicalInstantV1` reference, accepting a real UTC whole-second instant in the exact `YYYY-MM-DDTHH:mm:ssZ` wire shape, with a year from `0001` through `9999`.
 - `request_id`: the absolute `RequestIDV1` reference, accepting one through 128 ASCII letters, digits, `_`, or `-`.
 
 Unknown fields are rejected by the strict published schema. A specifically designated Swift Pending Check Response V1 reader may discard genuinely additive unknown response members for forward compatibility, but it must continue to require and validate every known member exactly. It must reject any payload containing the known hybrid-envelope keys `verdict`, `target`, `analysis`, `source_notices`, `versions`, `evaluated_at`, `valid_until`, or `block_eligible`; those members cannot be treated as harmless future additions. This tolerant client boundary does not widen the public schema or make an unknown member meaningful.
 
 The `check_token` rule validates only canonical encoded shape; neither the schema nor decoding proves issuance, randomness, entropy, secrecy, ownership, purpose, digesting, replay resistance, report linkage, authentication, or server-side handling. The timestamp and retry value likewise prove no relationship, schedule, completion behavior, or lifetime policy. This contract defines wire structure only. It defines no endpoint, HTTP behavior or status, polling behavior, token issuance or entropy proof, authentication or transport, App Attest behavior, completion guarantee, TTL, deletion, retention, persistence, storage, network behavior, or deployment.
 
-The `expires_at` pattern rejects fractions, offsets, lowercase `z`, and year `0000`; asserted `date-time` format validation also rejects impossible calendar instants. All bounded string grammars are ASCII, so their schema code-point limits equal their UTF-8 byte limits.
+The referenced canonical-instant grammar rejects fractions, offsets, lowercase `t` or `z`, and year `0000`; asserted `date-time` format validation also rejects impossible calendar instants. All bounded string grammars are ASCII, so their schema code-point limits equal their UTF-8 byte limits.
 
 ## Problem V1
 
@@ -135,15 +149,15 @@ Every verdict reason is a JSON object with exactly these required fields:
 - `family`: a forward-compatible reason family.
 - `severity`: a forward-compatible reason severity.
 - `summary_key`: a dot-separated localization key for approved copy.
-- `observed_at`: the canonical UTC whole-second instant when the supporting fact was observed.
+- `observed_at`: the absolute `CanonicalInstantV1` reference for the canonical UTC whole-second instant when the supporting fact was observed.
 - `freshness`: a forward-compatible evidence-freshness category.
 
 `code`, `family`, `severity`, and `freshness` use the lower-snake-case ASCII grammar: one through 128 bytes, beginning with a lowercase letter, with no doubled or trailing underscore. They are deliberately not enums so new valid stable values remain additive. Each `summary_key` segment uses the same grammar and one-through-128-byte bound; the complete dot-separated key is at most 256 bytes. Unknown fields are rejected by the public server schema.
 
-`observed_at` has the exact `YYYY-MM-DDTHH:mm:ssZ` wire shape. Strict validation must assert the standard `date-time` format as well as the exact pattern: the pattern rejects fractions, offsets, and lowercase `z`, while format validation rejects impossible calendar instants. All bounded string grammars are ASCII, so the schema's code-point limits equal their UTF-8 byte limits.
+The referenced canonical-instant contract fixes `observed_at` to the exact `YYYY-MM-DDTHH:mm:ssZ` wire shape in years `0001` through `9999`. Strict validation must assert the standard `date-time` format as well as the exact pattern: the pattern rejects fractions, offsets, lowercase `t` or `z`, and year `0000`, while format validation rejects impossible calendar instants. All bounded string grammars are ASCII, so the schema's code-point limits equal their UTF-8 byte limits.
 
 This standalone reason primitive does not define or authorize a complete verdict or check-response envelope.
 
 ## Explicit exclusions
 
-These artifacts contain only request, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, lifetime, retention or logging permission, storage, network or other I/O behavior, cross-plane identity, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
+These artifacts contain only request, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, clock, freshness, TTL, lifetime, retention or logging permission, storage, persistence, network or other I/O behavior, cross-plane identity, complete check-response envelope, completed-response or report semantics, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
