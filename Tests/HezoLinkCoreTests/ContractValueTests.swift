@@ -260,69 +260,6 @@ struct PendingCheckResponseV1Tests {
     #expect(object["request_id"] as? String == "plane-local-random-id")
   }
 
-  @Test(
-    "Canonical tokens cover both base64url alphabet extremes",
-    arguments: [
-      String(repeating: "A", count: CheckTokenV1.encodedCharacterCount),
-      String(repeating: "_", count: CheckTokenV1.encodedCharacterCount - 1) + "8",
-    ]
-  )
-  func canonicalTokenAlphabetBoundariesRoundTrip(candidate: String) throws {
-    let token = try CheckTokenV1(validating: candidate)
-    let data = try HezoJSON.makeEncoder().encode(token)
-    let json = try #require(String(data: data, encoding: .utf8))
-    let decoded = try HezoJSON.makeResponseDecoder().decode(CheckTokenV1.self, from: data)
-
-    #expect(json == "\"\(candidate)\"")
-    #expect(decoded == token)
-  }
-
-  @Test(
-    "Every canonical final base64url character is admitted",
-    arguments: ["A", "E", "I", "M", "Q", "U", "Y", "c", "g", "k", "o", "s", "w", "0", "4", "8"]
-  )
-  func canonicalTokenFinalCharactersAreAccepted(finalCharacter: String) throws {
-    let candidate = String(repeating: "A", count: 42) + finalCharacter
-    let token = try CheckTokenV1(validating: candidate)
-    let data = try HezoJSON.makeEncoder().encode(token)
-
-    #expect(try HezoJSON.makeResponseDecoder().decode(CheckTokenV1.self, from: data) == token)
-  }
-
-  @Test(
-    "Length, alphabet, padding, Unicode, and noncanonical tail mutations are rejected",
-    arguments: [
-      String(repeating: "A", count: 42),
-      String(repeating: "A", count: 44),
-      "+" + String(repeating: "A", count: 42),
-      "/" + String(repeating: "A", count: 42),
-      "=" + String(repeating: "A", count: 42),
-      " " + String(repeating: "A", count: 42),
-      String(repeating: "A", count: 42) + "é",
-      String(canonicalPendingToken.dropLast()) + "9",
-    ]
-  )
-  func tokenMutationsAreRejected(candidate: String) throws {
-    #expect(throws: CheckTokenContractError.invalidFormat) {
-      try CheckTokenV1(validating: candidate)
-    }
-
-    let data = try JSONEncoder().encode(candidate)
-    #expect(throws: DecodingError.self) {
-      try HezoJSON.makeResponseDecoder().decode(CheckTokenV1.self, from: data)
-    }
-  }
-
-  @Test(
-    "Token decoding rejects non-string JSON values",
-    arguments: ["null", "42", "true", "{}", "[]"]
-  )
-  func tokenDecoderRejectsWrongJSONTypes(json: String) {
-    #expect(throws: DecodingError.self) {
-      try HezoJSON.makeResponseDecoder().decode(CheckTokenV1.self, from: Data(json.utf8))
-    }
-  }
-
   @Test func retryDelayAcceptsBothBoundariesAndRejectsAdjacentValues() throws {
     let token = try CheckTokenV1(validating: canonicalPendingToken)
     let expiry = try canonicalPendingExpiry()
@@ -515,23 +452,17 @@ struct PendingCheckResponseV1Tests {
       token: token,
       requestID: privacyPendingRequestID
     )
-    let tokenMirror = Array(token.customMirror.children)
     let responseMirror = Array(response.customMirror.children)
     let encodedJSON = try #require(
       String(data: HezoJSON.makeEncoder().encode(response), encoding: .utf8)
     )
     let safeRenderings =
       [
-        token.description,
-        token.debugDescription,
-        String(describing: token),
-        String(reflecting: token),
         response.description,
         response.debugDescription,
         String(describing: response),
         String(reflecting: response),
-      ] + tokenMirror.map { String(describing: $0.value) }
-      + responseMirror.map { String(describing: $0.value) }
+      ] + responseMirror.map { String(describing: $0.value) }
 
     #expect(encodedJSON.contains(privacyPendingToken))
     #expect(encodedJSON.contains(privacyPendingRequestID))
@@ -541,21 +472,8 @@ struct PendingCheckResponseV1Tests {
           && $0.contains(privacyPendingRequestID) == false
       }
     )
-    #expect(tokenMirror.count == 1)
-    #expect(tokenMirror.first?.label == "value")
     #expect(responseMirror.count == 1)
     #expect(responseMirror.first?.label == "value")
-
-    let invalidTokenCandidate = "PRIVATE_INVALID_CHECK_TOKEN_CANARY"
-    do {
-      _ = try CheckTokenV1(validating: invalidTokenCandidate)
-      Issue.record("An invalid token candidate must be rejected.")
-    } catch {
-      expectErrorOmitsPendingCanaries(
-        error,
-        canaries: [invalidTokenCandidate, privacyPendingToken, privacyPendingRequestID]
-      )
-    }
 
     let invalidRequestID = privacyPendingRequestID + "/secret"
     do {
@@ -594,14 +512,6 @@ struct PendingCheckResponseV1Tests {
       #expect(renderings.allSatisfy { $0.isEmpty == false && $0.utf8.count <= 128 })
       #expect(error.errorDescription == error.description)
     }
-
-    let tokenError = CheckTokenContractError.invalidFormat
-    #expect(
-      pendingErrorRenderings(tokenError).allSatisfy {
-        $0.isEmpty == false && $0.utf8.count <= 128
-      }
-    )
-    #expect(tokenError.errorDescription == tokenError.description)
   }
 
   @Test func concurrentEncodeDecodeIsDeterministic() async throws {

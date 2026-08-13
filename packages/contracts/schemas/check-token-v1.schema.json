@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:check-token:v1",
+  "title": "Hezo Link check token V1",
+  "description": "Strict standalone canonical unpadded base64url shape for one Check Token V1 representing exactly 32 bytes. This schema validates syntax only and proves no entropy, randomness, uniqueness, secrecy, issuance, ownership, authority, purpose, lifetime, retention, logging permission, storage, replay resistance, or relationship to another token.",
+  "type": "string",
+  "minLength": 43,
+  "maxLength": 43,
+  "pattern": "^[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$"
+}

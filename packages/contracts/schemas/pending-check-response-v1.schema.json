@@ -23,11 +23,7 @@
       "const": "pending"
     },
     "check_token": {
-      "type": "string",
-      "minLength": 43,
-      "maxLength": 43,
-      "pattern": "^[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$",
-      "description": "Canonical unpadded base64url encoding shape for exactly 32 bytes. Structural validation does not prove randomness, entropy, issuance, ownership, purpose, or storage behavior."
+      "$ref": "urn:hezo-link:contract:check-token:v1"
     },
     "retry_after_ms": {
       "type": "integer",

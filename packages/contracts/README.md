@@ -1,6 +1,6 @@
 # Hezo Link contract components
 
-This directory is the public, offline source of truth for the first check-input, request-ID, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
+This directory is the public, offline source of truth for the first check-input, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
 
 ## Artifacts
 
@@ -9,6 +9,8 @@ This directory is the public, offline source of truth for the first check-input,
 - `fixtures/check-request-v1/manifest.json` lists deterministic, reserved-domain valid and invalid examples and their expected schema result.
 - `schemas/request-id-v1.schema.json` is the strict Draft 2020-12 standalone request-ID scalar schema.
 - `fixtures/request-id-v1/manifest.json` lists the exact length and alphabet boundaries plus deterministic invalid punctuation, whitespace, control, non-ASCII, null, and type examples with their exact schema failure keyword sets.
+- `schemas/check-token-v1.schema.json` is the strict Draft 2020-12 standalone check-token scalar schema.
+- `fixtures/check-token-v1/manifest.json` lists two visibly low-entropy valid syntax controls plus deterministic invalid length, character, padding, canonical-final-bit, whitespace, control, non-ASCII, null, and type examples with their exact schema failure keyword sets.
 - `schemas/check-response-status-v1.schema.json` is the strict Draft 2020-12 standalone check-response-status enum schema.
 - `fixtures/check-response-status-v1/manifest.json` lists both valid statuses and deterministic invalid aliases, cross-vocabulary values, types, and spellings with their exact schema failure keyword sets.
 - `schemas/pending-check-response-v1.schema.json` is the strict Draft 2020-12 Pending Check Response V1 object schema.
@@ -58,13 +60,21 @@ This primitive validates one check-response status value only. It defines no end
 
 `RequestIDV1` is a strict standalone bounded ASCII shape only. Acceptance proves no entropy, uniqueness, authority, lifetime, retention or logging permission, or cross-plane identity.
 
+## Check token V1
+
+`CheckTokenV1` is the canonical unpadded base64url encoding of exactly 32 bytes: exactly 43 ASCII characters, with letters, digits, `_`, or `-` in the first 42 positions and one of `AEIMQUYcgkosw048` in the final position so the unused base64 bits are zero. A conforming semantic decoder must decode exactly 32 bytes and re-encode to the identical text. The two valid fixtures are intentionally obvious, low-entropy public controls and are forbidden for operational use.
+
+The current executable contract assigns this standalone scalar only to `PendingCheckResponseV1.check_token`. Sharing this syntax does not authorize its use by the proposed completed-check or report envelopes, and it does not define any endpoint or runtime. A `CheckTokenV1` is not interchangeable with an MPD presence or withdrawal token, a request ID, an idempotency key, an integrity capability, or any other token or identifier. Equal bytes establish no identity, continuity, or relationship across purposes.
+
+Acceptance proves syntax only. It proves no producer entropy, randomness, uniqueness, secrecy, issuance, authenticity, ownership, authority, purpose, lifetime, expiry, retention or logging permission, digesting, storage, replay resistance, report linkage, polling behavior, authentication, or network behavior.
+
 ## Pending check response V1
 
 Every pending check response is a JSON object with exactly these required fields:
 
 - `schema_version`: integer constant `1`.
 - `status`: the absolute `CheckResponseStatusV1` reference further constrained to the string constant `pending`.
-- `check_token`: exactly 43 ASCII characters matching canonical unpadded base64url for 32 bytes. The first 42 characters use letters, digits, `_`, or `-`; the last character is one of `AEIMQUYcgkosw048` so unused base64 bits are zero. A producer must start with exactly 32 random bytes and emit their canonical unpadded base64url encoding.
+- `check_token`: the absolute `CheckTokenV1` reference, accepting exactly the canonical unpadded base64url encoding of 32 bytes without widening that standalone syntax.
 - `retry_after_ms`: an integer from `1` through `900000` inclusive. The upper bound is a wire-value cap only, not a polling schedule or duration policy.
 - `expires_at`: a real UTC whole-second instant in the exact `YYYY-MM-DDTHH:mm:ssZ` wire shape, with a year from `0001` through `9999`.
 - `request_id`: the absolute `RequestIDV1` reference, accepting one through 128 ASCII letters, digits, `_`, or `-`.
@@ -136,4 +146,4 @@ This standalone reason primitive does not define or authorize a complete verdict
 
 ## Explicit exclusions
 
-These artifacts contain only request, request-ID, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, lifetime, retention or logging permission, storage, network or other I/O behavior, cross-plane identity, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
+These artifacts contain only request, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, lifetime, retention or logging permission, storage, network or other I/O behavior, cross-plane identity, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.

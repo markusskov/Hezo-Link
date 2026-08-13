@@ -25,14 +25,14 @@ struct RequestIDContractAssetTests {
     let info = try requireRequestIDObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.8.0")
+    #expect(info["version"] as? String == "1.9.0")
     #expect(info["description"] as? String == requestIDOpenAPIDescription)
 
     let components = try requireRequestIDObject(openAPI["components"])
     #expect(Set(components.keys) == ["schemas"])
     let schemas = try requireRequestIDObject(components["schemas"])
     #expect(Set(schemas.keys) == requestIDExpectedOpenAPIComponents)
-    #expect(schemas.count == 12)
+    #expect(schemas.count == 13)
 
     let component = try requireRequestIDObject(schemas["RequestIDV1"])
     #expect(Set(component.keys) == ["$ref"])
@@ -367,18 +367,18 @@ private let requestIDPattern = "^[A-Za-z0-9_-]+$"
 private let requestIDSchemaDescription =
   "Strict standalone bounded ASCII request identifier shape. This schema validates structure only and proves no entropy, authority, lifetime, retention or logging permission, or cross-plane identity."
 private let requestIDOpenAPIDescription =
-  "Reusable offline check-input, request-ID, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+  "Reusable offline check-input, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
 private let requestIDGrammarSentence =
   "`RequestIDV1` is a string containing one through 128 ASCII letters, digits, `_`, or `-`. Its ASCII grammar makes the schema's code-point bounds equal its UTF-8 byte bounds. Problem V1 and Pending Check Response V1 use the same absolute standalone schema reference for their `request_id` member without widening this accepted language."
 private let requestIDNonclaimSentence =
   "`RequestIDV1` is a strict standalone bounded ASCII shape only. Acceptance proves no entropy, uniqueness, authority, lifetime, retention or logging permission, or cross-plane identity."
 private let requestIDExplicitExclusionsSentence =
-  "These artifacts contain only request, request-ID, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, lifetime, retention or logging permission, storage, network or other I/O behavior, cross-plane identity, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only."
+  "These artifacts contain only request, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, lifetime, retention or logging permission, storage, network or other I/O behavior, cross-plane identity, complete check-response envelope, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only."
 
 private let requestIDExpectedOpenAPIComponents: Set<String> = [
   "CheckRequestV1", "RequestIDV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
   "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1", "VerdictReasonsV1",
-  "CheckResponseStatusV1", "PendingCheckResponseV1", "VerdictV1",
+  "CheckResponseStatusV1", "CheckTokenV1", "PendingCheckResponseV1", "VerdictV1",
 ]
 
 private let requestIDFixtureExpectations: [RequestIDFixtureExpectation] = [
