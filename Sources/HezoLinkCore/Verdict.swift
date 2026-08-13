@@ -135,7 +135,7 @@ public struct Verdict: Codable, Equatable, Sendable {
   public let recommendedAction: RecommendedActionV1
 
   /// The bounded, forward-compatible confidence category.
-  public let confidence: ConfidenceCategory
+  public let confidence: ConfidenceCategoryV1
 
   /// The bounded, forward-compatible evaluated scope.
   public let evaluatedScope: EvaluatedScopeV1
@@ -147,7 +147,7 @@ public struct Verdict: Codable, Equatable, Sendable {
   public init(
     label: VerdictLabelV1,
     recommendedAction: RecommendedActionV1,
-    confidence: ConfidenceCategory,
+    confidence: ConfidenceCategoryV1,
     evaluatedScope: EvaluatedScopeV1,
     reasons: VerdictReasons
   ) throws {
@@ -170,7 +170,7 @@ public struct Verdict: Codable, Equatable, Sendable {
       RecommendedActionV1.self,
       forKey: .recommendedAction
     )
-    let confidence = try container.decode(ConfidenceCategory.self, forKey: .confidence)
+    let confidence = try container.decode(ConfidenceCategoryV1.self, forKey: .confidence)
     let evaluatedScope = try container.decode(EvaluatedScopeV1.self, forKey: .evaluatedScope)
     let reasons = try container.decode(VerdictReasons.self, forKey: .reasons)
 
