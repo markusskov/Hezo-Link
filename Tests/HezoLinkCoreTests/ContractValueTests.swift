@@ -57,7 +57,6 @@ struct ContractValueTests {
 
     try expectDecodeErrorOmitsCandidate(ReasonCode.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(ProblemCode.self, from: data, candidate: candidate)
-    try expectDecodeErrorOmitsCandidate(ConfidenceCategory.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(ReasonFamily.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(ReasonSeverity.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(FreshnessCategory.self, from: data, candidate: candidate)
@@ -96,15 +95,6 @@ struct ContractValueTests {
     #expect(ReasonCode(rawValue: "InvalidReason") == nil)
     #expect(LocalizationKey(rawValue: "verdict.reason")?.rawValue == "verdict.reason")
     #expect(LocalizationKey(rawValue: "verdict..reason") == nil)
-  }
-
-  @Test func knownAndFutureConfidenceValuesRemainDistinct() throws {
-    let future = try ConfidenceCategory(validating: "very_high")
-
-    #expect(ConfidenceCategory.low.rawValue == "low")
-    #expect(ConfidenceCategory.medium.rawValue == "medium")
-    #expect(ConfidenceCategory.high.rawValue == "high")
-    #expect(future.rawValue == "very_high")
   }
 
   private func expectDecodeErrorOmitsCandidate<Value: Decodable>(

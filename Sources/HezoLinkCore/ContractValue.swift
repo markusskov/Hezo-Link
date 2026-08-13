@@ -134,9 +134,6 @@ public typealias ProblemCode = StableContractValue<ProblemCodeKind>
 /// Distinguishes confidence-category values.
 public enum ConfidenceCategoryKind: StableContractValueKind {}
 
-/// A forward-compatible confidence category.
-public typealias ConfidenceCategory = StableContractValue<ConfidenceCategoryKind>
-
 /// Distinguishes evaluated-scope values.
 public enum EvaluatedScopeKind: StableContractValueKind {}
 

@@ -149,7 +149,7 @@ struct VerdictTests {
       _ = try Verdict(
         label: .dangerous,
         recommendedAction: .retry,
-        confidence: ConfidenceCategory(validating: confidenceCandidate),
+        confidence: ConfidenceCategoryV1(validating: confidenceCandidate),
         evaluatedScope: EvaluatedScopeV1(validating: scopeCandidate),
         reasons: reasons
       )

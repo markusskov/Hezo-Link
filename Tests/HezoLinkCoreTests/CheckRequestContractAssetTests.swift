@@ -1996,6 +1996,14 @@ struct VerdictSupportingStablePrimitiveContractAssetTests {
     #expect(integerValue(schema["minLength"]) == 1)
     #expect(integerValue(schema["maxLength"]) == 128)
     #expect(schema["pattern"] as? String == verdictReasonStableValuePattern)
+    if case .confidenceCategory = primitive {
+      let canonical: ConfidenceCategoryV1 = .medium
+      let compatibility: ConfidenceCategory = canonical
+      let canonicalAgain: ConfidenceCategoryV1 = compatibility
+      requireSameConfidenceCategoryContractType(ConfidenceCategory.self)
+      #expect(canonicalAgain == canonical)
+      #expect(canonical.rawValue == "medium")
+    }
     if case .evaluatedScope = primitive {
       let canonical: EvaluatedScopeV1 = .exactURL
       let compatibility: EvaluatedScope = canonical
@@ -2123,6 +2131,32 @@ struct VerdictSupportingStablePrimitiveContractAssetTests {
         _ = try roundTripSupportingStablePrimitive(primitive, data: data)
         Issue.record("A declared invalid stable primitive fixture was accepted: \(fixtureID)")
       } catch let error as DecodingError {
+        if case .confidenceCategory = primitive {
+          let payload = try primitiveFixturePayload(from: loadJSONValue(relativePath))
+          switch (payload, error) {
+          case (.string, .dataCorrupted(let context)):
+            #expect(context.codingPath.isEmpty)
+            #expect(context.debugDescription == "Invalid stable contract value.")
+            #expect(context.underlyingError == nil)
+          case (.integer, .typeMismatch(let type, let context)):
+            #expect(ObjectIdentifier(type) == ObjectIdentifier(String.self))
+            #expect(context.codingPath.isEmpty)
+            #expect(
+              context.debugDescription == "Expected to decode String but found number instead."
+            )
+            #expect(context.underlyingError == nil)
+          case (.null, .valueNotFound(let type, let context)):
+            #expect(ObjectIdentifier(type) == ObjectIdentifier(String.self))
+            #expect(context.codingPath.isEmpty)
+            #expect(
+              context.debugDescription
+                == "Cannot get value of type String -- found null value instead"
+            )
+            #expect(context.underlyingError == nil)
+          default:
+            Issue.record("ConfidenceCategoryV1 used the wrong DecodingError case: \(fixtureID)")
+          }
+        }
         if case .evaluatedScope = primitive {
           let payload = try primitiveFixturePayload(from: loadJSONValue(relativePath))
           switch (payload, error) {
@@ -2170,6 +2204,15 @@ struct VerdictSupportingStablePrimitiveContractAssetTests {
       _ = try roundTripSupportingStablePrimitive(primitive, data: data)
       Issue.record("A privacy-canary stable primitive was accepted: \(primitive.contractName)")
     } catch let error as DecodingError {
+      if case .confidenceCategory = primitive {
+        guard case .dataCorrupted(let context) = error else {
+          Issue.record("ConfidenceCategoryV1 privacy canary used the wrong DecodingError case")
+          return
+        }
+        #expect(context.codingPath.isEmpty)
+        #expect(context.debugDescription == "Invalid stable contract value.")
+        #expect(context.underlyingError == nil)
+      }
       if case .evaluatedScope = primitive {
         guard case .dataCorrupted(let context) = error else {
           Issue.record("EvaluatedScopeV1 privacy canary used the wrong DecodingError case")
@@ -4282,11 +4325,17 @@ private func roundTripSupportingStablePrimitive(
 ) throws -> (decodedValue: String, encodedData: Data) {
   switch primitive {
   case .confidenceCategory:
-    let decoded = try HezoJSON.makeResponseDecoder().decode(
-      ConfidenceCategory.self,
+    let canonical = try HezoJSON.makeResponseDecoder().decode(
+      ConfidenceCategoryV1.self,
       from: data
     )
-    return (decoded.rawValue, try HezoJSON.makeEncoder().encode(decoded))
+    let compatibility: ConfidenceCategory = canonical
+    let canonicalAgain: ConfidenceCategoryV1 = compatibility
+    let canonicalData = try HezoJSON.makeEncoder().encode(canonical)
+    let compatibilityData = try HezoJSON.makeEncoder().encode(compatibility)
+    #expect(canonicalAgain == canonical)
+    #expect(compatibilityData == canonicalData)
+    return (canonical.rawValue, canonicalData)
   case .evaluatedScope:
     let canonical = try HezoJSON.makeResponseDecoder().decode(
       EvaluatedScopeV1.self,
@@ -4300,6 +4349,10 @@ private func roundTripSupportingStablePrimitive(
     #expect(compatibilityData == canonicalData)
     return (canonical.rawValue, canonicalData)
   }
+}
+
+private func requireSameConfidenceCategoryContractType(_ type: ConfidenceCategoryV1.Type) {
+  _ = type
 }
 
 private func requireSameEvaluatedScopeContractType(_ type: EvaluatedScopeV1.Type) {
