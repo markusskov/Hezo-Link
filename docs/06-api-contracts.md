@@ -210,6 +210,8 @@ Public `verdict.label` has exactly four allowed values:
 | `caution` | Suspicious, contradictory, or incomplete corroborated evidence justifies caution |
 | `dangerous` | Current evidence satisfies the Dangerous policy |
 
+The Swift core exposes `VerdictLabelV1` as the canonical type and retains `VerdictLabel` as a source-compatible alias. The alias does not create a second vocabulary or change the four wire values.
+
 No aliases such as `safe`, `likely_safe`, `allow`, `warn`, `block`, `malicious`, or `suspicious` may appear in the public verdict-label field. Internal diagnostic labels must map to one canonical value at the contract boundary.
 
 `recommended_action` is separate and may be `allow`, `warn`, `avoid`, or `retry`. `allow` means proceed with ordinary care after `no_known_danger`; it never promises safety. The check response does not expose automatic block eligibility. That is a separately versioned internal decision.

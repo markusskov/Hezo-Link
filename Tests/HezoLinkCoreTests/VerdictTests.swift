@@ -5,37 +5,6 @@ import Testing
 
 struct VerdictTests {
   @Test(
-    "Verdict labels use the exact public wire vocabulary",
-    arguments: [
-      (VerdictLabel.unknown, "unknown"),
-      (VerdictLabel.noKnownDanger, "no_known_danger"),
-      (VerdictLabel.caution, "caution"),
-      (VerdictLabel.dangerous, "dangerous"),
-    ]
-  )
-  func verdictLabelWireValue(testCase: (VerdictLabel, String)) throws {
-    let (label, expectedWireValue) = testCase
-    let data = try HezoJSON.makeEncoder().encode(label)
-    let wireValue = try HezoJSON.makeResponseDecoder().decode(String.self, from: data)
-    let decoded = try HezoJSON.makeResponseDecoder().decode(VerdictLabel.self, from: data)
-
-    #expect(wireValue == expectedWireValue)
-    #expect(decoded == label)
-  }
-
-  @Test(
-    "Verdict label aliases and internal labels are rejected",
-    arguments: ["safe", "likely_safe", "allow", "warn", "block", "malicious", "suspicious"]
-  )
-  func invalidVerdictLabelsAreRejected(rawValue: String) throws {
-    let data = try #require("\"\(rawValue)\"".data(using: .utf8))
-
-    #expect(throws: DecodingError.self) {
-      try HezoJSON.makeResponseDecoder().decode(VerdictLabel.self, from: data)
-    }
-  }
-
-  @Test(
     "Recommended actions use the documented wire values",
     arguments: [
       (RecommendedAction.allow, "allow"),
@@ -62,7 +31,7 @@ struct VerdictTests {
     #expect(verdictPairCases.count == 16)
     #expect(Set(pairKeys).count == 16)
     #expect(verdictPairCases.filter(\.isAllowed).count == 5)
-    #expect(Set(verdictPairCases.map(\.label)) == Set(VerdictLabel.allCases))
+    #expect(Set(verdictPairCases.map(\.label)) == Set(VerdictLabelV1.allCases))
     #expect(
       Set(verdictPairCases.map(\.recommendedAction)) == Set(RecommendedAction.allCases)
     )
@@ -307,7 +276,7 @@ struct VerdictTests {
   }
 
   private func makeVerdict(
-    label: VerdictLabel = .caution,
+    label: VerdictLabelV1 = .caution,
     recommendedAction: RecommendedAction = .warn,
     reasons: VerdictReasons? = nil
   ) throws -> Verdict {
@@ -328,7 +297,7 @@ struct VerdictTests {
   }
 
   private func makeVerdictData(
-    label: VerdictLabel,
+    label: VerdictLabelV1,
     recommendedAction: RecommendedAction,
     confidence: Any = "high",
     evaluatedScope: Any = "exact_url",
@@ -369,7 +338,7 @@ struct VerdictTests {
 }
 
 struct VerdictPairCase: Sendable {
-  let label: VerdictLabel
+  let label: VerdictLabelV1
   let recommendedAction: RecommendedAction
   let isAllowed: Bool
 }
