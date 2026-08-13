@@ -1,39 +1,5 @@
 import Foundation
 
-/// The exact public verdict vocabulary.
-public enum VerdictLabel: String, CaseIterable, Codable, Sendable {
-  /// Hezo lacks sufficient current evidence or required analysis did not complete.
-  case unknown
-
-  /// The selected profile found no meaningful current danger; this is not a safety guarantee.
-  case noKnownDanger = "no_known_danger"
-
-  /// Corroborated evidence justifies caution.
-  case caution
-
-  /// Current evidence satisfies the Dangerous policy.
-  case dangerous
-
-  /// Decodes only the four canonical public labels without echoing an invalid candidate.
-  public init(from decoder: Decoder) throws {
-    let container = try decoder.singleValueContainer()
-    let candidate = try container.decode(String.self)
-    guard let value = Self(rawValue: candidate) else {
-      throw DecodingError.dataCorruptedError(
-        in: container,
-        debugDescription: "Invalid public verdict label."
-      )
-    }
-    self = value
-  }
-
-  /// Encodes the canonical public wire value.
-  public func encode(to encoder: Encoder) throws {
-    var container = encoder.singleValueContainer()
-    try container.encode(rawValue)
-  }
-}
-
 /// The bounded action recommended to the user, independent of block eligibility.
 public enum RecommendedAction: String, CaseIterable, Codable, Sendable {
   /// Proceed with ordinary care after a validated `no_known_danger` result.
@@ -197,7 +163,7 @@ public struct Verdict: Codable, Equatable, Sendable {
   }
 
   /// The canonical public verdict label.
-  public let label: VerdictLabel
+  public let label: VerdictLabelV1
 
   /// The bounded action recommended to the user.
   public let recommendedAction: RecommendedAction
@@ -213,7 +179,7 @@ public struct Verdict: Codable, Equatable, Sendable {
 
   /// Creates a verdict whose label and recommended action satisfy the public pair contract.
   public init(
-    label: VerdictLabel,
+    label: VerdictLabelV1,
     recommendedAction: RecommendedAction,
     confidence: ConfidenceCategory,
     evaluatedScope: EvaluatedScope,
@@ -233,7 +199,7 @@ public struct Verdict: Codable, Equatable, Sendable {
   /// Decodes and validates every structural public-verdict invariant.
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    let label = try container.decode(VerdictLabel.self, forKey: .label)
+    let label = try container.decode(VerdictLabelV1.self, forKey: .label)
     let recommendedAction = try container.decode(
       RecommendedAction.self,
       forKey: .recommendedAction
@@ -271,7 +237,7 @@ public struct Verdict: Codable, Equatable, Sendable {
   }
 
   private static func isAllowed(
-    label: VerdictLabel,
+    label: VerdictLabelV1,
     recommendedAction: RecommendedAction
   ) -> Bool {
     switch (label, recommendedAction) {
