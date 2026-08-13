@@ -12,7 +12,7 @@ public enum VerdictContractError: Error, Equatable, Sendable, CustomStringConver
 }
 
 /// A structurally coherent public verdict value with bounded contract fields.
-public struct Verdict: Codable, Equatable, Sendable {
+public struct VerdictV1: Codable, Equatable, Sendable {
   private enum CodingKeys: String, CodingKey {
     case label
     case recommendedAction = "recommended_action"
@@ -108,3 +108,6 @@ public struct Verdict: Codable, Equatable, Sendable {
     }
   }
 }
+
+/// The source-compatible spelling of the public verdict value.
+public typealias Verdict = VerdictV1
