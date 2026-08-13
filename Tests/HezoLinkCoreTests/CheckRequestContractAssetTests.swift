@@ -522,16 +522,30 @@ struct ProblemContractAssetTests {
   @Test func validProblemFixturesRoundTripThroughTheSwiftReader() throws {
     let manifest = try loadObject("packages/contracts/fixtures/problem-v1/manifest.json")
     let cases = try requireObjectArray(manifest["cases"])
+    requireSameProblemContractType(Problem.self)
 
     for fixtureCase in cases where try requireBool(fixtureCase["expected_schema_valid"]) {
       let path = try requireString(fixtureCase["path"])
       let relativePath = "packages/contracts/fixtures/problem-v1/\(path)"
       let fixtureData = try loadData(relativePath)
       let fixtureObject = try loadObject(relativePath)
-      let problem = try HezoJSON.makeResponseDecoder().decode(Problem.self, from: fixtureData)
-      let encodedData = try HezoJSON.makeEncoder().encode(problem)
-      let encodedObject = try jsonObject(from: encodedData)
+      let canonical = try HezoJSON.makeResponseDecoder().decode(
+        ProblemV1.self,
+        from: fixtureData
+      )
+      let compatibility: Problem = canonical
+      let canonicalAgain: ProblemV1 = compatibility
+      let canonicalData = try HezoJSON.makeEncoder().encode(canonical)
+      let compatibilityData = try HezoJSON.makeEncoder().encode(compatibility)
+      let compatibilityDecoded = try HezoJSON.makeResponseDecoder().decode(
+        Problem.self,
+        from: fixtureData
+      )
+      let encodedObject = try jsonObject(from: canonicalData)
 
+      #expect(canonicalAgain == canonical)
+      #expect(compatibilityDecoded == canonical)
+      #expect(compatibilityData == canonicalData)
       #expect(NSDictionary(dictionary: encodedObject).isEqual(to: fixtureObject))
     }
   }
@@ -547,14 +561,23 @@ struct ProblemContractAssetTests {
         continue
       }
       let path = try requireString(fixtureCase["path"])
+      let relativePath = "packages/contracts/fixtures/problem-v1/\(path)"
+      let fixture = try loadObject(relativePath)
       do {
         _ = try HezoJSON.makeResponseDecoder().decode(
-          Problem.self,
-          from: loadData("packages/contracts/fixtures/problem-v1/\(path)")
+          ProblemV1.self,
+          from: loadData(relativePath)
         )
         Issue.record("A declared invalid Problem V1 fixture was accepted: \(id)")
-      } catch is DecodingError {
-        // Expected. The safe fixture ID is enough context; never render the rejected payload.
+      } catch let error as DecodingError {
+        expectProblemFixtureDecodeError(error, fixtureID: id)
+        if let field = problemPrivacyFieldByFixtureID[id],
+          let candidate = fixture[field] as? String,
+          candidate.isEmpty == false
+        {
+          #expect(String(describing: error).contains(candidate) == false)
+          #expect(String(reflecting: error).contains(candidate) == false)
+        }
       } catch {
         Issue.record("Problem V1 decoding used an unexpected error category: \(id)")
       }
@@ -563,8 +586,8 @@ struct ProblemContractAssetTests {
 
   @Test(
     arguments: [
-      ("title", Problem.maximumTitleUTF8ByteCount),
-      ("detail", Problem.maximumDetailUTF8ByteCount),
+      ("title", ProblemV1.maximumTitleUTF8ByteCount),
+      ("detail", ProblemV1.maximumDetailUTF8ByteCount),
     ]
   )
   func SwiftReaderAddsTheDocumentedUTF8ByteLimit(
@@ -579,8 +602,18 @@ struct ProblemContractAssetTests {
     let registry = try loadProblemSchemaRegistry()
     #expect(try problemSchemaFailures(in: fixture, schema: schema, registry: registry).isEmpty)
     let data = try JSONSerialization.data(withJSONObject: fixture, options: [.sortedKeys])
-    #expect(throws: DecodingError.self) {
-      try HezoJSON.makeResponseDecoder().decode(Problem.self, from: data)
+    do {
+      _ = try HezoJSON.makeResponseDecoder().decode(ProblemV1.self, from: data)
+      Issue.record("Problem V1 accepted text beyond its documented UTF-8 byte limit")
+    } catch let DecodingError.dataCorrupted(context) {
+      #expect(context.codingPath.isEmpty)
+      #expect(context.debugDescription == "Invalid public problem value.")
+      #expect(context.underlyingError == nil)
+      let candidate = try requireString(fixture[field])
+      #expect(String(describing: context).contains(candidate) == false)
+      #expect(String(reflecting: context).contains(candidate) == false)
+    } catch {
+      Issue.record("Problem V1 used the wrong error for its UTF-8 byte limit")
     }
   }
 
@@ -596,7 +629,7 @@ struct ProblemContractAssetTests {
     )
 
     let problem = try HezoJSON.makeResponseDecoder().decode(
-      Problem.self,
+      ProblemV1.self,
       from: loadData(relativePath)
     )
     #expect(problem.type.rawValue.isEmpty == false)
@@ -4033,6 +4066,150 @@ private let expectedProblemFixturePaths: [String: String] = [
   "reject-retryable-type": "invalid/retryable-type.json",
 ]
 
+private let problemRootDataCorruptedFixtureIDs: Set<String> = [
+  "reject-empty-type",
+  "reject-malformed-type",
+  "reject-malformed-structure-type",
+  "reject-invalid-ip-literal",
+  "reject-non-ascii-type",
+  "reject-oversized-type",
+  "reject-empty-title",
+  "reject-title-control",
+  "reject-oversized-title",
+  "reject-status-below-range",
+  "reject-status-above-range",
+  "reject-fractional-status",
+  "reject-empty-detail",
+  "reject-detail-control",
+  "reject-oversized-detail",
+  "reject-empty-request-id",
+  "reject-request-id-character",
+  "reject-oversized-request-id",
+  "reject-retry-delay-on-non-retryable",
+  "reject-negative-retry-delay",
+  "reject-oversized-retry-delay",
+]
+
+private let problemPrivacyFieldByFixtureID: [String: String] = [
+  "reject-empty-type": "type",
+  "reject-malformed-type": "type",
+  "reject-malformed-structure-type": "type",
+  "reject-invalid-ip-literal": "type",
+  "reject-non-ascii-type": "type",
+  "reject-oversized-type": "type",
+  "reject-empty-title": "title",
+  "reject-title-control": "title",
+  "reject-oversized-title": "title",
+  "reject-code-grammar": "code",
+  "reject-oversized-code": "code",
+  "reject-empty-detail": "detail",
+  "reject-detail-control": "detail",
+  "reject-oversized-detail": "detail",
+  "reject-empty-request-id": "request_id",
+  "reject-request-id-character": "request_id",
+  "reject-oversized-request-id": "request_id",
+]
+
+private func expectProblemFixtureDecodeError(
+  _ error: DecodingError,
+  fixtureID: String,
+  sourceLocation: SourceLocation = #_sourceLocation
+) {
+  if problemRootDataCorruptedFixtureIDs.contains(fixtureID) {
+    guard case .dataCorrupted(let context) = error else {
+      Issue.record(
+        "Problem V1 used the wrong DecodingError case: \(fixtureID)",
+        sourceLocation: sourceLocation
+      )
+      return
+    }
+    #expect(context.codingPath.isEmpty, sourceLocation: sourceLocation)
+    #expect(
+      context.debugDescription == "Invalid public problem value.",
+      sourceLocation: sourceLocation
+    )
+    #expect(context.underlyingError == nil, sourceLocation: sourceLocation)
+    return
+  }
+
+  switch (fixtureID, error) {
+  case ("reject-missing-detail", .keyNotFound(let key, let context)):
+    #expect(key.stringValue == "detail", sourceLocation: sourceLocation)
+    #expect(key.intValue == nil, sourceLocation: sourceLocation)
+    #expect(context.codingPath.isEmpty, sourceLocation: sourceLocation)
+    #expect(
+      context.debugDescription
+        == "No value associated with key CodingKeys(stringValue: \"detail\", intValue: nil) (\"detail\").",
+      sourceLocation: sourceLocation
+    )
+    #expect(context.underlyingError == nil, sourceLocation: sourceLocation)
+  case ("reject-code-grammar", .dataCorrupted(let context)),
+    ("reject-oversized-code", .dataCorrupted(let context)):
+    #expect(context.codingPath.map(\.stringValue) == ["code"], sourceLocation: sourceLocation)
+    #expect(context.codingPath.map(\.intValue) == [nil], sourceLocation: sourceLocation)
+    #expect(
+      context.debugDescription == "Invalid stable contract value.",
+      sourceLocation: sourceLocation
+    )
+    #expect(context.underlyingError == nil, sourceLocation: sourceLocation)
+  case ("reject-fractional-retry-delay", .dataCorrupted(let context)):
+    expectProblemFractionalJSONError(
+      context,
+      safeNumber: "1.5",
+      sourceLocation: sourceLocation
+    )
+  case ("reject-null-retry-delay", .valueNotFound(let type, let context)):
+    #expect(ObjectIdentifier(type) == ObjectIdentifier(Int.self), sourceLocation: sourceLocation)
+    #expect(
+      context.codingPath.map(\.stringValue) == ["retry_after_seconds"],
+      sourceLocation: sourceLocation
+    )
+    #expect(context.codingPath.map(\.intValue) == [nil], sourceLocation: sourceLocation)
+    #expect(
+      context.debugDescription == "Cannot get value of type Int -- found null value instead",
+      sourceLocation: sourceLocation
+    )
+    #expect(context.underlyingError == nil, sourceLocation: sourceLocation)
+  case ("reject-retryable-type", .typeMismatch(let type, let context)):
+    #expect(ObjectIdentifier(type) == ObjectIdentifier(Bool.self), sourceLocation: sourceLocation)
+    #expect(
+      context.codingPath.map(\.stringValue) == ["retryable"],
+      sourceLocation: sourceLocation
+    )
+    #expect(context.codingPath.map(\.intValue) == [nil], sourceLocation: sourceLocation)
+    #expect(
+      context.debugDescription == "Expected to decode Bool but found a string instead.",
+      sourceLocation: sourceLocation
+    )
+    #expect(context.underlyingError == nil, sourceLocation: sourceLocation)
+  default:
+    Issue.record(
+      "Problem V1 used the wrong DecodingError case: \(fixtureID)",
+      sourceLocation: sourceLocation
+    )
+  }
+}
+
+private func expectProblemFractionalJSONError(
+  _ context: DecodingError.Context,
+  safeNumber: String,
+  sourceLocation: SourceLocation
+) {
+  #expect(context.codingPath.isEmpty, sourceLocation: sourceLocation)
+  #expect(
+    context.debugDescription == "The given data was not valid JSON.",
+    sourceLocation: sourceLocation
+  )
+  let underlyingError = context.underlyingError as NSError?
+  #expect(underlyingError?.domain == NSCocoaErrorDomain, sourceLocation: sourceLocation)
+  #expect(underlyingError?.code == 3840, sourceLocation: sourceLocation)
+  #expect(
+    underlyingError?.userInfo[NSDebugDescriptionErrorKey] as? String
+      == "Number \(safeNumber) is not representable in Swift.",
+    sourceLocation: sourceLocation
+  )
+}
+
 private func problemFixtureMatchesExpectedPurpose(
   id: String,
   object: [String: Any]
@@ -4518,6 +4695,10 @@ private func roundTripSupportingStablePrimitive(
 }
 
 private func requireSameConfidenceCategoryContractType(_ type: ConfidenceCategoryV1.Type) {
+  _ = type
+}
+
+private func requireSameProblemContractType(_ type: ProblemV1.Type) {
   _ = type
 }
 
@@ -6353,7 +6534,7 @@ private func checkProblemType(_ value: Any?, failures: inout Set<String>) {
     failures.insert("minLength")
     return
   }
-  if string.unicodeScalars.count > Problem.maximumTypeUTF8ByteCount {
+  if string.unicodeScalars.count > ProblemV1.maximumTypeUTF8ByteCount {
     failures.insert("maxLength")
     return
   }
@@ -6599,7 +6780,7 @@ private func checkProblemRetryDelay(
   if integer < 0 {
     failures.insert("minimum")
   }
-  if integer > Problem.maximumRetryAfterSeconds {
+  if integer > ProblemV1.maximumRetryAfterSeconds {
     failures.insert("maximum")
   }
   if (try? requireBool(retryable)) != true {

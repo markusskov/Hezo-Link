@@ -1,19 +1,99 @@
 import Foundation
+import HezoLinkCore
 import Testing
 
-@testable import HezoLinkCore
+struct ProblemV1Tests {
+  @Test func canonicalPublicSurfaceAndCompatibilityAliasAreExact() throws {
+    requireProblemV1Conformances(ProblemV1.self)
+    requireProblemContractErrorConformances(ProblemContractError.self)
+    requireSameProblemV1Type(Problem.self)
 
-struct ProblemTests {
+    #expect(ProblemV1.maximumTypeUTF8ByteCount == 256)
+    #expect(ProblemV1.maximumTitleUTF8ByteCount == 128)
+    #expect(ProblemV1.maximumDetailUTF8ByteCount == 512)
+    #expect(ProblemV1.maximumRequestIDByteCount == 128)
+    #expect(ProblemV1.maximumRetryAfterSeconds == 86_400)
+
+    let canonical = try makeProblem()
+    let compatibility: Problem = canonical
+    let canonicalAgain: ProblemV1 = compatibility
+    let canonicalData = try HezoJSON.makeEncoder().encode(canonical)
+    let compatibilityData = try HezoJSON.makeEncoder().encode(compatibility)
+    let compatibilityDecoded = try HezoJSON.makeResponseDecoder().decode(
+      Problem.self,
+      from: canonicalData
+    )
+    let type: ProblemType = canonical.type
+    let title: String = canonical.title
+    let status: Int = canonical.status
+    let code: ProblemCode = canonical.code
+    let detail: String = canonical.detail
+    let requestID: String = canonical.requestID
+    let retryable: Bool = canonical.retryable
+    let retryAfterSeconds: Int? = canonical.retryAfterSeconds
+
+    #expect(canonicalAgain == canonical)
+    #expect(compatibilityData == canonicalData)
+    #expect(compatibilityDecoded == canonical)
+    #expect(type.rawValue == "https://errors.hezo.example/temporarily-unavailable")
+    #expect(title == "Temporarily unavailable")
+    #expect(status == 503)
+    #expect(code == .temporarilyUnavailable)
+    #expect(detail == "Please try again later.")
+    #expect(requestID == "plane-local-random-id")
+    #expect(retryable)
+    #expect(retryAfterSeconds == 30)
+  }
+
   @Test func problemMatchesGoldenWireContract() throws {
     let problem = try makeProblem()
     let data = try HezoJSON.makeEncoder().encode(problem)
     let wireValue = try #require(String(data: data, encoding: .utf8))
     let expected =
       #"{"code":"temporarily_unavailable","detail":"Please try again later.","request_id":"plane-local-random-id","retry_after_seconds":30,"retryable":true,"status":503,"title":"Temporarily unavailable","type":"https://errors.hezo.example/temporarily-unavailable"}"#
-    let decoded = try HezoJSON.makeResponseDecoder().decode(Problem.self, from: data)
+    let decoded = try HezoJSON.makeResponseDecoder().decode(ProblemV1.self, from: data)
 
     #expect(wireValue == expected)
     #expect(decoded == problem)
+  }
+
+  @Test func nestedSemanticFailureHasExactBoundedContext() throws {
+    let candidate = "attacker-controlled-nested-detail"
+    let json =
+      #"{"problem":{"type":"about:blank","title":"Title","status":200,"code":"invalid_url","detail":"\#(candidate)","request_id":"request-id","retryable":false}}"#
+    let data = try #require(json.data(using: .utf8))
+
+    do {
+      _ = try HezoJSON.makeResponseDecoder().decode(ProblemV1Envelope.self, from: data)
+      Issue.record("Expected the nested invalid Problem V1 to be rejected.")
+    } catch let DecodingError.dataCorrupted(context) {
+      #expect(context.codingPath.map(\.stringValue) == ["problem"])
+      #expect(context.debugDescription == "Invalid public problem value.")
+      #expect(context.underlyingError == nil)
+      #expect(String(describing: context).contains(candidate) == false)
+      #expect(String(reflecting: context).contains(candidate) == false)
+    } catch {
+      Issue.record("Nested Problem V1 decoding used the wrong error category.")
+    }
+  }
+
+  @Test func concurrentCanonicalAndCompatibilityRoundTripsAreDeterministic() async throws {
+    let canonical = try makeProblem()
+    let expected = try HezoJSON.makeEncoder().encode(canonical)
+
+    try await withThrowingTaskGroup(of: Data.self) { group in
+      for _ in 0..<64 {
+        group.addTask {
+          let decoded = try HezoJSON.makeResponseDecoder().decode(ProblemV1.self, from: expected)
+          let compatibility: Problem = decoded
+          return try HezoJSON.makeEncoder().encode(compatibility)
+        }
+      }
+
+      for try await encoded in group {
+        #expect(encoded == expected)
+      }
+    }
   }
 
   @Test func unknownFutureProblemCodeAndObjectFieldAreTolerated() throws {
@@ -194,7 +274,7 @@ struct ProblemTests {
     let sensitiveTitle = "attacker supplied title"
     let sensitiveRequestID = "request-secret-identifier"
     let sensitiveDetail = "attacker-controlled-detail"
-    let problem = try Problem(
+    let problem = try ProblemV1(
       type: sensitiveType,
       title: sensitiveTitle,
       status: 422,
@@ -228,8 +308,8 @@ struct ProblemTests {
     requestID: String = "plane-local-random-id",
     retryable: Bool = true,
     retryAfterSeconds: Int? = 30
-  ) throws -> Problem {
-    try Problem(
+  ) throws -> ProblemV1 {
+    try ProblemV1(
       type: type,
       title: title,
       status: status,
@@ -241,3 +321,18 @@ struct ProblemTests {
     )
   }
 }
+
+private struct ProblemV1Envelope: Decodable {
+  let problem: ProblemV1
+}
+
+private func requireProblemV1Conformances<T>(_: T.Type)
+where
+  T: Codable & Equatable & Sendable & CustomStringConvertible & CustomDebugStringConvertible
+    & CustomReflectable
+{}
+
+private func requireProblemContractErrorConformances<T>(_: T.Type)
+where T: Error & Equatable & Sendable & CustomStringConvertible {}
+
+private func requireSameProblemV1Type(_: ProblemV1.Type) {}

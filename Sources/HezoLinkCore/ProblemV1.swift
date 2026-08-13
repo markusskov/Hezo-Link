@@ -239,7 +239,7 @@ public struct ProblemType: RawRepresentable, Codable, Hashable, Sendable {
 }
 
 /// A public RFC 9457-style problem value with bounded, stable contract fields.
-public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
+public struct ProblemV1: Codable, Equatable, Sendable, CustomStringConvertible,
   CustomDebugStringConvertible, CustomReflectable
 {
   private enum CodingKeys: String, CodingKey {
@@ -419,3 +419,6 @@ public struct Problem: Codable, Equatable, Sendable, CustomStringConvertible,
     }
   }
 }
+
+/// The source-compatible spelling retained for existing clients.
+public typealias Problem = ProblemV1

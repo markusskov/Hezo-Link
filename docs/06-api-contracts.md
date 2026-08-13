@@ -634,6 +634,8 @@ The final error origin is selected by ADR. `type`, `title`, `status`, and `code`
 
 V1 problem limits are: `type` is a nonempty, syntactically valid ASCII RFC 3986 URI reference of at most 256 bytes; `title` is 128 UTF-8 bytes; `detail` is 512; and `request_id` is a `RequestIDV1`. Status is `400...599`; `retry_after_seconds` is `0...86400`. Required text is nonempty and contains no Unicode control characters. Invalid problem values fail decoding without echoing their content.
 
+The Swift core exposes `ProblemV1` as the canonical problem-envelope type and retains `Problem` as a source-compatible alias. Both names preserve the same exact eight-field wire contract: the seven required fields `type`, `title`, `status`, `code`, `detail`, `request_id`, and `retryable`, plus optional `retry_after_seconds`; the existing validation, tolerant-reader, and content-free failure and log-safety requirements remain unchanged. The alias and type extraction create no second vocabulary, new wire value, endpoint, HTTP or status-handling behavior, runtime, network or transport behavior, authentication, persistence, retry scheduling, deployment, release, Stage-gate authority, or decision about the final error origin.
+
 | Status | Use |
 |---:|---|
 | `400` | Malformed JSON or invalid envelope |
