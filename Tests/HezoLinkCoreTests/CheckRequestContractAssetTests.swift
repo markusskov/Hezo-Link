@@ -2428,6 +2428,7 @@ struct VerdictReasonsContractAssetTests {
   @Test func validVerdictReasonsFixturesRoundTripWithCountOrderAndDuplicatesPreserved() throws {
     let manifest = try loadObject(verdictReasonsManifestPath)
     let cases = try requireObjectArray(manifest["cases"])
+    requireSameVerdictReasonsContractType(VerdictReasons.self)
 
     for fixtureCase in cases where try requireBool(fixtureCase["expected_schema_valid"]) {
       let fixtureID = try requireString(fixtureCase["id"])
@@ -2435,18 +2436,28 @@ struct VerdictReasonsContractAssetTests {
       let relativePath = "\(verdictReasonsFixtureRoot)/\(path)"
       let fixture = try loadJSONValue(relativePath)
       let fixtureArray = try requireJSONArray(fixture)
-      let decoded = try HezoJSON.makeResponseDecoder().decode(
-        VerdictReasons.self,
+      let canonical = try HezoJSON.makeResponseDecoder().decode(
+        VerdictReasonsV1.self,
         from: loadData(relativePath)
       )
-      let encoded = try HezoJSON.makeEncoder().encode(decoded)
-      let encodedValue = try jsonValue(from: encoded)
+      let compatibility: VerdictReasons = canonical
+      let canonicalAgain: VerdictReasonsV1 = compatibility
+      let canonicalEncoded = try HezoJSON.makeEncoder().encode(canonical)
+      let compatibilityEncoded = try HezoJSON.makeEncoder().encode(compatibility)
+      let compatibilityDecoded = try HezoJSON.makeResponseDecoder().decode(
+        VerdictReasons.self,
+        from: compatibilityEncoded
+      )
+      let encodedValue = try jsonValue(from: canonicalEncoded)
       let expectedCodes = try fixtureArray.map { item in
         try requireString(requireObject(item)["code"])
       }
 
-      #expect(decoded.count == fixtureArray.count)
-      #expect(decoded.values.map { $0.code.rawValue } == expectedCodes)
+      #expect(canonical.count == fixtureArray.count)
+      #expect(canonical.values.map { $0.code.rawValue } == expectedCodes)
+      #expect(canonicalAgain == canonical)
+      #expect(compatibilityDecoded == canonical)
+      #expect(compatibilityEncoded == canonicalEncoded)
       #expect(
         try jsonValuesAreEqual(encodedValue, fixture),
         "Verdict Reasons reader changed count, item order, or payload: \(fixtureID)"
@@ -2457,7 +2468,7 @@ struct VerdictReasonsContractAssetTests {
       "packages/contracts/fixtures/verdict-reasons-v1/valid/duplicate-items.json"
     )
     let duplicates = try HezoJSON.makeResponseDecoder().decode(
-      VerdictReasons.self,
+      VerdictReasonsV1.self,
       from: duplicateData
     )
     #expect(duplicates.count == 2)
@@ -2477,12 +2488,63 @@ struct VerdictReasonsContractAssetTests {
       let path = try requireString(fixtureCase["path"])
       do {
         _ = try HezoJSON.makeResponseDecoder().decode(
-          VerdictReasons.self,
+          VerdictReasonsV1.self,
           from: loadData("\(verdictReasonsFixtureRoot)/\(path)")
         )
         Issue.record("A declared invalid Verdict Reasons V1 fixture was accepted: \(fixtureID)")
-      } catch is DecodingError {
-        // Expected. The safe fixture ID is enough context; never render the rejected payload.
+      } catch let error as DecodingError {
+        switch (fixtureID, error) {
+        case ("reject-too-many", .dataCorrupted(let context)):
+          #expect(context.codingPath.map(\.stringValue) == ["Index 5"])
+          #expect(context.codingPath.map(\.intValue) == [5])
+          #expect(
+            context.debugDescription
+              == "Public verdict reason count exceeds the contract limit."
+          )
+          #expect(context.underlyingError == nil)
+        case ("reject-wrong-top-level-type", .typeMismatch(let type, let context)):
+          #expect(ObjectIdentifier(type) == ObjectIdentifier([Any].self))
+          #expect(context.codingPath.isEmpty)
+          #expect(
+            context.debugDescription
+              == "Expected to decode Array<Any> but found a dictionary instead."
+          )
+          #expect(context.underlyingError == nil)
+        case ("reject-null", .valueNotFound(let type, let context)):
+          #expect(ObjectIdentifier(type) == ObjectIdentifier([Any].self))
+          #expect(context.codingPath.isEmpty)
+          #expect(
+            context.debugDescription
+              == "Cannot get unkeyed decoding container -- found null value instead"
+          )
+          #expect(context.underlyingError == nil)
+        case ("reject-wrong-item-type", .typeMismatch(let type, let context)):
+          #expect(ObjectIdentifier(type) == ObjectIdentifier([String: Any].self))
+          #expect(context.codingPath.map(\.stringValue) == ["Index 0"])
+          #expect(context.codingPath.map(\.intValue) == [0])
+          #expect(
+            context.debugDescription
+              == "Expected to decode Dictionary<String, Any> but found number instead."
+          )
+          #expect(context.underlyingError == nil)
+        case ("reject-invalid-item-code", .dataCorrupted(let context)):
+          #expect(context.codingPath.map(\.stringValue) == ["Index 0", "code"])
+          #expect(context.codingPath.map(\.intValue) == [0, nil])
+          #expect(context.debugDescription == "Invalid stable contract value.")
+          #expect(context.underlyingError == nil)
+        case ("reject-item-missing-observed-at", .keyNotFound(let key, let context)):
+          #expect(key.stringValue == "observed_at")
+          #expect(key.intValue == nil)
+          #expect(context.codingPath.map(\.stringValue) == ["Index 0"])
+          #expect(context.codingPath.map(\.intValue) == [0])
+          #expect(
+            context.debugDescription
+              == "No value associated with key CodingKeys(stringValue: \"observed_at\", intValue: nil) (\"observed_at\")."
+          )
+          #expect(context.underlyingError == nil)
+        default:
+          Issue.record("Verdict Reasons V1 used the wrong DecodingError case: \(fixtureID)")
+        }
       } catch {
         Issue.record("Verdict Reasons V1 decoding used an unexpected error category: \(fixtureID)")
       }
@@ -2504,7 +2566,7 @@ struct VerdictReasonsContractAssetTests {
     )
 
     let decoded = try HezoJSON.makeResponseDecoder().decode(
-      VerdictReasons.self,
+      VerdictReasonsV1.self,
       from: loadData(relativePath)
     )
     #expect(decoded.count == 1)
@@ -2523,7 +2585,10 @@ struct VerdictReasonsContractAssetTests {
     invalidNestedReason["code"] = nestedCandidate
     try expectVerdictReasonsDecodeErrorOmitsCandidate(
       [invalidNestedReason],
-      candidate: nestedCandidate
+      candidate: nestedCandidate,
+      expectedCodingPathStrings: ["Index 0", "code"],
+      expectedCodingPathIntegers: [0, nil],
+      expectedDebugDescription: "Invalid stable contract value."
     )
 
     let sixthCandidate = "PRIVATE_SENTINEL_SIXTH_REASON"
@@ -2533,7 +2598,10 @@ struct VerdictReasonsContractAssetTests {
     tooManyReasons.append(sixthReason)
     try expectVerdictReasonsDecodeErrorOmitsCandidate(
       tooManyReasons,
-      candidate: sixthCandidate
+      candidate: sixthCandidate,
+      expectedCodingPathStrings: ["Index 5"],
+      expectedCodingPathIntegers: [5],
+      expectedDebugDescription: "Public verdict reason count exceeds the contract limit."
     )
   }
 
@@ -4370,6 +4438,10 @@ private func requireSameVerdictReasonContractType(_ type: VerdictReasonV1.Type) 
   _ = type
 }
 
+private func requireSameVerdictReasonsContractType(_ type: VerdictReasonsV1.Type) {
+  _ = type
+}
+
 private func requireSameEvaluatedScopeContractType(_ type: EvaluatedScopeV1.Type) {
   _ = type
 }
@@ -5043,17 +5115,50 @@ private func requireFrozenVerdictReasonEvaluatorSurface(
 
 private func expectVerdictReasonsDecodeErrorOmitsCandidate(
   _ payload: Any,
-  candidate: String
+  candidate: String,
+  expectedCodingPathStrings: [String],
+  expectedCodingPathIntegers: [Int?],
+  expectedDebugDescription: String,
+  sourceLocation: SourceLocation = #_sourceLocation
 ) throws {
   let data = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
   do {
-    _ = try HezoJSON.makeResponseDecoder().decode(VerdictReasons.self, from: data)
-    Issue.record("A Verdict Reasons privacy canary was accepted")
+    _ = try HezoJSON.makeResponseDecoder().decode(VerdictReasonsV1.self, from: data)
+    Issue.record("A Verdict Reasons privacy canary was accepted", sourceLocation: sourceLocation)
   } catch let error as DecodingError {
-    #expect(String(describing: error).contains(candidate) == false)
-    #expect(String(reflecting: error).contains(candidate) == false)
+    guard case .dataCorrupted(let context) = error else {
+      Issue.record(
+        "Verdict Reasons privacy canary used the wrong DecodingError case",
+        sourceLocation: sourceLocation
+      )
+      return
+    }
+    #expect(
+      context.codingPath.map(\.stringValue) == expectedCodingPathStrings,
+      sourceLocation: sourceLocation
+    )
+    #expect(
+      context.codingPath.map(\.intValue) == expectedCodingPathIntegers,
+      sourceLocation: sourceLocation
+    )
+    #expect(
+      context.debugDescription == expectedDebugDescription,
+      sourceLocation: sourceLocation
+    )
+    #expect(context.underlyingError == nil, sourceLocation: sourceLocation)
+    #expect(
+      String(describing: error).contains(candidate) == false,
+      sourceLocation: sourceLocation
+    )
+    #expect(
+      String(reflecting: error).contains(candidate) == false,
+      sourceLocation: sourceLocation
+    )
   } catch {
-    Issue.record("Verdict Reasons privacy canary used an unexpected error category")
+    Issue.record(
+      "Verdict Reasons privacy canary used an unexpected error category",
+      sourceLocation: sourceLocation
+    )
   }
 }
 

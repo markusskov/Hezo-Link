@@ -23,7 +23,7 @@ struct VerdictTests {
     arguments: verdictPairCases
   )
   func verdictLabelActionPairMatrix(testCase: VerdictPairCase) throws {
-    let reasons = try VerdictReasons([])
+    let reasons = try VerdictReasonsV1([])
     let data = try makeVerdictData(
       label: testCase.label,
       recommendedAction: testCase.recommendedAction
@@ -101,7 +101,7 @@ struct VerdictTests {
       freshness: "recent"
     )
     let orderedReasons = [firstReason, secondReason, firstReason, secondReason, firstReason]
-    let verdict = try makeVerdict(reasons: VerdictReasons(orderedReasons))
+    let verdict = try makeVerdict(reasons: VerdictReasonsV1(orderedReasons))
     let data = try HezoJSON.makeEncoder().encode(verdict)
     let decoded = try HezoJSON.makeResponseDecoder().decode(Verdict.self, from: data)
 
@@ -124,7 +124,7 @@ struct VerdictTests {
     )
 
     #expect(throws: VerdictReasonsError.tooManyReasons) {
-      try VerdictReasons(sixReasons)
+      try VerdictReasonsV1(sixReasons)
     }
     #expect(throws: DecodingError.self) {
       try HezoJSON.makeResponseDecoder().decode(Verdict.self, from: verdictData)
@@ -136,7 +136,7 @@ struct VerdictTests {
     let scopeCandidate = "private_scope_sentinel"
     let reasonCandidate = "private_reason_sentinel"
     let summaryCandidate = "private.reason.sentinel"
-    let reasons = try VerdictReasons([
+    let reasons = try VerdictReasonsV1([
       makeReason(
         code: ReasonCode(validating: reasonCandidate),
         family: "private_family_sentinel",
@@ -194,35 +194,16 @@ struct VerdictTests {
     }
   }
 
-  @Test func verdictReasonSetEnforcesFiveItemLimitDuringConstructionAndDecoding() throws {
-    let reason = try makeReason()
-    let fiveReasons = Array(repeating: reason, count: 5)
-    let sixReasons = Array(repeating: reason, count: 6)
-    let bounded = try VerdictReasons(fiveReasons)
-    let boundedData = try HezoJSON.makeEncoder().encode(bounded)
-    let decoded = try HezoJSON.makeResponseDecoder().decode(VerdictReasons.self, from: boundedData)
-    let oversizedData = try HezoJSON.makeEncoder().encode(sixReasons)
-
-    #expect(bounded.count == 5)
-    #expect(decoded.values == fiveReasons)
-    #expect(throws: VerdictReasonsError.tooManyReasons) {
-      try VerdictReasons(sixReasons)
-    }
-    #expect(throws: DecodingError.self) {
-      try HezoJSON.makeResponseDecoder().decode(VerdictReasons.self, from: oversizedData)
-    }
-  }
-
   private func makeVerdict(
     label: VerdictLabelV1 = .caution,
     recommendedAction: RecommendedActionV1 = .warn,
-    reasons: VerdictReasons? = nil
+    reasons: VerdictReasonsV1? = nil
   ) throws -> Verdict {
-    let boundedReasons: VerdictReasons
+    let boundedReasons: VerdictReasonsV1
     if let reasons {
       boundedReasons = reasons
     } else {
-      boundedReasons = try VerdictReasons([makeReason()])
+      boundedReasons = try VerdictReasonsV1([makeReason()])
     }
 
     return try Verdict(
