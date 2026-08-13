@@ -25,8 +25,7 @@
       "description": "Exact deliberate submission. Do not normalize or strip query or fragment. In addition to this code-point bound, reject values over 8192 UTF-8 bytes and apply the documented semantic URL policy."
     },
     "analysis_profile": {
-      "type": "string",
-      "const": "standard"
+      "$ref": "urn:hezo-link:contract:analysis-profile:v1"
     },
     "wait_budget_ms": {
       "type": "integer",
@@ -35,8 +34,7 @@
       "description": "Nonnegative signed 32-bit completion-wait hint, not a completion promise."
     },
     "reason_schema_version": {
-      "type": "integer",
-      "const": 1
+      "$ref": "urn:hezo-link:contract:reason-schema-version:v1"
     }
   }
 }

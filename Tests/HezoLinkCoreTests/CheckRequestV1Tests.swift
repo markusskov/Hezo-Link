@@ -85,22 +85,24 @@ struct CheckRequestV1Tests {
       waitBudgetMilliseconds: 1_200
     )
     let object = try requireJSONObject(HezoJSON.makeEncoder().encode(request))
+    let analysisProfile: String = CheckRequestV1.analysisProfile
+    let reasonSchemaVersion: Int = CheckRequestV1.reasonSchemaVersion
     let expectedKeys: Set<String> = [
       "schema_version", "url", "analysis_profile", "wait_budget_ms",
       "reason_schema_version",
     ]
     let constantsMatch =
       object["schema_version"] as? Int == CheckRequestV1.schemaVersion
-      && object["analysis_profile"] as? String == CheckRequestV1.analysisProfile
-      && object["reason_schema_version"] as? Int == CheckRequestV1.reasonSchemaVersion
+      && object["analysis_profile"] as? String == analysisProfile
+      && object["reason_schema_version"] as? Int == reasonSchemaVersion
       && object["wait_budget_ms"] as? Int == request.waitBudgetMilliseconds
       && object["url"] as? String == "https://shape.test/path"
 
     #expect(Set(object.keys) == expectedKeys)
     #expect(constantsMatch)
     #expect(CheckRequestV1.schemaVersion == 1)
-    #expect(CheckRequestV1.analysisProfile == "standard")
-    #expect(CheckRequestV1.reasonSchemaVersion == 1)
+    #expect(analysisProfile == AnalysisProfileV1.standard.rawValue)
+    #expect(reasonSchemaVersion == ReasonSchemaVersionV1.v1.rawValue)
     #expect(CheckRequestV1.maximumWaitBudgetMilliseconds == Int(Int32.max))
   }
 

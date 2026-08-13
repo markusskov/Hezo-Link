@@ -1,12 +1,16 @@
 # Hezo Link contract components
 
-This directory is the public, offline source of truth for the first check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
+This directory is the public, offline source of truth for the first check-input, check-request leaf-primitive, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting wire contracts described in [API and message contracts](../../docs/06-api-contracts.md). It contains only data contracts and synthetic examples. It does not define a deployed service.
 
 ## Artifacts
 
 - `openapi-components.json` is an OpenAPI 3.1 components document. Its `paths` object is deliberately empty and it declares no server or security scheme.
 - `schemas/check-request-v1.schema.json` is the strict Draft 2020-12 request schema.
 - `fixtures/check-request-v1/manifest.json` lists deterministic, reserved-domain valid and invalid examples and their expected schema result.
+- `schemas/analysis-profile-v1.schema.json` is the strict Draft 2020-12 standalone Check Request V1 analysis-profile scalar schema.
+- `fixtures/analysis-profile-v1/manifest.json` lists the sole valid profile and deterministic invalid candidate strings and JSON types with their exact schema failure keyword sets.
+- `schemas/reason-schema-version-v1.schema.json` is the strict Draft 2020-12 standalone Check Request V1 reason-schema-version scalar schema.
+- `fixtures/reason-schema-version-v1/manifest.json` lists two representative JSON spellings of the valid integer value and deterministic invalid version values and JSON types with their exact schema failure keyword sets.
 - `schemas/request-id-v1.schema.json` is the strict Draft 2020-12 standalone request-ID scalar schema.
 - `fixtures/request-id-v1/manifest.json` lists the exact length and alphabet boundaries plus deterministic invalid punctuation, whitespace, control, non-ASCII, null, and type examples with their exact schema failure keyword sets.
 - `schemas/check-token-v1.schema.json` is the strict Draft 2020-12 standalone check-token scalar schema.
@@ -45,6 +49,16 @@ Every request is a JSON object with exactly these required fields:
 - `reason_schema_version`: integer constant `1`.
 
 Unknown fields are rejected.
+
+`CheckRequestV1.analysis_profile` and `CheckRequestV1.reason_schema_version` use absolute references to the standalone primitives below. Those references preserve the request's prior accepted JSON values exactly; they do not widen the request or alter any existing Check Request V1 fixture.
+
+### Analysis profile V1
+
+`AnalysisProfileV1` is a string constant with the sole value `standard`. The standalone primitive is assigned only to `CheckRequestV1.analysis_profile`. It does not authorize a `fast` profile, select or disclose collectors, prove completeness, define negotiation or policy, or define the completed-response `analysis` object. It defines no runtime, network, storage, or persistence behavior.
+
+### Reason schema version V1
+
+`ReasonSchemaVersionV1` is an integer constant with the sole value `1`. Under Draft 2020-12, JSON numbers such as `1` and `1.0` represent the same valid integer value; the deterministic fixtures pin those two representative JSON spellings. The Swift value is intentionally encoder-only: this package selects no strict inbound numeric decoder, so inbound validation remains at the standalone JSON Schema boundary. The standalone primitive is assigned only to `CheckRequestV1.reason_schema_version`. It does not define a reason vocabulary, version negotiation, or the completed-response `versions` object, and it creates no relationship to the design-target `versions.reason_schema` field. It defines no completeness, collector, profile, policy, runtime, network, storage, or persistence behavior.
 
 ### URL validation boundary
 
@@ -160,4 +174,4 @@ This standalone reason primitive does not define or authorize a complete verdict
 
 ## Explicit exclusions
 
-These artifacts contain only request, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, clock, freshness, TTL, lifetime, retention or logging permission, storage, persistence, network or other I/O behavior, cross-plane identity, complete check-response envelope, completed-response or report semantics, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.
+These artifacts contain only request, check-request analysis-profile and reason-schema-version, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, verdict-reason, and standalone verdict-supporting shapes with reserved or synthetic examples. They define no endpoint, deployment, HTTP or polling behavior, token or request-ID issuance or entropy proof, authority, profile negotiation, collector set, completeness, clock, freshness, TTL, lifetime, retention or logging permission, storage, persistence, network or other I/O behavior, cross-plane identity, complete check-response envelope, completed-response analysis or versions object, completed-response or report semantics, automatic block eligibility, or unrelated product data. All fixture hosts use the reserved `.test` namespace and are intended for offline validation only.

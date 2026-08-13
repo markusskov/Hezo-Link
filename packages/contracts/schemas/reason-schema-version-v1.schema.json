@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:reason-schema-version:v1",
+  "title": "Hezo Link reason schema version V1",
+  "description": "Exact standalone CheckRequestV1 reason-schema-version primitive. This value is assigned only to CheckRequestV1.reason_schema_version and defines no completed-response versions member, reason vocabulary, negotiation, completeness, collector set, profile, policy, runtime, network, or persistence behavior.",
+  "type": "integer",
+  "const": 1
+}

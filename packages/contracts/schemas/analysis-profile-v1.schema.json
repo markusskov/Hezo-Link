@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hezo-link:contract:analysis-profile:v1",
+  "title": "Hezo Link analysis profile V1",
+  "description": "Exact standalone CheckRequestV1 analysis-profile primitive. This value is assigned only to CheckRequestV1.analysis_profile and defines no completed-response analysis, completeness, collector set, fast profile, negotiation, policy, runtime, network, or persistence behavior.",
+  "type": "string",
+  "const": "standard"
+}

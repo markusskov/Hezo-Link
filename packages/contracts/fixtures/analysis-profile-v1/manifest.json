@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "contract": "analysis-profile-v1",
+  "contract_schema": "../../schemas/analysis-profile-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-standard",
+      "path": "valid/standard.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-fast",
+      "path": "invalid/fast.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-uppercase",
+      "path": "invalid/uppercase.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-empty",
+      "path": "invalid/empty.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-integer",
+      "path": "invalid/integer.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-boolean",
+      "path": "invalid/boolean.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-array",
+      "path": "invalid/array.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-object",
+      "path": "invalid/object.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    }
+  ]
+}

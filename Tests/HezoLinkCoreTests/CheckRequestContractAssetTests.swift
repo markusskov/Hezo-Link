@@ -26,7 +26,7 @@ struct CheckRequestContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.10.0")
+    #expect(info["version"] as? String == "1.11.0")
     #expect(try requireString(info["description"]).isEmpty == false)
 
     let components = try requireObject(openAPI["components"])
@@ -35,8 +35,8 @@ struct CheckRequestContractAssetTests {
     #expect(
       Set(schemas.keys)
         == [
-          "CheckRequestV1", "RequestIDV1", "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1",
-          "VerdictLabelV1",
+          "CheckRequestV1", "AnalysisProfileV1", "ReasonSchemaVersionV1", "RequestIDV1",
+          "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
           "VerdictReasonsV1", "CheckResponseStatusV1", "CheckTokenV1",
           "PendingCheckResponseV1", "VerdictV1",
@@ -45,6 +45,20 @@ struct CheckRequestContractAssetTests {
     let checkRequest = try requireObject(schemas["CheckRequestV1"])
     #expect(Set(checkRequest.keys) == ["$ref"])
     #expect(checkRequest["$ref"] as? String == "./schemas/check-request-v1.schema.json")
+
+    let analysisProfileComponent = try requireObject(schemas["AnalysisProfileV1"])
+    #expect(Set(analysisProfileComponent.keys) == ["$ref"])
+    #expect(
+      analysisProfileComponent["$ref"] as? String
+        == "./schemas/analysis-profile-v1.schema.json"
+    )
+
+    let reasonSchemaVersionComponent = try requireObject(schemas["ReasonSchemaVersionV1"])
+    #expect(Set(reasonSchemaVersionComponent.keys) == ["$ref"])
+    #expect(
+      reasonSchemaVersionComponent["$ref"] as? String
+        == "./schemas/reason-schema-version-v1.schema.json"
+    )
 
     let requestID = try requireObject(schemas["RequestIDV1"])
     #expect(Set(requestID.keys) == ["$ref"])
@@ -110,6 +124,7 @@ struct CheckRequestContractAssetTests {
     #expect(FileManager.default.fileExists(atPath: referencedVerdictReasonSchemaURL.path))
 
     for path in [
+      "analysis-profile-v1.schema.json", "reason-schema-version-v1.schema.json",
       "verdict-label-v1.schema.json", "recommended-action-v1.schema.json",
       "confidence-category-v1.schema.json", "evaluated-scope-v1.schema.json",
       "verdict-reasons-v1.schema.json", "check-response-status-v1.schema.json",
@@ -151,12 +166,19 @@ struct CheckRequestContractAssetTests {
     let properties = try requireObject(schema["properties"])
     #expect(Set(properties.keys) == expectedProperties)
     try expectIntegerConstant(properties["schema_version"], constant: 1)
-    try expectIntegerConstant(properties["reason_schema_version"], constant: 1)
-
     let analysisProfile = try requireObject(properties["analysis_profile"])
-    #expect(Set(analysisProfile.keys) == ["type", "const"])
-    #expect(analysisProfile["type"] as? String == "string")
-    #expect(analysisProfile["const"] as? String == "standard")
+    #expect(Set(analysisProfile.keys) == ["$ref"])
+    #expect(
+      analysisProfile["$ref"] as? String
+        == "urn:hezo-link:contract:analysis-profile:v1"
+    )
+
+    let reasonSchemaVersion = try requireObject(properties["reason_schema_version"])
+    #expect(Set(reasonSchemaVersion.keys) == ["$ref"])
+    #expect(
+      reasonSchemaVersion["$ref"] as? String
+        == "urn:hezo-link:contract:reason-schema-version:v1"
+    )
 
     let waitBudget = try requireObject(properties["wait_budget_ms"])
     #expect(Set(waitBudget.keys) == ["type", "minimum", "maximum", "description"])
@@ -643,7 +665,7 @@ struct VerdictReasonContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.10.0")
+    #expect(info["version"] as? String == "1.11.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -653,8 +675,8 @@ struct VerdictReasonContractAssetTests {
     #expect(
       Set(schemas.keys)
         == [
-          "CheckRequestV1", "RequestIDV1", "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1",
-          "VerdictLabelV1",
+          "CheckRequestV1", "AnalysisProfileV1", "ReasonSchemaVersionV1", "RequestIDV1",
+          "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
           "VerdictReasonsV1", "CheckResponseStatusV1", "CheckTokenV1",
           "PendingCheckResponseV1", "VerdictV1",
@@ -930,7 +952,7 @@ struct VerdictPrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.10.0")
+    #expect(info["version"] as? String == "1.11.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1282,10 +1304,10 @@ struct CheckResponseStatusContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.10.0")
+    #expect(info["version"] as? String == "1.11.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, check-request leaf-primitive, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
@@ -1557,17 +1579,17 @@ struct PendingCheckResponseContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.10.0")
+    #expect(info["version"] as? String == "1.11.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, check-request leaf-primitive, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
     #expect(Set(components.keys) == ["schemas"])
     let schemas = try requireObject(components["schemas"])
     #expect(Set(schemas.keys) == expectedOpenAPIComponentNames)
-    #expect(schemas.count == 14)
+    #expect(schemas.count == 16)
     let component = try requireObject(schemas["PendingCheckResponseV1"])
     #expect(Set(component.keys) == ["$ref"])
     #expect(component["$ref"] as? String == pendingCheckResponseOpenAPIReference)
@@ -2002,7 +2024,7 @@ struct VerdictSupportingStablePrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.10.0")
+    #expect(info["version"] as? String == "1.11.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -2281,7 +2303,7 @@ struct VerdictReasonsContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.10.0")
+    #expect(info["version"] as? String == "1.11.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -2700,10 +2722,10 @@ struct VerdictContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.10.0")
+    #expect(info["version"] as? String == "1.11.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, check-request leaf-primitive, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
@@ -3232,8 +3254,8 @@ private let repositoryRoot = URL(fileURLWithPath: #filePath)
   .deletingLastPathComponent()
 
 private let expectedOpenAPIComponentNames: Set<String> = [
-  "CheckRequestV1", "RequestIDV1", "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1",
-  "VerdictLabelV1",
+  "CheckRequestV1", "AnalysisProfileV1", "ReasonSchemaVersionV1", "RequestIDV1",
+  "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
   "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
   "VerdictReasonsV1", "CheckResponseStatusV1", "CheckTokenV1", "PendingCheckResponseV1",
   "VerdictV1",
