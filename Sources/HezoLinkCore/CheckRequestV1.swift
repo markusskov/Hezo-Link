@@ -37,10 +37,10 @@ public struct CheckRequestV1: Encodable, Equatable, Sendable, CustomStringConver
   public static let schemaVersion = 1
 
   /// The only analysis profile supported by this V1 request.
-  public static let analysisProfile = "standard"
+  public static let analysisProfile: String = AnalysisProfileV1.standard.rawValue
 
   /// The frozen verdict-reason schema version requested by this client.
-  public static let reasonSchemaVersion = 1
+  public static let reasonSchemaVersion: Int = ReasonSchemaVersionV1.v1.rawValue
 
   /// The largest completion-wait hint representable by the public contract.
   public static let maximumWaitBudgetMilliseconds = Int(Int32.max)
@@ -80,9 +80,9 @@ public struct CheckRequestV1: Encodable, Equatable, Sendable, CustomStringConver
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(Self.schemaVersion, forKey: .schemaVersion)
     try container.encode(submittedURL.rawValue, forKey: .url)
-    try container.encode(Self.analysisProfile, forKey: .analysisProfile)
+    try container.encode(AnalysisProfileV1.standard, forKey: .analysisProfile)
     try container.encode(waitBudgetMilliseconds, forKey: .waitBudgetMilliseconds)
-    try container.encode(Self.reasonSchemaVersion, forKey: .reasonSchemaVersion)
+    try container.encode(ReasonSchemaVersionV1.v1, forKey: .reasonSchemaVersion)
   }
 
   /// A constant log-safe description that never includes submitted content.

@@ -147,10 +147,13 @@ Contract rules:
 - `url` is the exact deliberate submission. Query and fragment are not stripped before analysis.
 - Only syntactically valid HTTP and HTTPS URLs are accepted. User information, control characters, ambiguous host syntax, prohibited local names, and other validation failures follow [document 08](08-sandbox-and-security.md).
 - The proposed V1 network port policy is 80/443. A syntactically valid other port returns a completed `unknown` result with operational code `unsupported_port`; it is not silently rewritten.
-- `analysis_profile` is allowlisted. The app cannot request hidden collectors or broaden egress. `standard` is the normal manual profile; a future fast profile requires policy support.
+- `analysis_profile` is the standalone `AnalysisProfileV1` string constant `standard`. The app cannot request hidden collectors or broaden egress. This contract does not authorize a fast profile; any future profile requires a separately versioned contract and explicit policy support.
 - `wait_budget_ms` is a hint clamped to a server maximum. It is not a promise and is not persisted as analytics.
+- `reason_schema_version` is the standalone `ReasonSchemaVersionV1` integer constant `1`. Its Swift value is intentionally encoder-only: this package selects no strict inbound numeric decoder, so inbound validation remains at the standalone JSON Schema boundary.
 - `Idempotency-Key` is required because the request may schedule work. It is retained only for the short check window.
 - `Hezo-Integrity` is accepted when available. Core manual checks must retain a documented reduced-trust/rate-limited path when App Attest is unsupported or temporarily unavailable; lack of attestation is not proof of abuse.
+
+The strict offline `CheckRequestV1` schema assigns these standalone primitives only to `analysis_profile` and `reason_schema_version`, using their absolute schema IDs. Extracting the two exact leaf languages does not change the accepted Check Request V1 wire values or any existing request fixture. Neither primitive authorizes or defines the design-target completed response's `analysis` or `versions` object, analysis completeness, unavailable collectors, a collector set, fast-profile behavior, version or profile negotiation, runtime, network, persistence, storage, or policy behavior. In particular, `ReasonSchemaVersionV1` creates no contract relationship with the illustrative `versions.reason_schema` member below.
 
 ### Completed check
 

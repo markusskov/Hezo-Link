@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "contract": "reason-schema-version-v1",
+  "contract_schema": "../../schemas/reason-schema-version-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-one",
+      "path": "valid/one.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-equivalent-decimal",
+      "path": "valid/equivalent-decimal.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-zero",
+      "path": "invalid/zero.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-next-version",
+      "path": "invalid/next-version.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-negative",
+      "path": "invalid/negative.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "const"
+    },
+    {
+      "id": "reject-fractional",
+      "path": "invalid/fractional.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-string",
+      "path": "invalid/string.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-boolean",
+      "path": "invalid/boolean.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-array",
+      "path": "invalid/array.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    },
+    {
+      "id": "reject-object",
+      "path": "invalid/object.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "type",
+        "const"
+      ]
+    }
+  ]
+}

@@ -36,6 +36,9 @@
 		20000000000000000000001C /* ConfidenceCategoryV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000001D /* ConfidenceCategoryV1Tests.swift */; };
 		20000000000000000000001D /* VerdictReasonV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000001E /* VerdictReasonV1Tests.swift */; };
 		20000000000000000000001E /* VerdictReasonsV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000001F /* VerdictReasonsV1Tests.swift */; };
+		20000000000000000000001F /* AnalysisProfileV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000020 /* AnalysisProfileV1Tests.swift */; };
+		200000000000000000000020 /* ReasonSchemaVersionV1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000021 /* ReasonSchemaVersionV1Tests.swift */; };
+		200000000000000000000021 /* CheckRequestPrimitiveContractAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000022 /* CheckRequestPrimitiveContractAssetTests.swift */; };
 		8CB53578DD05D68A51E50D96 /* AddressRegistryClassifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C538A73E9CA9458C912B26 /* AddressRegistryClassifierTests.swift */; };
 		03E35C6C43CBF72FFE453CA9 /* IANAAddressRegistryAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0644C83465D71BD819ED2279 /* IANAAddressRegistryAssetTests.swift */; };
 		200000000000000000000008 /* URLPolicyTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000009 /* URLPolicyTestSupport.swift */; };
@@ -65,6 +68,8 @@
 		810000000000000000000016 /* ConfidenceCategoryV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000016 /* ConfidenceCategoryV1.swift */; };
 		810000000000000000000017 /* VerdictReasonV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000017 /* VerdictReasonV1.swift */; };
 		810000000000000000000018 /* VerdictReasonsV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000018 /* VerdictReasonsV1.swift */; };
+		810000000000000000000019 /* AnalysisProfileV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800000000000000000000019 /* AnalysisProfileV1.swift */; };
+		81000000000000000000001A /* ReasonSchemaVersionV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80000000000000000000001A /* ReasonSchemaVersionV1.swift */; };
 		F084A386B928A6324548CB3E /* AddressRegistryClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9552005C21001B0116D010 /* AddressRegistryClassifier.swift */; };
 		8A0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat in Resources */ = {isa = PBXBuildFile; fileRef = 8B0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat */; };
 		8A0000000000000000000002 /* LICENSE-MPL-2.0.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8B0000000000000000000002 /* LICENSE-MPL-2.0.txt */; };
@@ -105,6 +110,9 @@
 		10000000000000000000001D /* ConfidenceCategoryV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceCategoryV1Tests.swift; sourceTree = "<group>"; };
 		10000000000000000000001E /* VerdictReasonV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictReasonV1Tests.swift; sourceTree = "<group>"; };
 		10000000000000000000001F /* VerdictReasonsV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictReasonsV1Tests.swift; sourceTree = "<group>"; };
+		100000000000000000000020 /* AnalysisProfileV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisProfileV1Tests.swift; sourceTree = "<group>"; };
+		100000000000000000000021 /* ReasonSchemaVersionV1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReasonSchemaVersionV1Tests.swift; sourceTree = "<group>"; };
+		100000000000000000000022 /* CheckRequestPrimitiveContractAssetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRequestPrimitiveContractAssetTests.swift; sourceTree = "<group>"; };
 		B4C538A73E9CA9458C912B26 /* AddressRegistryClassifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRegistryClassifierTests.swift; sourceTree = "<group>"; };
 		0644C83465D71BD819ED2279 /* IANAAddressRegistryAssetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IANAAddressRegistryAssetTests.swift; sourceTree = "<group>"; };
 		100000000000000000000009 /* URLPolicyTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPolicyTestSupport.swift; sourceTree = "<group>"; };
@@ -137,6 +145,8 @@
 		800000000000000000000016 /* ConfidenceCategoryV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceCategoryV1.swift; sourceTree = "<group>"; };
 		800000000000000000000017 /* VerdictReasonV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictReasonV1.swift; sourceTree = "<group>"; };
 		800000000000000000000018 /* VerdictReasonsV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerdictReasonsV1.swift; sourceTree = "<group>"; };
+		800000000000000000000019 /* AnalysisProfileV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisProfileV1.swift; sourceTree = "<group>"; };
+		80000000000000000000001A /* ReasonSchemaVersionV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReasonSchemaVersionV1.swift; sourceTree = "<group>"; };
 		0D9552005C21001B0116D010 /* AddressRegistryClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRegistryClassifier.swift; sourceTree = "<group>"; };
 		8B0000000000000000000001 /* hezolink-public-suffix-list-e1b8015c.dat */ = {isa = PBXFileReference; lastKnownFileType = text; path = "hezolink-public-suffix-list-e1b8015c.dat"; sourceTree = "<group>"; };
 		8B0000000000000000000002 /* LICENSE-MPL-2.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "LICENSE-MPL-2.0.txt"; sourceTree = "<group>"; };
@@ -199,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				B4C538A73E9CA9458C912B26 /* AddressRegistryClassifierTests.swift */,
+				100000000000000000000020 /* AnalysisProfileV1Tests.swift */,
 				100000000000000000000016 /* CanonicalInstantContractAssetTests.swift */,
 				100000000000000000000017 /* CanonicalInstantV1Tests.swift */,
 				10000000000000000000001D /* ConfidenceCategoryV1Tests.swift */,
@@ -206,6 +217,7 @@
 				100000000000000000000019 /* PendingCheckResponseV1Tests.swift */,
 				10000000000000000000001C /* EvaluatedScopeV1Tests.swift */,
 				10000000000000000000000A /* CheckRequestContractAssetTests.swift */,
+				100000000000000000000022 /* CheckRequestPrimitiveContractAssetTests.swift */,
 				10000000000000000000000F /* CheckRequestV1Tests.swift */,
 				100000000000000000000014 /* CheckTokenContractAssetTests.swift */,
 				100000000000000000000015 /* CheckTokenV1Tests.swift */,
@@ -216,6 +228,7 @@
 				100000000000000000000007 /* ManualURLInputValidatorTests.swift */,
 				100000000000000000000002 /* ProblemV1Tests.swift */,
 				100000000000000000000011 /* PublicSuffixListAssetTests.swift */,
+				100000000000000000000021 /* ReasonSchemaVersionV1Tests.swift */,
 				10000000000000000000001B /* RecommendedActionV1Tests.swift */,
 				100000000000000000000010 /* RegistrableDomainClassifierTests.swift */,
 				100000000000000000000012 /* RequestIDContractAssetTests.swift */,
@@ -254,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				0D9552005C21001B0116D010 /* AddressRegistryClassifier.swift */,
+				800000000000000000000019 /* AnalysisProfileV1.swift */,
 				800000000000000000000010 /* CanonicalInstantV1.swift */,
 				80000000000000000000000C /* CheckRequestV1.swift */,
 				800000000000000000000011 /* CheckResponseStatusV1.swift */,
@@ -267,6 +281,7 @@
 				800000000000000000000009 /* ManualURLInputValidator.swift */,
 				800000000000000000000012 /* PendingCheckResponseV1.swift */,
 				800000000000000000000003 /* ProblemV1.swift */,
+				80000000000000000000001A /* ReasonSchemaVersionV1.swift */,
 				800000000000000000000014 /* RecommendedActionV1.swift */,
 				80000000000000000000000D /* RegistrableDomainClassifier.swift */,
 				80000000000000000000000E /* RequestIDV1.swift */,
@@ -463,6 +478,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CB53578DD05D68A51E50D96 /* AddressRegistryClassifierTests.swift in Sources */,
+				20000000000000000000001F /* AnalysisProfileV1Tests.swift in Sources */,
 				200000000000000000000015 /* CanonicalInstantContractAssetTests.swift in Sources */,
 				200000000000000000000016 /* CanonicalInstantV1Tests.swift in Sources */,
 				20000000000000000000001C /* ConfidenceCategoryV1Tests.swift in Sources */,
@@ -470,6 +486,7 @@
 				200000000000000000000018 /* PendingCheckResponseV1Tests.swift in Sources */,
 				20000000000000000000001B /* EvaluatedScopeV1Tests.swift in Sources */,
 				200000000000000000000009 /* CheckRequestContractAssetTests.swift in Sources */,
+				200000000000000000000021 /* CheckRequestPrimitiveContractAssetTests.swift in Sources */,
 				20000000000000000000000E /* CheckRequestV1Tests.swift in Sources */,
 				200000000000000000000013 /* CheckTokenContractAssetTests.swift in Sources */,
 				200000000000000000000014 /* CheckTokenV1Tests.swift in Sources */,
@@ -480,6 +497,7 @@
 				200000000000000000000006 /* ManualURLInputValidatorTests.swift in Sources */,
 				200000000000000000000002 /* ProblemV1Tests.swift in Sources */,
 				200000000000000000000010 /* PublicSuffixListAssetTests.swift in Sources */,
+				200000000000000000000020 /* ReasonSchemaVersionV1Tests.swift in Sources */,
 				20000000000000000000001A /* RecommendedActionV1Tests.swift in Sources */,
 				20000000000000000000000F /* RegistrableDomainClassifierTests.swift in Sources */,
 				200000000000000000000011 /* RequestIDContractAssetTests.swift in Sources */,
@@ -502,6 +520,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F084A386B928A6324548CB3E /* AddressRegistryClassifier.swift in Sources */,
+				810000000000000000000019 /* AnalysisProfileV1.swift in Sources */,
 				810000000000000000000010 /* CanonicalInstantV1.swift in Sources */,
 				81000000000000000000000C /* CheckRequestV1.swift in Sources */,
 				810000000000000000000011 /* CheckResponseStatusV1.swift in Sources */,
@@ -515,6 +534,7 @@
 				810000000000000000000009 /* ManualURLInputValidator.swift in Sources */,
 				810000000000000000000012 /* PendingCheckResponseV1.swift in Sources */,
 				810000000000000000000003 /* ProblemV1.swift in Sources */,
+				81000000000000000000001A /* ReasonSchemaVersionV1.swift in Sources */,
 				810000000000000000000014 /* RecommendedActionV1.swift in Sources */,
 				81000000000000000000000D /* RegistrableDomainClassifier.swift in Sources */,
 				81000000000000000000000E /* RequestIDV1.swift in Sources */,

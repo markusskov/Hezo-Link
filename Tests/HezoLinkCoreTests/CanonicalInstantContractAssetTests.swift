@@ -40,14 +40,14 @@ struct CanonicalInstantContractAssetTests {
     let info = try canonicalRequireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.10.0")
+    #expect(info["version"] as? String == "1.11.0")
     #expect(info["description"] as? String == canonicalOpenAPIDescription)
 
     let components = try canonicalRequireObject(openAPI["components"])
     let schemas = try canonicalRequireObject(components["schemas"])
     #expect(Set(components.keys) == ["schemas"])
     #expect(Set(schemas.keys) == canonicalOpenAPIComponents)
-    #expect(schemas.count == 14)
+    #expect(schemas.count == 16)
     let component = try canonicalRequireObject(schemas["CanonicalInstantV1"])
     #expect(Set(component.keys) == ["$ref"])
     #expect(component["$ref"] as? String == canonicalOpenAPIReference)
@@ -385,11 +385,11 @@ private let canonicalSchemaSHA256 =
 private let canonicalManifestSHA256 =
   "65b1691b3ea823f349f52ae23960c8150500396bdaf17f03cda9872b149b14b0"
 private let canonicalComponentDocumentDigest =
-  "7849793c07cdf9d4f65aaafd359c68427d054778bedc4b542c324164c7f26511"
+  "ab9ecb02ee6049ef09ae1f0aa8a060e8767f296e82c5e4fa8dc164232a8ab2dd"
 private let canonicalReadmeSHA256 =
-  "87267d2b4b717aa27900a897b76feb564c3178602b53e5ebf40225846b18260c"
+  "3418142aea7a06ac775f1f2243e6820b2c6c73572eab55e61360d13fc25379ed"
 private let canonicalContractDocumentDigest =
-  "3560520d4724afe78d218078e7f53742f671c31e0f9a07f2a8c5e1876aae2f8c"
+  "9640fe17077659ee8e5a13b04f469e41a942e98f9c23454713742b0f17ef2e71"
 private let canonicalPendingFixtureTreeSHA256 =
   "8c878df826a48db1537b6845feb8f6dd514fe7e71678022c3a3dc2f2668f9b7d"
 private let canonicalVerdictReasonFixtureTreeSHA256 =
@@ -397,10 +397,11 @@ private let canonicalVerdictReasonFixtureTreeSHA256 =
 private let canonicalSchemaDescription =
   "Canonical real proleptic-Gregorian UTC whole-second instant in years 0001 through 9999. Validators must assert the date-time format so impossible calendar dates are rejected. This syntax alone defines no clock, freshness, lifetime, expiry, retention, polling, storage, persistence, network, completed-response, or report semantics."
 private let canonicalOpenAPIDescription =
-  "Reusable offline check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+  "Reusable offline check-input, check-request leaf-primitive, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
 private let canonicalOpenAPIComponents: Set<String> = [
-  "CheckRequestV1", "RequestIDV1", "CheckTokenV1", "CanonicalInstantV1", "ProblemV1",
-  "VerdictReasonV1", "VerdictLabelV1", "RecommendedActionV1", "ConfidenceCategoryV1",
+  "CheckRequestV1", "AnalysisProfileV1", "ReasonSchemaVersionV1", "RequestIDV1",
+  "CheckTokenV1", "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+  "RecommendedActionV1", "ConfidenceCategoryV1",
   "EvaluatedScopeV1", "VerdictReasonsV1", "CheckResponseStatusV1",
   "PendingCheckResponseV1", "VerdictV1",
 ]
