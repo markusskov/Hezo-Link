@@ -138,7 +138,7 @@ public struct Verdict: Codable, Equatable, Sendable {
   public let confidence: ConfidenceCategory
 
   /// The bounded, forward-compatible evaluated scope.
-  public let evaluatedScope: EvaluatedScope
+  public let evaluatedScope: EvaluatedScopeV1
 
   /// Zero through five ordered public reasons.
   public let reasons: VerdictReasons
@@ -148,7 +148,7 @@ public struct Verdict: Codable, Equatable, Sendable {
     label: VerdictLabelV1,
     recommendedAction: RecommendedActionV1,
     confidence: ConfidenceCategory,
-    evaluatedScope: EvaluatedScope,
+    evaluatedScope: EvaluatedScopeV1,
     reasons: VerdictReasons
   ) throws {
     guard Self.isAllowed(label: label, recommendedAction: recommendedAction) else {
@@ -171,7 +171,7 @@ public struct Verdict: Codable, Equatable, Sendable {
       forKey: .recommendedAction
     )
     let confidence = try container.decode(ConfidenceCategory.self, forKey: .confidence)
-    let evaluatedScope = try container.decode(EvaluatedScope.self, forKey: .evaluatedScope)
+    let evaluatedScope = try container.decode(EvaluatedScopeV1.self, forKey: .evaluatedScope)
     let reasons = try container.decode(VerdictReasons.self, forKey: .reasons)
 
     do {

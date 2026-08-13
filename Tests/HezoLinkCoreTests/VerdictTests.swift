@@ -150,7 +150,7 @@ struct VerdictTests {
         label: .dangerous,
         recommendedAction: .retry,
         confidence: ConfidenceCategory(validating: confidenceCandidate),
-        evaluatedScope: EvaluatedScope(validating: scopeCandidate),
+        evaluatedScope: EvaluatedScopeV1(validating: scopeCandidate),
         reasons: reasons
       )
       Issue.record("Expected an incoherent verdict pair to be rejected.")

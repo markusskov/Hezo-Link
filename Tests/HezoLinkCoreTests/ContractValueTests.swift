@@ -58,7 +58,6 @@ struct ContractValueTests {
     try expectDecodeErrorOmitsCandidate(ReasonCode.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(ProblemCode.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(ConfidenceCategory.self, from: data, candidate: candidate)
-    try expectDecodeErrorOmitsCandidate(EvaluatedScope.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(ReasonFamily.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(ReasonSeverity.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(FreshnessCategory.self, from: data, candidate: candidate)
@@ -106,13 +105,6 @@ struct ContractValueTests {
     #expect(ConfidenceCategory.medium.rawValue == "medium")
     #expect(ConfidenceCategory.high.rawValue == "high")
     #expect(future.rawValue == "very_high")
-  }
-
-  @Test func exactAndFutureEvaluatedScopesRemainDistinct() throws {
-    let future = try EvaluatedScope(validating: "future_narrow_scope")
-
-    #expect(EvaluatedScope.exactURL.rawValue == "exact_url")
-    #expect(future.rawValue == "future_narrow_scope")
   }
 
   private func expectDecodeErrorOmitsCandidate<Value: Decodable>(
