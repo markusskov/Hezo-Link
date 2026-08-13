@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "contract": "check-token-v1",
+  "contract_schema": "../../schemas/check-token-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-all-zero",
+      "path": "valid/all-zero.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-alternating",
+      "path": "valid/alternating.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-short",
+      "path": "invalid/short.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "minLength",
+        "pattern"
+      ]
+    },
+    {
+      "id": "reject-long",
+      "path": "invalid/long.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "maxLength",
+        "pattern"
+      ]
+    },
+    {
+      "id": "reject-invalid-character",
+      "path": "invalid/invalid-character.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-padded",
+      "path": "invalid/padded.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "maxLength",
+        "pattern"
+      ]
+    },
+    {
+      "id": "reject-noncanonical-final-character",
+      "path": "invalid/noncanonical-final-character.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-whitespace",
+      "path": "invalid/whitespace.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-control",
+      "path": "invalid/control.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-non-ascii",
+      "path": "invalid/non-ascii.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-wrong-type",
+      "path": "invalid/wrong-type.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    }
+  ]
+}

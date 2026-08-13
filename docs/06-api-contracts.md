@@ -38,6 +38,16 @@ Each value is opaque and scoped to its producing plane and immediate response pu
 
 Wire conformance alone proves only that grammar. It does not itself prove entropy, randomness, uniqueness, authenticity, or which producer minted a value, and it grants no lifetime, retention, or logging permission. Equal byte strings establish no identity, continuity, or other relationship across planes or purposes. This contract does not authorize an endpoint, network I/O, or persistence.
 
+### Standalone `CheckTokenV1`
+
+`CheckTokenV1` is currently assigned only to `PendingCheckResponseV1.check_token`. This extraction shares its syntax without approving the proposed completed-check or report envelopes as additional consumers and without defining an endpoint or runtime behavior.
+
+After JSON string decoding, a value is valid if and only if it is the canonical unpadded base64url encoding of exactly 32 bytes. The wire text is exactly 43 ASCII characters: positions one through 42 contain an ASCII letter, digit, `_`, or `-`, and the final position is one of `AEIMQUYcgkosw048` so the unused base64 bits are zero. A semantic decoder must decode exactly 32 bytes and re-encode to the identical text. The valid public fixtures deliberately use visibly low-entropy controls and are forbidden for operational use.
+
+This is a syntax contract and a purpose boundary, not proof of producer behavior. Conformance proves no entropy, randomness, uniqueness, secrecy, issuance, authenticity, ownership, authority, lifetime, expiry, retention or logging permission, digesting, storage, replay resistance, report linkage, polling behavior, authentication, or network behavior. It does not authorize accepting a token at any endpoint.
+
+A `CheckTokenV1` is not interchangeable with an MPD presence or withdrawal token, request ID, idempotency key, report receipt, deletion capability, integrity capability, or any other token or identifier. Matching bytes establish no identity, continuity, linkage, or authority across purposes.
+
 ## Origins and routing boundaries
 
 The exact hostnames require the infrastructure ADR, but production must expose independently controlled origins for these purposes:
@@ -220,7 +230,7 @@ Provider-specific attribution or advisory requirements appear in `source_notices
 
 - `schema_version` is the integer `1`.
 - `status` is the string `pending`.
-- `check_token` is the canonical unpadded base64url encoding of exactly 32 bytes: exactly 43 ASCII characters with no `=` padding. A producer must generate exactly 32 cryptographically random bytes and encode those bytes canonically. A decoder must reject padding, noncanonical trailing bits, alternate encodings, and any value that does not decode to exactly 32 bytes and re-encode to the identical text. These checks prove only the canonical wire shape, not producer entropy or randomness.
+- `check_token` is a `CheckTokenV1`. A future producer must generate exactly 32 cryptographically random bytes and encode those bytes canonically, but accepting the standalone syntax does not prove that behavior.
 - `retry_after_ms` is an integer from `1` through `900000`, inclusive.
 - `expires_at` is a canonical UTC whole-second absolute instant using the common `YYYY-MM-DDTHH:mm:ssZ` grammar in years `0001` through `9999`. Fractional seconds, offsets, lowercase `z`, year `0000`, and impossible calendar instants are invalid.
 - `request_id` is a `RequestIDV1`.
