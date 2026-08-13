@@ -214,7 +214,7 @@ The Swift core exposes `VerdictLabelV1` as the canonical type and retains `Verdi
 
 No aliases such as `safe`, `likely_safe`, `allow`, `warn`, `block`, `malicious`, or `suspicious` may appear in the public verdict-label field. Internal diagnostic labels must map to one canonical value at the contract boundary.
 
-`recommended_action` is separate and may be `allow`, `warn`, `avoid`, or `retry`. `allow` means proceed with ordinary care after `no_known_danger`; it never promises safety. The check response does not expose automatic block eligibility. That is a separately versioned internal decision.
+`recommended_action` is separate and may be `allow`, `warn`, `avoid`, or `retry`. The Swift core exposes `RecommendedActionV1` as the canonical type and retains `RecommendedAction` as a source-compatible alias; the alias does not create a second vocabulary or change the four wire values. `allow` means proceed with ordinary care after `no_known_danger`; it never promises safety. The check response does not expose automatic block eligibility. That is a separately versioned internal decision.
 
 V1 admits only these label/action pairs:
 
