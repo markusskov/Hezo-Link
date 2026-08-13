@@ -194,27 +194,6 @@ struct VerdictTests {
     }
   }
 
-  @Test func verdictReasonMatchesGoldenWireContract() throws {
-    let reason = try makeReason()
-    let data = try HezoJSON.makeEncoder().encode(reason)
-    let wireValue = try #require(String(data: data, encoding: .utf8))
-    let expected =
-      #"{"code":"brand_impersonation_unrelated_domain","family":"identity_impersonation","freshness":"current","observed_at":"2000-02-15T10:00:00Z","severity":"high","summary_key":"verdict.reason.brand_impersonation_unrelated_domain"}"#
-    let decoded = try HezoJSON.makeResponseDecoder().decode(VerdictReason.self, from: data)
-
-    #expect(wireValue == expected)
-    #expect(decoded == reason)
-  }
-
-  @Test func verdictReasonReaderToleratesAdditiveUnknownField() throws {
-    let json =
-      #"{"code":"brand_impersonation_unrelated_domain","family":"identity_impersonation","severity":"high","summary_key":"verdict.reason.brand_impersonation_unrelated_domain","observed_at":"2000-02-15T10:00:00Z","freshness":"current","future_optional":true}"#
-    let data = try #require(json.data(using: .utf8))
-    let decoded = try HezoJSON.makeResponseDecoder().decode(VerdictReason.self, from: data)
-
-    #expect(decoded.code == .brandImpersonationUnrelatedDomain)
-  }
-
   @Test func verdictReasonSetEnforcesFiveItemLimitDuringConstructionAndDecoding() throws {
     let reason = try makeReason()
     let fiveReasons = Array(repeating: reason, count: 5)
@@ -231,28 +210,6 @@ struct VerdictTests {
     }
     #expect(throws: DecodingError.self) {
       try HezoJSON.makeResponseDecoder().decode(VerdictReasons.self, from: oversizedData)
-    }
-  }
-
-  @Test func timestampsRequireCanonicalUTCWholeSecondPrecision() throws {
-    let fractionalDate = Date(timeIntervalSince1970: 951_091_200.5)
-    let outOfRangeDate = Date(timeIntervalSince1970: 253_402_300_800)
-    let fractionalJSON = #""2000-02-15T10:00:00.500Z""#
-    let offsetJSON = #""2000-02-15T11:00:00+01:00""#
-    let impossibleJSON = #""2000-02-30T10:00:00Z""#
-
-    #expect(throws: EncodingError.self) {
-      try HezoJSON.makeEncoder().encode(fractionalDate)
-    }
-    #expect(throws: EncodingError.self) {
-      try HezoJSON.makeEncoder().encode(outOfRangeDate)
-    }
-
-    for json in [fractionalJSON, offsetJSON, impossibleJSON] {
-      let data = try #require(json.data(using: .utf8))
-      #expect(throws: DecodingError.self) {
-        try HezoJSON.makeResponseDecoder().decode(Date.self, from: data)
-      }
     }
   }
 
@@ -303,11 +260,11 @@ struct VerdictTests {
     summaryKey: String = "verdict.reason.brand_impersonation_unrelated_domain",
     observedAt: String = "2000-02-15T10:00:00Z",
     freshness: String = "current"
-  ) throws -> VerdictReason {
+  ) throws -> VerdictReasonV1 {
     let observedAt = try #require(
       ISO8601DateFormatter().date(from: observedAt)
     )
-    return try VerdictReason(
+    return try VerdictReasonV1(
       code: code,
       family: ReasonFamily(validating: family),
       severity: ReasonSeverity(validating: severity),

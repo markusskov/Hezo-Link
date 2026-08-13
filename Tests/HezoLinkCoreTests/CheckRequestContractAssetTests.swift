@@ -799,13 +799,24 @@ struct VerdictReasonContractAssetTests {
       let relativePath = "packages/contracts/fixtures/verdict-reason-v1/\(path)"
       let fixtureData = try loadData(relativePath)
       let fixtureObject = try loadObject(relativePath)
-      let reason = try HezoJSON.makeResponseDecoder().decode(
-        VerdictReason.self,
+      let canonical = try HezoJSON.makeResponseDecoder().decode(
+        VerdictReasonV1.self,
         from: fixtureData
       )
-      let encodedData = try HezoJSON.makeEncoder().encode(reason)
-      let encodedObject = try jsonObject(from: encodedData)
+      let compatibility: VerdictReason = canonical
+      let canonicalAgain: VerdictReasonV1 = compatibility
+      requireSameVerdictReasonContractType(VerdictReason.self)
+      let canonicalData = try HezoJSON.makeEncoder().encode(canonical)
+      let compatibilityData = try HezoJSON.makeEncoder().encode(compatibility)
+      let compatibilityDecoded = try HezoJSON.makeResponseDecoder().decode(
+        VerdictReason.self,
+        from: compatibilityData
+      )
+      let encodedObject = try jsonObject(from: canonicalData)
 
+      #expect(canonicalAgain == canonical)
+      #expect(compatibilityDecoded == canonical)
+      #expect(compatibilityData == canonicalData)
       #expect(NSDictionary(dictionary: encodedObject).isEqual(to: fixtureObject))
     }
   }
@@ -825,7 +836,7 @@ struct VerdictReasonContractAssetTests {
       let path = try requireString(fixtureCase["path"])
       do {
         _ = try HezoJSON.makeResponseDecoder().decode(
-          VerdictReason.self,
+          VerdictReasonV1.self,
           from: loadData("packages/contracts/fixtures/verdict-reason-v1/\(path)")
         )
         Issue.record("A declared invalid Verdict Reason V1 fixture was accepted: \(id)")
@@ -844,7 +855,7 @@ struct VerdictReasonContractAssetTests {
     #expect(verdictReasonSchemaFailures(in: fixture) == ["additionalProperties"])
 
     let reason = try HezoJSON.makeResponseDecoder().decode(
-      VerdictReason.self,
+      VerdictReasonV1.self,
       from: loadData(relativePath)
     )
     let encoded = try HezoJSON.makeEncoder().encode(reason)
@@ -865,7 +876,7 @@ struct VerdictReasonContractAssetTests {
     let data = try JSONSerialization.data(withJSONObject: fixture, options: [.sortedKeys])
 
     do {
-      _ = try HezoJSON.makeResponseDecoder().decode(VerdictReason.self, from: data)
+      _ = try HezoJSON.makeResponseDecoder().decode(VerdictReasonV1.self, from: data)
       Issue.record("A privacy-canary Verdict Reason field was accepted: \(field)")
     } catch let error as DecodingError {
       #expect(String(describing: error).contains(rejectedCandidate) == false)
@@ -4352,6 +4363,10 @@ private func roundTripSupportingStablePrimitive(
 }
 
 private func requireSameConfidenceCategoryContractType(_ type: ConfidenceCategoryV1.Type) {
+  _ = type
+}
+
+private func requireSameVerdictReasonContractType(_ type: VerdictReasonV1.Type) {
   _ = type
 }
 
