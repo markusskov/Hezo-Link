@@ -140,9 +140,6 @@ public typealias ConfidenceCategory = StableContractValue<ConfidenceCategoryKind
 /// Distinguishes evaluated-scope values.
 public enum EvaluatedScopeKind: StableContractValueKind {}
 
-/// A forward-compatible description of the evaluated scope.
-public typealias EvaluatedScope = StableContractValue<EvaluatedScopeKind>
-
 /// Distinguishes reason-family values.
 public enum ReasonFamilyKind: StableContractValueKind {}
 
