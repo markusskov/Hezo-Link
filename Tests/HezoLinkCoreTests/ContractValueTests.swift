@@ -63,7 +63,6 @@ struct ContractValueTests {
     try expectDecodeErrorOmitsCandidate(ReasonSeverity.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(FreshnessCategory.self, from: data, candidate: candidate)
     try expectDecodeErrorOmitsCandidate(LocalizationKey.self, from: data, candidate: candidate)
-    try expectDecodeErrorOmitsCandidate(RecommendedAction.self, from: data, candidate: candidate)
   }
 
   @Test func localizationKeysHaveBoundedDotSeparatedGrammar() throws {

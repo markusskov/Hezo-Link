@@ -389,7 +389,7 @@ private let canonicalComponentDocumentDigest =
 private let canonicalReadmeSHA256 =
   "87267d2b4b717aa27900a897b76feb564c3178602b53e5ebf40225846b18260c"
 private let canonicalContractDocumentDigest =
-  "7032e9f6e3c6fde1ca906d650f5d092edf4b48fd6706da984d5b4bb7cb9caa84"
+  "3912489ad5b66525d74720a1934fbcf595f4b2cf4db2645247a161112709f55f"
 private let canonicalPendingFixtureTreeSHA256 =
   "8c878df826a48db1537b6845feb8f6dd514fe7e71678022c3a3dc2f2668f9b7d"
 private let canonicalVerdictReasonFixtureTreeSHA256 =

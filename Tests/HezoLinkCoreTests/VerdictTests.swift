@@ -4,25 +4,6 @@ import Testing
 @testable import HezoLinkCore
 
 struct VerdictTests {
-  @Test(
-    "Recommended actions use the documented wire values",
-    arguments: [
-      (RecommendedAction.allow, "allow"),
-      (RecommendedAction.warn, "warn"),
-      (RecommendedAction.avoid, "avoid"),
-      (RecommendedAction.retry, "retry"),
-    ]
-  )
-  func recommendedActionRoundTrip(testCase: (RecommendedAction, String)) throws {
-    let (action, expectedWireValue) = testCase
-    let data = try HezoJSON.makeEncoder().encode(action)
-    let wireValue = try HezoJSON.makeResponseDecoder().decode(String.self, from: data)
-    let decoded = try HezoJSON.makeResponseDecoder().decode(RecommendedAction.self, from: data)
-
-    #expect(wireValue == expectedWireValue)
-    #expect(decoded == action)
-  }
-
   @Test func verdictLabelActionPairMatrixIsExhaustive() {
     let pairKeys = verdictPairCases.map { testCase in
       "\(testCase.label.rawValue)|\(testCase.recommendedAction.rawValue)"
@@ -33,7 +14,7 @@ struct VerdictTests {
     #expect(verdictPairCases.filter(\.isAllowed).count == 5)
     #expect(Set(verdictPairCases.map(\.label)) == Set(VerdictLabelV1.allCases))
     #expect(
-      Set(verdictPairCases.map(\.recommendedAction)) == Set(RecommendedAction.allCases)
+      Set(verdictPairCases.map(\.recommendedAction)) == Set(RecommendedActionV1.allCases)
     )
   }
 
@@ -277,7 +258,7 @@ struct VerdictTests {
 
   private func makeVerdict(
     label: VerdictLabelV1 = .caution,
-    recommendedAction: RecommendedAction = .warn,
+    recommendedAction: RecommendedActionV1 = .warn,
     reasons: VerdictReasons? = nil
   ) throws -> Verdict {
     let boundedReasons: VerdictReasons
@@ -298,7 +279,7 @@ struct VerdictTests {
 
   private func makeVerdictData(
     label: VerdictLabelV1,
-    recommendedAction: RecommendedAction,
+    recommendedAction: RecommendedActionV1,
     confidence: Any = "high",
     evaluatedScope: Any = "exact_url",
     reasons: Any = []
@@ -339,7 +320,7 @@ struct VerdictTests {
 
 struct VerdictPairCase: Sendable {
   let label: VerdictLabelV1
-  let recommendedAction: RecommendedAction
+  let recommendedAction: RecommendedActionV1
   let isAllowed: Bool
 }
 

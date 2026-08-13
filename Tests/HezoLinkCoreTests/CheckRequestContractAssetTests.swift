@@ -919,6 +919,9 @@ struct VerdictPrimitiveContractAssetTests {
     if case .verdictLabel = primitive {
       #expect(VerdictLabelV1.allCases.map(\.rawValue) == primitive.wireValues)
     }
+    if case .recommendedAction = primitive {
+      #expect(RecommendedActionV1.allCases.map(\.rawValue) == primitive.wireValues)
+    }
   }
 
   @Test(arguments: VerdictPrimitiveContract.allCases)
@@ -1053,12 +1056,24 @@ struct VerdictPrimitiveContractAssetTests {
         #expect(compatibilityEncoded == canonicalEncoded)
         encodedData = canonicalEncoded
       case .recommendedAction:
-        let decoded = try HezoJSON.makeResponseDecoder().decode(
-          RecommendedAction.self,
+        let canonical = try HezoJSON.makeResponseDecoder().decode(
+          RecommendedActionV1.self,
           from: fixtureData
         )
-        #expect(decoded.rawValue == fixtureValue)
-        encodedData = try HezoJSON.makeEncoder().encode(decoded)
+        let compatibility: RecommendedAction = canonical
+        let canonicalAgain: RecommendedActionV1 = compatibility
+        let canonicalEncoded = try HezoJSON.makeEncoder().encode(canonical)
+        let compatibilityEncoded = try HezoJSON.makeEncoder().encode(compatibility)
+        let compatibilityDecoded = try HezoJSON.makeResponseDecoder().decode(
+          RecommendedAction.self,
+          from: compatibilityEncoded
+        )
+
+        #expect(canonical.rawValue == fixtureValue)
+        #expect(canonicalAgain == canonical)
+        #expect(compatibilityDecoded == canonical)
+        #expect(compatibilityEncoded == canonicalEncoded)
+        encodedData = canonicalEncoded
       }
 
       #expect(try requirePrimitiveString(jsonValue(from: encodedData)) == fixtureValue)
@@ -1109,6 +1124,32 @@ struct VerdictPrimitiveContractAssetTests {
             Issue.record("VerdictLabelV1 used the wrong DecodingError case: \(fixtureID)")
           }
         }
+        if case .recommendedAction = primitive {
+          let payload = try primitiveFixturePayload(from: loadJSONValue(relativePath))
+          switch (payload, error) {
+          case (.string, .dataCorrupted(let context)):
+            #expect(context.codingPath.isEmpty)
+            #expect(context.debugDescription == "Invalid recommended action.")
+            #expect(context.underlyingError == nil)
+          case (.integer, .typeMismatch(let type, let context)):
+            #expect(ObjectIdentifier(type) == ObjectIdentifier(String.self))
+            #expect(context.codingPath.isEmpty)
+            #expect(
+              context.debugDescription == "Expected to decode String but found number instead."
+            )
+            #expect(context.underlyingError == nil)
+          case (.null, .valueNotFound(let type, let context)):
+            #expect(ObjectIdentifier(type) == ObjectIdentifier(String.self))
+            #expect(context.codingPath.isEmpty)
+            #expect(
+              context.debugDescription
+                == "Cannot get value of type String -- found null value instead"
+            )
+            #expect(context.underlyingError == nil)
+          default:
+            Issue.record("RecommendedActionV1 used the wrong DecodingError case: \(fixtureID)")
+          }
+        }
         if let rejectedString, rejectedString.isEmpty == false {
           #expect(String(describing: error).contains(rejectedString) == false)
           #expect(String(reflecting: error).contains(rejectedString) == false)
@@ -1137,6 +1178,15 @@ struct VerdictPrimitiveContractAssetTests {
         }
         #expect(context.codingPath.isEmpty)
         #expect(context.debugDescription == "Invalid public verdict label.")
+        #expect(context.underlyingError == nil)
+      }
+      if case .recommendedAction = primitive {
+        guard case .dataCorrupted(let context) = error else {
+          Issue.record("RecommendedActionV1 privacy canary used the wrong DecodingError case")
+          return
+        }
+        #expect(context.codingPath.isEmpty)
+        #expect(context.debugDescription == "Invalid recommended action.")
         #expect(context.underlyingError == nil)
       }
       #expect(String(describing: error).contains(rejectedCandidate) == false)
@@ -4956,7 +5006,7 @@ private func decodeVerdictPrimitive(
   case .verdictLabel:
     _ = try HezoJSON.makeResponseDecoder().decode(VerdictLabelV1.self, from: data)
   case .recommendedAction:
-    _ = try HezoJSON.makeResponseDecoder().decode(RecommendedAction.self, from: data)
+    _ = try HezoJSON.makeResponseDecoder().decode(RecommendedActionV1.self, from: data)
   }
 }
 
