@@ -1173,7 +1173,7 @@ struct CheckResponseStatusContractAssetTests {
     )
     #expect(schema["type"] as? String == "string")
     #expect(try requireStringArray(schema["enum"]) == checkResponseStatusWireValues)
-    #expect(CheckResponseStatus.allCases.map(\.rawValue) == checkResponseStatusWireValues)
+    #expect(CheckResponseStatusV1.allCases.map(\.rawValue) == checkResponseStatusWireValues)
   }
 
   @Test func manifestHasCompleteUniqueCheckResponseStatusFixtureCoverage() throws {
@@ -1251,7 +1251,7 @@ struct CheckResponseStatusContractAssetTests {
     #expect(invalidCount == 8)
   }
 
-  @Test func validFixturesRoundTripThroughTheSwiftReader() throws {
+  @Test func validFixturesRoundTripThroughCanonicalReaderAndCompatibilityAlias() throws {
     let manifest = try loadObject(checkResponseStatusManifestPath)
     let cases = try requireObjectArray(manifest["cases"])
     var decodedRawValues = Set<String>()
@@ -1260,15 +1260,25 @@ struct CheckResponseStatusContractAssetTests {
       let path = try requireString(fixtureCase["path"])
       let relativePath = "\(checkResponseStatusFixtureRoot)/\(path)"
       let fixtureValue = try requirePrimitiveString(loadJSONValue(relativePath))
-      let decoded = try HezoJSON.makeResponseDecoder().decode(
-        CheckResponseStatus.self,
+      let canonical = try HezoJSON.makeResponseDecoder().decode(
+        CheckResponseStatusV1.self,
         from: loadData(relativePath)
       )
-      let encoded = try HezoJSON.makeEncoder().encode(decoded)
+      let compatibility: CheckResponseStatus = canonical
+      let canonicalAgain: CheckResponseStatusV1 = compatibility
+      let canonicalEncoded = try HezoJSON.makeEncoder().encode(canonical)
+      let compatibilityEncoded = try HezoJSON.makeEncoder().encode(compatibility)
+      let compatibilityDecoded = try HezoJSON.makeResponseDecoder().decode(
+        CheckResponseStatus.self,
+        from: compatibilityEncoded
+      )
 
-      #expect(decoded.rawValue == fixtureValue)
-      #expect(try requirePrimitiveString(jsonValue(from: encoded)) == fixtureValue)
-      decodedRawValues.insert(decoded.rawValue)
+      #expect(canonical.rawValue == fixtureValue)
+      #expect(canonicalAgain == canonical)
+      #expect(compatibilityDecoded == canonical)
+      #expect(compatibilityEncoded == canonicalEncoded)
+      #expect(try requirePrimitiveString(jsonValue(from: canonicalEncoded)) == fixtureValue)
+      decodedRawValues.insert(canonical.rawValue)
     }
 
     #expect(decodedRawValues == Set(checkResponseStatusWireValues))
@@ -1283,12 +1293,31 @@ struct CheckResponseStatusContractAssetTests {
       let path = try requireString(fixtureCase["path"])
       let relativePath = "\(checkResponseStatusFixtureRoot)/\(path)"
       let data = try loadData(relativePath)
+      let payload = try primitiveFixturePayload(from: loadJSONValue(relativePath))
       let rejectedString = try? requirePrimitiveString(loadJSONValue(relativePath))
 
       do {
-        _ = try HezoJSON.makeResponseDecoder().decode(CheckResponseStatus.self, from: data)
+        _ = try HezoJSON.makeResponseDecoder().decode(CheckResponseStatusV1.self, from: data)
         Issue.record("A declared invalid check-response status fixture was accepted: \(fixtureID)")
       } catch let error as DecodingError {
+        switch (payload, error) {
+        case (.string, .dataCorrupted(let context)):
+          #expect(context.codingPath.isEmpty)
+          #expect(context.debugDescription == "Invalid check-response status.")
+          #expect(context.underlyingError == nil)
+        case (.integer, .typeMismatch(let type, let context)):
+          #expect(ObjectIdentifier(type) == ObjectIdentifier(String.self))
+          #expect(context.codingPath.isEmpty)
+          #expect(context.underlyingError == nil)
+        case (.null, .valueNotFound(let type, let context)):
+          #expect(ObjectIdentifier(type) == ObjectIdentifier(String.self))
+          #expect(context.codingPath.isEmpty)
+          #expect(context.underlyingError == nil)
+        default:
+          Issue.record(
+            "Check-response status decoding used the wrong DecodingError case: \(fixtureID)"
+          )
+        }
         if let rejectedString, rejectedString.isEmpty == false {
           #expect(String(describing: error).contains(rejectedString) == false)
           #expect(String(reflecting: error).contains(rejectedString) == false)
@@ -1305,9 +1334,16 @@ struct CheckResponseStatusContractAssetTests {
     let data = try JSONEncoder().encode(rejectedCandidate)
 
     do {
-      _ = try HezoJSON.makeResponseDecoder().decode(CheckResponseStatus.self, from: data)
+      _ = try HezoJSON.makeResponseDecoder().decode(CheckResponseStatusV1.self, from: data)
       Issue.record("A privacy-canary check-response status was accepted")
     } catch let error as DecodingError {
+      guard case .dataCorrupted(let context) = error else {
+        Issue.record("Check-response status privacy canary used the wrong DecodingError case")
+        return
+      }
+      #expect(context.codingPath.isEmpty)
+      #expect(context.debugDescription == "Invalid check-response status.")
+      #expect(context.underlyingError == nil)
       #expect(String(describing: error).contains(rejectedCandidate) == false)
       #expect(String(reflecting: error).contains(rejectedCandidate) == false)
     } catch {

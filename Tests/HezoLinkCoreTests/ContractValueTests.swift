@@ -22,72 +22,6 @@ struct ContractValueTests {
   }
 
   @Test(
-    "Check-response statuses use only their exact wire strings",
-    arguments: [
-      (CheckResponseStatus.complete, "complete"),
-      (CheckResponseStatus.pending, "pending"),
-    ]
-  )
-  func checkResponseStatusesRoundTripExactly(
-    testCase: (CheckResponseStatus, String)
-  ) throws {
-    let (status, expectedWireValue) = testCase
-    let data = try HezoJSON.makeEncoder().encode(status)
-    let encodedValue = try #require(String(data: data, encoding: .utf8))
-    let decoded = try HezoJSON.makeResponseDecoder().decode(
-      CheckResponseStatus.self,
-      from: data
-    )
-
-    #expect(encodedValue == "\"\(expectedWireValue)\"")
-    #expect(decoded.rawValue == expectedWireValue)
-  }
-
-  @Test func checkResponseStatusCasesKeepTheirExactOrderAndSet() {
-    let wireValues = CheckResponseStatus.allCases.map(\.rawValue)
-
-    #expect(wireValues == ["complete", "pending"])
-    #expect(Set(wireValues) == Set(["complete", "pending"]))
-    #expect(wireValues.count == Set(wireValues).count)
-  }
-
-  @Test(
-    "Check-response statuses reject aliases and other public vocabularies",
-    arguments: [
-      "completed",
-      "analyzing",
-      "accepted",
-      "unknown",
-      "retry",
-      "Complete",
-      "",
-    ]
-  )
-  func checkResponseStatusesRejectOtherStrings(candidate: String) throws {
-    #expect(CheckResponseStatus(rawValue: candidate) == nil)
-
-    let data = try JSONEncoder().encode(candidate)
-    expectCheckResponseStatusDecodeFailure(from: data, rejectedCandidate: candidate)
-  }
-
-  @Test(
-    "Check-response statuses reject null and non-string JSON values",
-    arguments: ["null", "200", "true", "{}", "[]"]
-  )
-  func checkResponseStatusesRejectWrongJSONTypes(json: String) throws {
-    let data = try #require(json.data(using: .utf8))
-
-    expectCheckResponseStatusDecodeFailure(from: data)
-  }
-
-  @Test func checkResponseStatusDecodeErrorsDoNotReflectRejectedContent() throws {
-    let candidate = "PRIVATE_CHECK_RESPONSE_STATUS_SENTINEL"
-    let data = try JSONEncoder().encode(candidate)
-
-    expectCheckResponseStatusDecodeFailure(from: data, rejectedCandidate: candidate)
-  }
-
-  @Test(
     "Invalid stable values return the exact bounded error",
     arguments: [
       ("_leading", ContractValueError.invalidFormat),
@@ -181,23 +115,6 @@ struct ContractValueTests {
 
     #expect(EvaluatedScope.exactURL.rawValue == "exact_url")
     #expect(future.rawValue == "future_narrow_scope")
-  }
-
-  private func expectCheckResponseStatusDecodeFailure(
-    from data: Data,
-    rejectedCandidate: String? = nil
-  ) {
-    do {
-      _ = try HezoJSON.makeResponseDecoder().decode(CheckResponseStatus.self, from: data)
-      Issue.record("Expected invalid check-response status to be rejected.")
-    } catch let error as DecodingError {
-      if let rejectedCandidate, rejectedCandidate.isEmpty == false {
-        #expect(String(describing: error).contains(rejectedCandidate) == false)
-        #expect(String(reflecting: error).contains(rejectedCandidate) == false)
-      }
-    } catch {
-      Issue.record("Check-response status decoding used an unexpected error category.")
-    }
   }
 
   private func expectDecodeErrorOmitsCandidate<Value: Decodable>(
