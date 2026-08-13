@@ -26,7 +26,7 @@ struct CheckRequestContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.9.0")
+    #expect(info["version"] as? String == "1.10.0")
     #expect(try requireString(info["description"]).isEmpty == false)
 
     let components = try requireObject(openAPI["components"])
@@ -35,7 +35,8 @@ struct CheckRequestContractAssetTests {
     #expect(
       Set(schemas.keys)
         == [
-          "CheckRequestV1", "RequestIDV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+          "CheckRequestV1", "RequestIDV1", "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1",
+          "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
           "VerdictReasonsV1", "CheckResponseStatusV1", "CheckTokenV1",
           "PendingCheckResponseV1", "VerdictV1",
@@ -609,7 +610,7 @@ struct VerdictReasonContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.9.0")
+    #expect(info["version"] as? String == "1.10.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -619,7 +620,8 @@ struct VerdictReasonContractAssetTests {
     #expect(
       Set(schemas.keys)
         == [
-          "CheckRequestV1", "RequestIDV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+          "CheckRequestV1", "RequestIDV1", "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1",
+          "VerdictLabelV1",
           "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
           "VerdictReasonsV1", "CheckResponseStatusV1", "CheckTokenV1",
           "PendingCheckResponseV1", "VerdictV1",
@@ -682,11 +684,8 @@ struct VerdictReasonContractAssetTests {
     #expect(try requireString(summaryKey["description"]).isEmpty == false)
 
     let observedAt = try requireObject(properties["observed_at"])
-    #expect(Set(observedAt.keys) == ["type", "pattern", "format", "description"])
-    #expect(observedAt["type"] as? String == "string")
-    #expect(observedAt["pattern"] as? String == verdictReasonObservedAtPattern)
-    #expect(observedAt["format"] as? String == "date-time")
-    #expect(try requireString(observedAt["description"]).isEmpty == false)
+    #expect(Set(observedAt.keys) == ["$ref"])
+    #expect(observedAt["$ref"] as? String == canonicalInstantSchemaID)
   }
 
   @Test func manifestHasCompleteUniqueVerdictReasonFixtureCoverage() throws {
@@ -887,7 +886,7 @@ struct VerdictPrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.9.0")
+    #expect(info["version"] as? String == "1.10.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -1139,10 +1138,10 @@ struct CheckResponseStatusContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.9.0")
+    #expect(info["version"] as? String == "1.10.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
@@ -1378,17 +1377,17 @@ struct PendingCheckResponseContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.9.0")
+    #expect(info["version"] as? String == "1.10.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
     #expect(Set(components.keys) == ["schemas"])
     let schemas = try requireObject(components["schemas"])
     #expect(Set(schemas.keys) == expectedOpenAPIComponentNames)
-    #expect(schemas.count == 13)
+    #expect(schemas.count == 14)
     let component = try requireObject(schemas["PendingCheckResponseV1"])
     #expect(Set(component.keys) == ["$ref"])
     #expect(component["$ref"] as? String == pendingCheckResponseOpenAPIReference)
@@ -1440,11 +1439,8 @@ struct PendingCheckResponseContractAssetTests {
     #expect(try requireString(retryAfter["description"]).isEmpty == false)
 
     let expiresAt = try requireObject(properties["expires_at"])
-    #expect(Set(expiresAt.keys) == ["type", "pattern", "format", "description"])
-    #expect(expiresAt["type"] as? String == "string")
-    #expect(expiresAt["pattern"] as? String == pendingCheckExpiresAtPattern)
-    #expect(expiresAt["format"] as? String == "date-time")
-    #expect(try requireString(expiresAt["description"]).isEmpty == false)
+    #expect(Set(expiresAt.keys) == ["$ref"])
+    #expect(expiresAt["$ref"] as? String == canonicalInstantSchemaID)
 
     let requestID = try requireObject(properties["request_id"])
     #expect(Set(requestID.keys) == ["$ref"])
@@ -1459,12 +1455,17 @@ struct PendingCheckResponseContractAssetTests {
       from: schema,
       registry: registry
     )
+    let resolvedCanonicalInstant = try resolveFrozenPendingCheckResponseCanonicalInstantSchema(
+      from: schema,
+      registry: registry
+    )
     let resolvedRequestID = try resolveFrozenPendingCheckResponseRequestIDSchema(
       from: schema,
       registry: registry
     )
     #expect(resolvedStatus["$id"] as? String == checkResponseStatusSchemaID)
     #expect(resolvedCheckToken["$id"] as? String == checkTokenSchemaID)
+    #expect(resolvedCanonicalInstant["$id"] as? String == canonicalInstantSchemaID)
     #expect(resolvedRequestID["$id"] as? String == requestIDSchemaID)
     #expect(PendingCheckResponseV1.schemaVersion == 1)
     #expect(PendingCheckResponseV1.status == .pending)
@@ -1821,7 +1822,7 @@ struct VerdictSupportingStablePrimitiveContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.9.0")
+    #expect(info["version"] as? String == "1.10.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -2014,7 +2015,7 @@ struct VerdictReasonsContractAssetTests {
 
     let info = try requireObject(openAPI["info"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.9.0")
+    #expect(info["version"] as? String == "1.10.0")
     #expect((openAPI["paths"] as? [String: Any])?.isEmpty == true)
     #expect(openAPI["servers"] == nil)
     #expect(openAPI["security"] == nil)
@@ -2365,10 +2366,10 @@ struct VerdictContractAssetTests {
     let info = try requireObject(openAPI["info"])
     #expect(Set(info.keys) == ["title", "version", "description"])
     #expect(info["title"] as? String == "Hezo Link public contract components")
-    #expect(info["version"] as? String == "1.9.0")
+    #expect(info["version"] as? String == "1.10.0")
     #expect(
       info["description"] as? String
-        == "Reusable offline check-input, request-ID, check-token, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
+        == "Reusable offline check-input, request-ID, check-token, canonical-instant, problem, check-response-status, pending-check-response, verdict, and standalone verdict-supporting schemas. This document declares no deployed service or operation."
     )
 
     let components = try requireObject(openAPI["components"])
@@ -2810,7 +2811,8 @@ private let repositoryRoot = URL(fileURLWithPath: #filePath)
   .deletingLastPathComponent()
 
 private let expectedOpenAPIComponentNames: Set<String> = [
-  "CheckRequestV1", "RequestIDV1", "ProblemV1", "VerdictReasonV1", "VerdictLabelV1",
+  "CheckRequestV1", "RequestIDV1", "CanonicalInstantV1", "ProblemV1", "VerdictReasonV1",
+  "VerdictLabelV1",
   "RecommendedActionV1", "ConfidenceCategoryV1", "EvaluatedScopeV1",
   "VerdictReasonsV1", "CheckResponseStatusV1", "CheckTokenV1", "PendingCheckResponseV1",
   "VerdictV1",
@@ -2879,6 +2881,11 @@ private let checkResponseStatusSchemaID =
   "urn:hezo-link:contract:check-response-status:v1"
 private let checkTokenSchemaPath = "packages/contracts/schemas/check-token-v1.schema.json"
 private let checkTokenSchemaID = "urn:hezo-link:contract:check-token:v1"
+private let canonicalInstantSchemaPath =
+  "packages/contracts/schemas/canonical-instant-v1.schema.json"
+private let canonicalInstantSchemaID = "urn:hezo-link:contract:canonical-instant:v1"
+private let canonicalInstantPattern =
+  "^(?!0000-)[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
 private let pendingCheckResponseSchemaPath =
   "packages/contracts/schemas/pending-check-response-v1.schema.json"
 private let pendingCheckResponseOpenAPIReference =
@@ -2895,8 +2902,7 @@ private let pendingCheckResponseFields = [
   "schema_version", "status", "check_token", "retry_after_ms", "expires_at", "request_id",
 ]
 private let pendingCheckTokenPattern = "^[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$"
-private let pendingCheckExpiresAtPattern =
-  "^(?!0000-)[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
+private let pendingCheckExpiresAtPattern = canonicalInstantPattern
 private let pendingCheckDefaultToken = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 private let pendingCheckDefaultExpiry = "2000-01-01T00:15:00Z"
 private let pendingCheckResponseValidFixtureIDs: Set<String> = [
@@ -3554,8 +3560,7 @@ private let verdictReasonStableValuePattern = "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
 private let verdictReasonSummaryKeyPattern =
   #"^(?=.{1,128}(?:\.|$))[a-z][a-z0-9]*(?:_[a-z0-9]+)*(?:\.(?=.{1,128}(?:\.|$))[a-z][a-z0-9]*(?:_[a-z0-9]+)*)*$"#
 
-private let verdictReasonObservedAtPattern =
-  "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
+private let verdictReasonObservedAtPattern = canonicalInstantPattern
 
 private let expectedVerdictReasonFixturePaths: [String: String] = [
   "valid-documented": "valid/documented.json",
@@ -4772,9 +4777,8 @@ private func requireFrozenVerdictReasonEvaluatorSurface(
   }
 
   let observedAt = try requireObject(properties["observed_at"])
-  guard observedAt["type"] as? String == "string",
-    observedAt["pattern"] as? String == verdictReasonObservedAtPattern,
-    observedAt["format"] as? String == "date-time"
+  guard Set(observedAt.keys) == ["$ref"],
+    observedAt["$ref"] as? String == canonicalInstantSchemaID
   else {
     throw ContractAssetTestError.invalidAsset
   }
@@ -5371,6 +5375,7 @@ private func loadPendingCheckResponseSchemaRegistry() throws -> [String: [String
   [
     checkResponseStatusSchemaID: try loadObject(checkResponseStatusSchemaPath),
     checkTokenSchemaID: try loadObject(checkTokenSchemaPath),
+    canonicalInstantSchemaID: try loadObject(canonicalInstantSchemaPath),
     requestIDSchemaID: try loadObject(requestIDSchemaPath),
   ]
 }
@@ -5437,6 +5442,27 @@ private func resolveFrozenPendingCheckResponseCheckTokenSchema(
   return resolved
 }
 
+private func resolveFrozenPendingCheckResponseCanonicalInstantSchema(
+  from pendingSchema: [String: Any],
+  registry: [String: [String: Any]]
+) throws -> [String: Any] {
+  let properties = try requireObject(pendingSchema["properties"])
+  let referenceObject = try requireObject(properties["expires_at"])
+  guard Set(referenceObject.keys) == ["$ref"],
+    let reference = referenceObject["$ref"] as? String,
+    reference == canonicalInstantSchemaID,
+    let resolved = registry[reference],
+    Set(resolved.keys) == ["$schema", "$id", "title", "description", "type", "pattern", "format"],
+    resolved["$id"] as? String == reference,
+    resolved["type"] as? String == "string",
+    resolved["pattern"] as? String == canonicalInstantPattern,
+    resolved["format"] as? String == "date-time"
+  else {
+    throw ContractAssetTestError.invalidAsset
+  }
+  return resolved
+}
+
 private func requireFrozenPendingCheckResponseEvaluatorSurface(
   _ schema: [String: Any],
   registry: [String: [String: Any]]
@@ -5464,18 +5490,15 @@ private func requireFrozenPendingCheckResponseEvaluatorSurface(
 
   _ = try resolveFrozenPendingCheckResponseCheckTokenSchema(from: schema, registry: registry)
 
+  _ = try resolveFrozenPendingCheckResponseCanonicalInstantSchema(
+    from: schema,
+    registry: registry
+  )
+
   let retryAfter = try requireObject(properties["retry_after_ms"])
   guard retryAfter["type"] as? String == "integer",
     integerValue(retryAfter["minimum"]) == 1,
     integerValue(retryAfter["maximum"]) == 900_000
-  else {
-    throw ContractAssetTestError.invalidAsset
-  }
-
-  let expiresAt = try requireObject(properties["expires_at"])
-  guard expiresAt["type"] as? String == "string",
-    expiresAt["pattern"] as? String == pendingCheckExpiresAtPattern,
-    expiresAt["format"] as? String == "date-time"
   else {
     throw ContractAssetTestError.invalidAsset
   }

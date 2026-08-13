@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "contract": "canonical-instant-v1",
+  "contract_schema": "../../schemas/canonical-instant-v1.schema.json",
+  "cases": [
+    {
+      "id": "valid-lower-boundary",
+      "path": "valid/lower-boundary.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-upper-boundary",
+      "path": "valid/upper-boundary.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-gregorian-leap-day",
+      "path": "valid/gregorian-leap-day.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-early-century-leap-day",
+      "path": "valid/early-century-leap-day.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-gregorian-reform-gap",
+      "path": "valid/gregorian-reform-gap.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-post-reform-century-leap-day",
+      "path": "valid/post-reform-century-leap-day.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "valid-representative",
+      "path": "valid/representative.json",
+      "expected_schema_valid": true
+    },
+    {
+      "id": "reject-year-zero",
+      "path": "invalid/year-zero.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-impossible-calendar-date",
+      "path": "invalid/impossible-calendar-date.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-early-century-non-leap-day",
+      "path": "invalid/early-century-non-leap-day.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-pre-reform-century-non-leap-day",
+      "path": "invalid/pre-reform-century-non-leap-day.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-post-reform-century-non-leap-day",
+      "path": "invalid/post-reform-century-non-leap-day.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-future-century-non-leap-day",
+      "path": "invalid/future-century-non-leap-day.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "format"
+    },
+    {
+      "id": "reject-fractional-second",
+      "path": "invalid/fractional-second.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-numeric-offset",
+      "path": "invalid/numeric-offset.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-lowercase-t",
+      "path": "invalid/lowercase-t.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-lowercase-z",
+      "path": "invalid/lowercase-z.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-leap-second",
+      "path": "invalid/leap-second.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "pattern"
+    },
+    {
+      "id": "reject-short",
+      "path": "invalid/short.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "pattern",
+        "format"
+      ]
+    },
+    {
+      "id": "reject-long",
+      "path": "invalid/long.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "pattern",
+        "format"
+      ]
+    },
+    {
+      "id": "reject-control",
+      "path": "invalid/control.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "pattern",
+        "format"
+      ]
+    },
+    {
+      "id": "reject-non-ascii",
+      "path": "invalid/non-ascii.json",
+      "expected_schema_valid": false,
+      "expected_failure_keywords": [
+        "pattern",
+        "format"
+      ]
+    },
+    {
+      "id": "reject-null",
+      "path": "invalid/null.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-wrong-type-number",
+      "path": "invalid/wrong-type-number.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-wrong-type-boolean",
+      "path": "invalid/wrong-type-boolean.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-wrong-type-object",
+      "path": "invalid/wrong-type-object.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    },
+    {
+      "id": "reject-wrong-type-array",
+      "path": "invalid/wrong-type-array.json",
+      "expected_schema_valid": false,
+      "expected_failure_keyword": "type"
+    }
+  ]
+}
