@@ -119,34 +119,6 @@ public struct StableContractValue<Kind: StableContractValueKind>: RawRepresentab
   }
 }
 
-/// The exact public check-response status vocabulary.
-public enum CheckResponseStatus: String, CaseIterable, Codable, Sendable {
-  /// The check has reached its completed state.
-  case complete
-
-  /// The check remains in progress.
-  case pending
-
-  /// Decodes only the canonical public statuses without echoing an invalid candidate.
-  public init(from decoder: Decoder) throws {
-    let container = try decoder.singleValueContainer()
-    let candidate = try container.decode(String.self)
-    guard let value = Self(rawValue: candidate) else {
-      throw DecodingError.dataCorruptedError(
-        in: container,
-        debugDescription: "Invalid check-response status."
-      )
-    }
-    self = value
-  }
-
-  /// Encodes the canonical public wire value.
-  public func encode(to encoder: Encoder) throws {
-    var container = encoder.singleValueContainer()
-    try container.encode(rawValue)
-  }
-}
-
 /// A bounded construction failure for a V1 pending check response.
 ///
 /// Cases intentionally carry no submitted content, so error rendering cannot expose a request
@@ -207,7 +179,7 @@ public struct PendingCheckResponseV1: Codable, Equatable, Sendable, CustomString
   public static let schemaVersion = 1
 
   /// The only status admitted by this response envelope.
-  public static let status = CheckResponseStatus.pending
+  public static let status = CheckResponseStatusV1.pending
 
   /// The smallest admitted retry hint.
   public static let minimumRetryAfterMilliseconds = 1
@@ -302,7 +274,7 @@ public struct PendingCheckResponseV1: Codable, Equatable, Sendable, CustomString
       guard try container.decode(Int.self, forKey: .schemaVersion) == Self.schemaVersion else {
         throw DecodingFailure.invalidEnvelope
       }
-      guard try container.decode(CheckResponseStatus.self, forKey: .status) == Self.status else {
+      guard try container.decode(CheckResponseStatusV1.self, forKey: .status) == Self.status else {
         throw DecodingFailure.invalidEnvelope
       }
 

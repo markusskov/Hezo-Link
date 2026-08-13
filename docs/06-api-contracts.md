@@ -60,6 +60,12 @@ The Swift core's shared `Date` strategy adopts this mapping as a contract-confor
 
 This standalone primitive validates wire syntax and calendar reality only. It does not read or authorize use of a clock, compare instants, define a TTL, decide freshness or retention, authorize network I/O or persistence, or approve a completed-check or report contract or behavior. The names `expires_at` and `observed_at` add no such authority.
 
+### Standalone `CheckResponseStatusV1`
+
+`CheckResponseStatusV1` is the closed check-response status vocabulary with exactly two wire values, in order: `complete` and `pending`. The Swift core exposes that versioned type as canonical and retains `CheckResponseStatus` as a source-compatible alias; the alias does not create a second vocabulary or widen either value's meaning.
+
+This scalar validates only one discriminator value. In particular, `complete` does not approve or define the still-paused completed-check envelope, and `pending` does not authorize an endpoint, HTTP mapping, polling loop, retry scheduler, token behavior, clock or lifetime policy, network request, persistence, or state transition.
+
 ## Origins and routing boundaries
 
 The exact hostnames require the infrastructure ADR, but production must expose independently controlled origins for these purposes:
